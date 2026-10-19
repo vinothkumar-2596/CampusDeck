@@ -83,16 +83,33 @@ export function wrapText(text: string, size: number, width: number): string[] {
       else {
         if (line) out.push(line);
         line = "";
-        for (const c of word) {
-          if (
-            [...(line + c)].reduce((n, v) => n + charWidth(v) * size, 0) >
-              width &&
-            line
-          ) {
-            out.push(line);
-            line = "";
+        let remaining = [...word];
+        while (remaining.length) {
+          let measured = 0,
+            fit = 0,
+            hyphenBreak = 0;
+          for (const [i, character] of remaining.entries()) {
+            const next = measured + charWidth(character) * size;
+            if (next > width && i > 0) break;
+            measured = next;
+            fit = i + 1;
+            // Preserve existing, legal word boundaries before resorting to a
+            // character break. A leading minus is not a word boundary, and a
+            // non-breaking hyphen (U+2011) deliberately is not included here.
+            if (
+              i > 0 &&
+              i < remaining.length - 1 &&
+              (character === "-" || character === "\u2010")
+            )
+              hyphenBreak = fit;
           }
-          line += c;
+          if (fit === remaining.length) {
+            line = remaining.join("");
+            break;
+          }
+          const cut = hyphenBreak || fit;
+          out.push(remaining.slice(0, cut).join(""));
+          remaining = remaining.slice(cut);
         }
       }
     }

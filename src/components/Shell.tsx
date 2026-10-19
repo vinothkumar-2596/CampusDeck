@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Link,
   NavLink,
@@ -25,15 +25,31 @@ import { SlideView } from "./SlideView";
 import { Modal } from "./Common";
 import navigation from "../data/navigation.json" with { type: "json" };
 import "../styles/site.css";
+import "../styles/refine.css";
 
 export function Logo() {
   return (
     <Link to="/" className="cd-logo" aria-label="CampusDeck home">
       <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
-        <rect width="28" height="28" rx="8" fill="#111827" />
-        <rect x="6" y="8" width="12" height="8" rx="1.5" fill="#3B4A63" />
-        <rect x="8" y="10" width="12" height="8" rx="1.5" fill="#315CFD" />
-        <rect x="10" y="12" width="12" height="8" rx="1.5" fill="white" />
+        <defs>
+          <linearGradient id="cd-logo-bg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#22365A" />
+            <stop offset="1" stopColor="#0F1A2E" />
+          </linearGradient>
+        </defs>
+        <rect width="28" height="28" rx="8" fill="url(#cd-logo-bg)" />
+        <rect x="5.5" y="7" width="12" height="8" rx="1.6" fill="#3B4A63" />
+        <rect x="7.75" y="9.25" width="12" height="8" rx="1.6" fill="#315CFD" />
+        <rect x="10" y="11.5" width="12" height="8" rx="1.6" fill="#fff" />
+        <rect x="12" y="13.5" width="5" height="1.5" rx="0.75" fill="#315CFD" />
+        <rect
+          x="12"
+          y="16.25"
+          width="3.2"
+          height="1.1"
+          rx="0.55"
+          fill="#CBD5E1"
+        />
       </svg>
       <span>CampusDeck</span>
     </Link>
@@ -54,7 +70,8 @@ export function Shell() {
   const [menu, setMenu] = useState(false),
     [dropdown, setDropdown] = useState<"college" | "categories" | null>(null),
     [search, setSearch] = useState(false),
-    [query, setQuery] = useState("");
+    [query, setQuery] = useState(""),
+    [scrolled, setScrolled] = useState(false);
   const navRef = useRef<HTMLElement>(null),
     mobileRef = useRef<HTMLButtonElement>(null),
     inputRef = useRef<HTMLInputElement>(null);
@@ -105,6 +122,12 @@ export function Shell() {
   useEffect(() => {
     if (search) inputRef.current?.focus();
   }, [search]);
+  useEffect(() => {
+    const update = () => setScrolled(window.scrollY > 6);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
   const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
   const matches = templates
     .filter((t) => {
@@ -150,7 +173,7 @@ export function Shell() {
       <a href="#main" className="skip-link">
         Skip to content
       </a>
-      <header className="cd-header">
+      <header className="cd-header" data-scrolled={scrolled ? "true" : "false"}>
         <div className="cd-container cd-header-inner">
           <Logo />
           <nav
@@ -533,6 +556,9 @@ export function Footer() {
           <span>Made for your next presentation.</span>
         </div>
       </div>
+      <span className="cd-footer-watermark" aria-hidden="true">
+        CampusDeck
+      </span>
     </footer>
   );
 }

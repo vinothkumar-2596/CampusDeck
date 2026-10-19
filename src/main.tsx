@@ -9,6 +9,7 @@ import { AppProvider } from "./lib/context";
 import { Shell } from "./components/Shell";
 import { Spinner } from "./components/Common";
 import Home from "./pages/Home";
+import { isModuleLoadError } from "./lib/recovery";
 const Explore = lazy(() => import("./pages/Explore")),
   Details = lazy(() => import("./pages/Details")),
   Customise = lazy(() => import("./pages/Customise")),
@@ -21,17 +22,25 @@ const Explore = lazy(() => import("./pages/Explore")),
   Info = lazy(() => import("./pages/Info"));
 class ErrorBoundary extends React.Component<
   { children: React.ReactNode },
-  { error: boolean }
+  { error: Error | null }
 > {
-  state = { error: false };
-  static getDerivedStateFromError() {
-    return { error: true };
+  state: { error: Error | null } = { error: null };
+  static getDerivedStateFromError(error: Error) {
+    return { error };
   }
   render() {
     return this.state.error ? (
       <div className="error-state">
-        <h1>Something needs a fresh start.</h1>
-        <p>Your saved presentations are still in your workspace.</p>
+        <h1>
+          {isModuleLoadError(this.state.error)
+            ? "This page needs a refresh"
+            : "Something needs a fresh start."}
+        </h1>
+        <p>
+          {isModuleLoadError(this.state.error)
+            ? "A page could not load. Check your connection, then reload to get the latest version. Existing drafts in this tab are kept."
+            : "Your saved presentations are still in your workspace."}
+        </p>
         <button
           className="btn btn-primary"
           onClick={() => window.location.reload()}

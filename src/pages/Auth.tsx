@@ -131,7 +131,7 @@ export default function Auth() {
                           required
                           value={name}
                           onChange={(event) => setName(event.target.value)}
-                          placeholder="Priya Ramesh"
+                          placeholder="e.g. Kaaviya"
                           maxLength={80}
                         />
                       </label>
@@ -232,7 +232,10 @@ export default function Auth() {
           <span className="cd-eyebrow">
             Your next presentation, considered.
           </span>
-          <h2>A better starting point for your best work.</h2>
+          <h2>
+            A better starting point for your{" "}
+            <em className="cd-serif">best work</em>.
+          </h2>
           <p>
             From the first review to the final viva, keep your presentations and
             ideas together.

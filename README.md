@@ -35,6 +35,7 @@ Then refresh the application and open `/admin`. Alternatively, configure `ADMIN_
 - Structured editor: headings, subtitles, body points, tables, chart data, images, colour themes, headline fonts, layout changes, speaker notes, add/duplicate/reorder/delete, zoom, undo/redo, and debounced autosave with retry feedback.
 - Native editable PowerPoint text, vector shapes, tables, charts with embedded Excel data, and embedded image assets. This is not a screenshot export. UTF-8 text, including Tamil, is preserved in PPTX; PowerPoint needs a font supporting the script.
 - Real vector PDF export for Latin-script presentations. No LibreOffice or remote conversion service is required.
+- If an open tab references an outdated download module after deployment, **Reload and download** preserves the exact presentation, theme and format and retries once. Newer editor drafts are retained; blocked browser storage prevents an unsafe reload. Failed history updates do not discard generated downloads.
 - Registration/login, HTTP-only sessions, private presentations, bookmark collections, export snapshots, rename/duplicate/delete, and download history.
 - Template snapshots preserve the original design of a saved deck when catalogue metadata or colours change. Existing presentations and original template links remain supported alongside the new collection.
 - Protected admin interface: create/duplicate/edit/publish/unpublish designs, colours and metadata, dynamic categories and renaming, member roles, real download totals, support messages, and audit logs.
@@ -74,6 +75,7 @@ src/lib/slides/        New family resolution, content and native scene construct
 src/lib/marketplace.ts Category, requirement and filter helpers
 src/lib/scene.ts        Shared, deterministic layout and text fitting
 src/components/SlideView.tsx   SVG preview of that same scene
+src/styles/refine.css   Visual refinement layer over the handoff chrome
 src/lib/export.ts       Native PPTX and vector PDF renderers
 src/pages/             Marketplace, editor, account, workspace, admin
 server/api.ts          Validated API, identity, ownership and admin gates
@@ -99,6 +101,7 @@ npm test
 npx playwright install chromium
 npm run test:e2e
 npm run build
+npm run test:recovery
 npm run preview
 ```
 
@@ -107,6 +110,8 @@ The engine/API tests validate catalogue consistency, generated slide counts, PPT
 Playwright starts an isolated in-memory test database on port 5174. Browser journeys cover catalogue downloads; browse, preview, personalisation, slide operations, PPTX/PDF export, and guest reload; profile/logo reuse, bookmarks, rename/duplicate/delete, download history, sign-out and fresh-browser sign-in; table/chart/image/notes editing and Tamil PPTX text; public deep links and static assets; admin publication; and mobile browsing/filtering/editor overflow. The redesigned homepage, search and menus, collection routes, themes, authentication and editor are checked through real interactions. Downloaded files are unpacked to verify native content. Screenshots, sample exports, and the HTML report are written under `artifacts/`, which is not published or committed. If needed, `PLAYWRIGHT_CHROMIUM_EXECUTABLE` can point to an already installed compatible Chromium binary.
 
 PPTX contents are validated programmatically; desktop Microsoft PowerPoint is not installed in the build environment, so opening the generated files in that application remains a release check for the operator.
+
+The separate recovery suite runs built assets on port 5181 and deliberately returns missing export, PDF and route modules. It checks draft preservation, a single resumed download, persistent-failure handling, recovery-dialog accessibility and downloads during a history-service outage. Build first with `npm run build`; the runner uses an isolated in-memory database. Set `E2E_BASE_URL` to run these browser-intercepted failures against a deployment without changing its assets.
 
 ## Standalone production
 

@@ -174,6 +174,8 @@ export async function createPdf(deck: Deck, template: Template): Promise<Blob> {
     ...deck.slides.flatMap((s) => [
       s.title,
       s.subtitle,
+      s.eyebrow || "",
+      s.question || "",
       ...s.body,
       ...s.table.flat(),
       ...s.chart.map((d) => d.label),

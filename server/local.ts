@@ -91,11 +91,22 @@ const server = createServer(async (req, res) => {
     res.end();
     return;
   }
+  if (!existsSync(path) && (req.url || "").startsWith("/assets/")) {
+    res.writeHead(404, {
+      "content-type": "text/plain",
+      "cache-control": "no-store",
+    });
+    res.end("Not found");
+    return;
+  }
   if (!existsSync(path) || !extname(path)) path = resolve(root, "index.html");
   try {
     res.writeHead(200, {
       "content-type": types[extname(path)] || "application/octet-stream",
       "x-content-type-options": "nosniff",
+      "cache-control": (req.url || "").startsWith("/assets/")
+        ? "public, max-age=31536000, immutable"
+        : "no-cache",
     });
     const body = readFileSync(path);
     res.end(

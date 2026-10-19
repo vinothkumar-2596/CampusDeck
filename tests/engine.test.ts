@@ -15,7 +15,7 @@ import {
   personalise,
   newSlide,
 } from "../src/lib/model";
-import { buildScene, fitText } from "../src/lib/scene";
+import { buildScene, fitText, wrapText } from "../src/lib/scene";
 import { createPptx, createPdf } from "../src/lib/export";
 import { getContentSet, getHandoffTemplate } from "../src/lib/slides/content";
 import {
@@ -189,6 +189,26 @@ test("PDF rejects unsupported scripts instead of silently corrupting the content
   await assert.rejects(() => createPdf(deck, templates[0]), /PowerPoint/);
 });
 
+test("PDF rejects unsupported top labels and highlighted questions, while PPTX preserves them", async () => {
+  const template = handoffTemplates.find((t) => t.id === "vertex")!;
+  for (const field of ["eyebrow", "question"] as const) {
+    const deck = makeDeck(template);
+    const slide =
+      field === "eyebrow"
+        ? deck.slides[0]
+        : deck.slides.find((s) => s.layout === "problem")!;
+    slide[field] = "தமிழ்";
+    await assert.rejects(() => createPdf(deck, template), /PowerPoint/);
+    const zip = await JSZip.loadAsync(
+      await (await createPptx(deck, template)).arrayBuffer(),
+    );
+    const xml = await zip
+      .file(`ppt/slides/slide${deck.slides.indexOf(slide) + 1}.xml`)!
+      .async("string");
+    assert.ok(xml.includes("தமிழ்"));
+  }
+});
+
 test("41 working designs cover 12 families with honest counts and compatible legacy snapshots", () => {
   assert.equal(handoffTemplates.length, 41);
   assert.equal(new Set(handoffTemplates.map((t) => t.familyKey)).size, 12);
@@ -340,19 +360,44 @@ test("eight scenario-specific additions ship distinct outlines and substantial e
   for (const [id, contentSet, distinguishingSlide] of additions) {
     const template = handoffTemplates.find((t) => t.id === id)!;
     assert.ok(template, id);
-    const deck = makeDeck(template), source = getContentSet(id);
+    const deck = makeDeck(template),
+      source = getContentSet(id);
     assert.equal(getHandoffTemplate(id).contentSet, contentSet);
     assert.equal(deck.slides.length, source.detailPage.insideList.length);
     assert.equal(template.slides, deck.slides.length);
     assert.ok(deck.slides.length >= 12 && deck.slides.length <= 17);
-    assert.ok(deck.slides.some((s) => s.title === distinguishingSlide), id);
-    assert.ok(deck.slides.some((s) => s.layout === "table" && s.table.length >= 4), id);
-    assert.ok(deck.slides.some((s) => s.layout === "architecture" && s.body.length === 5), id);
+    assert.ok(
+      deck.slides.some((s) => s.title === distinguishingSlide),
+      id,
+    );
+    assert.ok(
+      deck.slides.some((s) => s.layout === "table" && s.table.length >= 4),
+      id,
+    );
+    assert.ok(
+      deck.slides.some(
+        (s) => s.layout === "architecture" && s.body.length === 5,
+      ),
+      id,
+    );
     const charts = deck.slides.filter((s) => s.layout === "chart");
     assert.ok(charts.length >= 1, id);
-    assert.ok(charts.every((s) => /illustrative/i.test(s.subtitle)), id);
-    assert.ok(deck.slides.filter((s) => ["text", "columns"].includes(s.layout) && s.body.length >= 3).length >= 2, id);
-    assert.ok(deck.slides.slice(1, -1).every((s, n) => s.title === source.detailPage.insideList[n + 1]), id);
+    assert.ok(
+      charts.every((s) => /illustrative/i.test(s.subtitle)),
+      id,
+    );
+    assert.ok(
+      deck.slides.filter(
+        (s) => ["text", "columns"].includes(s.layout) && s.body.length >= 3,
+      ).length >= 2,
+      id,
+    );
+    assert.ok(
+      deck.slides
+        .slice(1, -1)
+        .every((s, n) => s.title === source.detailPage.insideList[n + 1]),
+      id,
+    );
     outlines.add(deck.slides.map((s) => s.title).join("|"));
     assert.ok(deckSchema.safeParse(deck).success, id);
   }
@@ -515,4 +560,76 @@ test("admin background, text and panel colours override covers while preserving 
   assert.ok(
     oldScene.elements.some((e) => e.kind === "text" && e.color === legacy.ink),
   );
+});
+
+test("long compound words wrap at existing hyphens before breaking their spelling", () => {
+  assert.deepEqual(wrapText("GESTURE-CONTROLLED ROBOTIC ARM", 84, 760), [
+    "GESTURE-",
+    "CONTROLLED",
+    "ROBOTIC ARM",
+  ]);
+  assert.deepEqual(wrapText("GESTURE\u2010CONTROLLED", 84, 760), [
+    "GESTURE\u2010",
+    "CONTROLLED",
+  ]);
+  assert.deepEqual(wrapText("Gesture-Controlled", 24, 760), [
+    "Gesture-Controlled",
+  ]);
+  assert.deepEqual(
+    wrapText("Keep whole words\n\nAnd explicit paragraphs", 24, 760),
+    ["Keep whole words", "", "And explicit paragraphs"],
+  );
+  const unbroken = "UNINTERRUPTEDIDENTIFIER".repeat(4);
+  const emergency = wrapText(unbroken, 48, 190);
+  assert.equal(emergency.join(""), unbroken);
+  assert.ok(emergency.every((line) => line.length > 0));
+  const compound = "RESEARCH-DRIVEN-DATA-LED-CROSS-DISCIPLINARY";
+  assert.equal(wrapText(compound, 64, 300).join(""), compound);
+});
+
+test("Vertex title line breaks remain natural and identical in preview, native PPTX and PDF", async () => {
+  const t = handoffTemplates.find((template) => template.id === "vertex")!;
+  for (const theme of [0, 1, 2] as const) {
+    const deck = makeDeck(t);
+    deck.theme = theme;
+    const scene = buildScene(deck.slides[0], t, deck);
+    const heading = scene.elements.find(
+      (element) =>
+        element.kind === "text" &&
+        element.text === deck.slides[0].title.toUpperCase(),
+    );
+    assert.ok(heading?.kind === "text");
+    assert.deepEqual(heading.lines, ["GESTURE-", "CONTROLLED", "ROBOTIC ARM"]);
+    assert.ok(heading.lines.length * heading.size * 1.2 <= heading.h);
+    const zip = await JSZip.loadAsync(
+      await (await createPptx(deck, t)).arrayBuffer(),
+    );
+    const xml = await zip.file("ppt/slides/slide1.xml")!.async("string");
+    assert.ok(xml.includes("<a:t>GESTURE-</a:t>"));
+    assert.ok(xml.includes("<a:t>CONTROLLED</a:t>"));
+    assert.ok(!xml.includes("GESTURE-CONTRO</a:t>"));
+    const pdf = Buffer.from(
+      await (await createPdf(deck, t)).arrayBuffer(),
+    ).toString("latin1");
+    assert.ok(pdf.includes("(GESTURE-)"));
+    assert.ok(pdf.includes("(CONTROLLED)"));
+  }
+  for (const title of [
+    "Human-Centred Research-Driven Evidence-Based Design for Community Learning",
+    "Ultra-Long-Compound-Heading ".repeat(7).slice(0, 160),
+    "UNINTERRUPTEDIDENTIFIER".repeat(8).slice(0, 160),
+  ]) {
+    const deck = makeDeck(t);
+    deck.slides[0].title = title;
+    const heading = buildScene(deck.slides[0], t, deck).elements.find(
+      (element) =>
+        element.kind === "text" && element.text === title.toUpperCase(),
+    );
+    assert.ok(heading?.kind === "text");
+    assert.ok(heading.lines!.length * heading.size * 1.2 <= heading.h + 1);
+    assert.equal(
+      heading.lines!.join("").replace(/\s/g, ""),
+      title.toUpperCase().replace(/\s/g, ""),
+    );
+  }
 });

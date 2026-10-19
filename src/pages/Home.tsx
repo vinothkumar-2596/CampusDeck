@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import { useApp } from "../lib/context";
 import { makeDeck, type Profile, type Template } from "../lib/model";
+import { listedTemplates, templateFamily } from "../lib/marketplace";
 import { SlideView } from "../components/SlideView";
 import { TemplateCard, Spinner } from "../components/Common";
 import { HeroPlayground } from "../components/HeroPlayground";
@@ -209,10 +210,14 @@ export function HowSteps() {
             ) : index === 2 ? (
               <>
                 <div className="cd-demo-field">
-                  <small>Team members</small>
-                  <span>Priya R · Arun K · Divya S</span>
+                  <small>Sample team</small>
+                  <span>Kaaviya R · Arun K · Divya S</span>
                 </div>
-                <MiniSlide template={find("meridian")} kind="team" />
+                <MiniSlide
+                  template={find("meridian")}
+                  kind="team"
+                  profile={{ students: "Kaaviya R · Arun K · Divya S" }}
+                />
               </>
             ) : (
               <FormatRows />
@@ -339,6 +344,10 @@ export default function Home() {
       </div>
     );
   const featured = get(home.featured.hero.id);
+  const listed = listedTemplates(templates);
+  const familyCount = new Set(
+    listed.map((t) => templateFamily(t)?.id).filter(Boolean),
+  ).size;
   return (
     <div className="cd-home">
       <section className="cd-home-hero">
@@ -352,7 +361,8 @@ export default function Home() {
             <h1>
               Present Your
               <br />
-              Best Work<span>.</span>
+              <em className="cd-serif">Best Work</em>
+              <span>.</span>
             </h1>
             <p>{home.hero.supporting}</p>
             <div className="cd-actions">
@@ -373,6 +383,24 @@ export default function Home() {
                 </Link>
               ))}
             </div>
+            <ul className="cd-hero-proof" aria-label="What you get">
+              <li>
+                <strong>{listed.length}</strong>
+                <span>Editable templates</span>
+              </li>
+              <li>
+                <strong>{familyCount}</strong>
+                <span>Design families</span>
+              </li>
+              <li>
+                <strong>PPTX · PDF</strong>
+                <span>Native exports</span>
+              </li>
+              <li>
+                <strong>Free</strong>
+                <span>No account needed</span>
+              </li>
+            </ul>
           </div>
           <HeroPlayground />
         </div>

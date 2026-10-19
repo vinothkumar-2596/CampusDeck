@@ -96,7 +96,9 @@ export default function HowItWorks() {
         <div className="cd-container">
           <span className="cd-eyebrow">How it works</span>
           <h1>
-            From blank slide to final review in four steps<span>.</span>
+            From blank slide to final review in{" "}
+            <em className="cd-serif">four steps</em>
+            <span>.</span>
           </h1>
           <p>
             Pick the structure that matches your requirement, add your details
@@ -179,14 +181,14 @@ export default function HowItWorks() {
               ) : index === 2 ? (
                 <>
                   <div className="cd-demo-form">
-                    <strong>Presentation details</strong>
+                    <strong>Sample presentation details</strong>
                     <div>
                       <small>Project title</small>
                       <span>Smart Attendance Using Face Recognition</span>
                     </div>
                     <div>
                       <small>Team members</small>
-                      <span>Asha P, Ravi K, Sneha M</span>
+                      <span>Kaaviya R, Ravi K, Sneha M</span>
                     </div>
                     <div>
                       <small>Guided by</small>
@@ -197,7 +199,7 @@ export default function HowItWorks() {
                     template={get("meridian")}
                     title="Smart Attendance Using Face Recognition"
                     profile={{
-                      students: "Asha P, Ravi K, Sneha M",
+                      students: "Kaaviya R, Ravi K, Sneha M",
                       guide: "Dr. M. Priya",
                     }}
                   />

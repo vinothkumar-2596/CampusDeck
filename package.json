@@ -15,6 +15,7 @@
     "test": "tsx --test tests/*.test.ts",
     "test:mongo": "node --env-file=.env.local --import tsx scripts/test-mongo.ts",
     "test:e2e": "playwright test",
+    "test:recovery": "playwright test --config playwright.recovery.config.ts",
     "check": "tsc -b",
     "admin": "tsx scripts/admin.ts"
   },
