@@ -1,0 +1,15 @@
+services:
+  campusdeck:
+    build: .
+    ports:
+      - "5173:5173"
+    environment:
+      PORT: 5173
+      HOST: 0.0.0.0
+      DATABASE_PATH: /app/.data/campusdeck.sqlite
+      SECURE_COOKIES: "false"
+    volumes:
+      - campusdeck-data:/app/.data
+    restart: unless-stopped
+volumes:
+  campusdeck-data:

@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /workspace
+Disallow: /editor/
+Disallow: /admin
+Sitemap: https://campusdeck-studio.smvec-2026.chatgpt.site/sitemap.xml

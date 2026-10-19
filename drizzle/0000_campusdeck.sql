@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, email TEXT NOT NULL UNIQUE, name TEXT NOT NULL, password_hash TEXT, salt TEXT, role TEXT NOT NULL DEFAULT 'user' CHECK(role IN ('user','admin')), created_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS sessions (id TEXT PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE, expires_at INTEGER NOT NULL);
+CREATE INDEX IF NOT EXISTS sessions_user ON sessions(user_id);
+CREATE TABLE IF NOT EXISTS categories (id TEXT PRIMARY KEY, name TEXT NOT NULL UNIQUE, parent TEXT);
+CREATE TABLE IF NOT EXISTS templates (id TEXT PRIMARY KEY, name TEXT NOT NULL, category TEXT NOT NULL, data TEXT NOT NULL, published INTEGER NOT NULL DEFAULT 1, premium INTEGER NOT NULL DEFAULT 0, version INTEGER NOT NULL DEFAULT 1, created_at TEXT NOT NULL);
+CREATE INDEX IF NOT EXISTS templates_category ON templates(category,published);
+CREATE TABLE IF NOT EXISTS projects (id TEXT PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE, template_id TEXT NOT NULL REFERENCES templates(id), title TEXT NOT NULL, data TEXT NOT NULL, updated_at TEXT NOT NULL);
+CREATE INDEX IF NOT EXISTS projects_owner ON projects(user_id,updated_at);
+CREATE TABLE IF NOT EXISTS profiles (user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE, data TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS saved_templates (user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE, template_id TEXT NOT NULL REFERENCES templates(id) ON DELETE CASCADE, PRIMARY KEY(user_id,template_id));
+CREATE TABLE IF NOT EXISTS downloads (id TEXT PRIMARY KEY, user_id TEXT REFERENCES users(id) ON DELETE CASCADE, template_id TEXT NOT NULL REFERENCES templates(id), title TEXT NOT NULL, format TEXT NOT NULL, snapshot TEXT, created_at TEXT NOT NULL);
+CREATE INDEX IF NOT EXISTS downloads_owner ON downloads(user_id,created_at);
+CREATE TABLE IF NOT EXISTS purchases (id TEXT PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id), provider_id TEXT UNIQUE, status TEXT NOT NULL, amount INTEGER NOT NULL, currency TEXT NOT NULL DEFAULT 'INR', created_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS entitlements (user_id TEXT NOT NULL REFERENCES users(id), template_id TEXT NOT NULL REFERENCES templates(id), purchase_id TEXT REFERENCES purchases(id), PRIMARY KEY(user_id,template_id));
+CREATE TABLE IF NOT EXISTS webhook_events (id TEXT PRIMARY KEY, provider TEXT NOT NULL, processed_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS audit_logs (id TEXT PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id), action TEXT NOT NULL, target TEXT NOT NULL, created_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS rate_limits (key TEXT PRIMARY KEY, count INTEGER NOT NULL, expires_at INTEGER NOT NULL);
+CREATE TABLE IF NOT EXISTS contact_messages (id TEXT PRIMARY KEY, name TEXT NOT NULL, email TEXT NOT NULL, message TEXT NOT NULL, created_at TEXT NOT NULL);
