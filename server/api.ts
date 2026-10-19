@@ -1,16 +1,16 @@
-import { storage, type Mutation } from "./store";
+import { storage, type Mutation } from "./store.js";
 import { z } from "zod";
 import {
   deckSchema,
   profileSchema,
   type User,
   type Template,
-} from "../src/lib/model";
+} from "../src/lib/model.js";
 import {
   templates,
   initialCategories,
   findTemplates,
-} from "../src/lib/templates";
+} from "../src/lib/templates.js";
 import type { Env } from "./db";
 
 const json = (

@@ -12,7 +12,7 @@ import {
   type Row,
   type Filter,
   type Table,
-} from "./store";
+} from "./store.js";
 
 // Presentations, slides and template snapshots are embedded MongoDB documents.
 // The API's existing JSON serialization boundary is kept for SQLite/D1 compatibility.

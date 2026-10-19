@@ -1,5 +1,5 @@
-import { api } from "../server/api";
-import { connectMongo } from "../server/mongo";
+import { api } from "../server/api.js";
+import { connectMongo } from "../server/mongo.js";
 
 async function handle(request: Request) {
   const url = new URL(request.url);
