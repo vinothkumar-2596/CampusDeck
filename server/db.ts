@@ -9,7 +9,8 @@ export interface DB {
   batch(statements: Statement[]): Promise<unknown[]>;
 }
 export interface Env {
-  DB: DB;
+  DB?: DB;
+  STORE?: import("./store").Store;
   ADMIN_EMAILS?: string;
   SECURE_COOKIES?: string;
   HOSTED?: string;

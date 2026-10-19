@@ -98,6 +98,31 @@ PPTX contents are validated programmatically; desktop Microsoft PowerPoint is no
 
 ## Standalone production
 
+### Vercel with MongoDB Atlas
+
+The Vercel project is `vinothkumars-projects-d5644634/campusdeck`, connected to this GitHub repository. `vercel.json` deploys the React/Vite bundle from `dist/client` and one Node 24 API function in Mumbai. The MongoDB Atlas Marketplace integration supplies `MONGODB_URI`; `MONGODB_DATABASE` defaults to `campusdeck`. No credentials are embedded in the browser or committed to Git.
+
+```powershell
+npx vercel env pull .env.local --yes --scope vinothkumars-projects-d5644634
+npm run dev:mongo
+npm run test:mongo
+npx vercel deploy --prod --scope vinothkumars-projects-d5644634
+```
+
+MongoDB stores slides and snapshots as embedded documents. Unique indexes protect identities and bookmarks; compound indexes support private workspace/history lookups; TTL indexes expire sessions and rate-limit counters. Category updates use a transaction. The same API also supports SQLite locally and D1 on Sites through `server/store.ts`. Database failures return an error rather than falling back to temporary storage. Each deployment provider has separate account data.
+
+MongoDB integration tests use a randomly named test database and remove their documents afterward. Production browser checks can use `E2E_BASE_URL`, `E2E_EMAIL`, and `E2E_PASSWORD`; they verify a regular account and do not change the public catalogue.
+
+To grant administrator access, register your real account first, then run this command with the correct server-side MongoDB environment:
+
+```powershell
+node --env-file=.env.local --import tsx scripts/admin.ts registered-email@example.com
+```
+
+The Vercel API does not grant administrator access based on an unverified signup email. The administrator command explicitly promotes an existing account.
+
+### Persistent Node server
+
 ```powershell
 npm ci
 npm run build

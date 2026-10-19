@@ -37,6 +37,9 @@ async function visit(dir: string, prefix = "") {
 }
 const origin =
   process.env.PUBLIC_ORIGIN ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? "https://" + process.env.VERCEL_PROJECT_PRODUCTION_URL
+    : undefined) ||
   "https://campusdeck-studio.smvec-2026.chatgpt.site";
 const urls = [
   "/",
@@ -61,6 +64,12 @@ await writeFile(
     }),
   ),
 );
+// Vercel serves the React bundle and its own Node function. The D1 Worker
+// remains a separate build target for the existing Sites deployment.
+if (process.env.VERCEL === "1") {
+  console.log("Vercel React application built successfully.");
+  process.exit(0);
+}
 await visit("dist/client");
 await mkdir("dist/server", { recursive: true });
 await mkdir("dist/.openai", { recursive: true });

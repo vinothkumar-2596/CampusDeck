@@ -3,4 +3,8 @@ dist
 .data
 .git
 .env
+.env.*
+.vercel
+.agents
+skills-lock.json
 artifacts

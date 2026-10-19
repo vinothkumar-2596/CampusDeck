@@ -4,11 +4,15 @@ import { resolve, extname } from "node:path";
 import { api } from "./api";
 import { openDatabase } from "./sqlite";
 import { pageDocument } from "./metadata";
+import { connectMongo } from "./mongo";
 try {
   process.loadEnvFile(".env");
 } catch {}
 const production = process.argv.includes("--production");
-const db = openDatabase(process.env.DATABASE_PATH || ".data/campusdeck.sqlite");
+const mongo = process.env.MONGODB_URI ? await connectMongo() : null;
+const db = mongo
+  ? undefined
+  : openDatabase(process.env.DATABASE_PATH || ".data/campusdeck.sqlite");
 const vite = !production
   ? await (
       await import("vite")
@@ -65,6 +69,7 @@ const server = createServer(async (req, res) => {
     );
     const result = await api(request, {
       DB: db,
+      STORE: mongo?.store,
       ADMIN_EMAILS: process.env.ADMIN_EMAILS,
       SECURE_COOKIES: process.env.SECURE_COOKIES,
     });
@@ -119,9 +124,10 @@ server.listen(
     ),
 );
 for (const signal of ["SIGINT", "SIGTERM"])
-  process.on(signal, () => {
+  process.on(signal, async () => {
     server.close();
-    db.close();
+    db?.close();
+    await mongo?.client.close();
     void vite?.close();
     process.exit(0);
   });

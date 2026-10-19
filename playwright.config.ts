@@ -10,7 +10,7 @@ export default defineConfig({
     ["html", { outputFolder: "artifacts/playwright-report", open: "never" }],
   ],
   use: {
-    baseURL: "http://127.0.0.1:5174",
+    baseURL: process.env.E2E_BASE_URL || "http://127.0.0.1:5174",
     headless: true,
     viewport: { width: 1440, height: 1000 },
     screenshot: "only-on-failure",
@@ -20,10 +20,12 @@ export default defineConfig({
     },
   },
   outputDir: "artifacts/browser-results",
-  webServer: {
-    command: "node scripts/e2e-server.mjs",
-    url: "http://127.0.0.1:5174/api/health",
-    reuseExistingServer: false,
-    timeout: 30000,
-  },
+  webServer: process.env.E2E_BASE_URL
+    ? undefined
+    : {
+        command: "node scripts/e2e-server.mjs",
+        url: "http://127.0.0.1:5174/api/health",
+        reuseExistingServer: false,
+        timeout: 30000,
+      },
 });

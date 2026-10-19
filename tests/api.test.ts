@@ -1,11 +1,43 @@
-import test from "node:test";
+import test, { after } from "node:test";
 import assert from "node:assert/strict";
 import { api } from "../server/api";
 import { openDatabase } from "../server/sqlite";
 import { makeDeck } from "../src/lib/model";
 import { templates } from "../src/lib/templates";
+import { storage, primaryKeys } from "../server/store";
+import { initializeMongo, mongoStore } from "../server/mongo";
+import { MongoClient } from "mongodb";
+import type { Env } from "../server/db";
 const database = openDatabase(":memory:");
-const env = { DB: database, ADMIN_EMAILS: "admin@campusdeck.test" };
+const env: Env = { DB: database, ADMIN_EMAILS: "admin@campusdeck.test" };
+let mongoClient: MongoClient | undefined;
+const testDatabaseName =
+  "campusdeck_test_" + crypto.randomUUID().replaceAll("-", "").slice(0, 20);
+if (process.env.TEST_MONGODB === "1") {
+  if (!process.env.MONGODB_URI)
+    throw new Error("MONGODB_URI required for MongoDB integration tests");
+  mongoClient = await new MongoClient(process.env.MONGODB_URI, {
+    maxPoolSize: 5,
+    serverSelectionTimeoutMS: 15000,
+  }).connect();
+  const mongoDatabase = mongoClient.db(testDatabaseName);
+  await initializeMongo(mongoDatabase);
+  env.STORE = mongoStore(mongoClient, mongoDatabase);
+}
+after(async () => {
+  database.close();
+  if (mongoClient) {
+    // Delete only this run's newly generated, isolated test database.
+    if (!/^campusdeck_test_[a-f0-9]{20}$/.test(testDatabaseName))
+      throw new Error("Invalid test database name");
+    try {
+      for (const table of Object.keys(primaryKeys))
+        await mongoClient.db(testDatabaseName).collection(table).deleteMany({});
+    } finally {
+      await mongoClient.close();
+    }
+  }
+});
 let counter = 0;
 async function request(
   path: string,
@@ -96,9 +128,11 @@ test("registration, password validation, login and secure sessions", async () =>
   });
   admin = ad.cookie;
   assert.equal(ad.body.user.role, "admin");
-  const row = database.raw
-    .prepare("SELECT password_hash,salt FROM users WHERE email=?")
-    .get("asha@campusdeck.test");
+  const row = await storage(env).first({
+    table: "users",
+    where: { email: "asha@campusdeck.test" },
+    fields: ["password_hash", "salt"],
+  });
   assert.ok(row?.password_hash);
   assert.notEqual(row?.password_hash, "Correct-password-123");
   assert.equal(
@@ -312,5 +346,59 @@ test("contact messages are stored for administrators and logout revokes the sess
     (await request("/projects", "GET", undefined, alice)).status,
     401,
   );
-  database.close();
+});
+
+test("concurrent counters are atomic and failed batches roll back completely", async () => {
+  const store = storage(env);
+  await Promise.all(
+    Array.from({ length: 16 }, () =>
+      store.write({
+        table: "rate_limits",
+        action: "put",
+        keys: ["key"],
+        values: {
+          key: "concurrent-test",
+          count: 1,
+          expires_at: Date.now() + 300000,
+        },
+        update: [],
+        increment: { count: 1 },
+      }),
+    ),
+  );
+  assert.equal(
+    (
+      await store.first({
+        table: "rate_limits",
+        where: { key: "concurrent-test" },
+      })
+    )?.count,
+    16,
+  );
+  await assert.rejects(
+    store.batch([
+      {
+        table: "categories",
+        action: "insert",
+        values: {
+          id: "rollback-one",
+          name: "Duplicate Test Category",
+          parent: null,
+        },
+      },
+      {
+        table: "categories",
+        action: "insert",
+        values: {
+          id: "rollback-two",
+          name: "Duplicate Test Category",
+          parent: null,
+        },
+      },
+    ]),
+  );
+  assert.equal(
+    await store.first({ table: "categories", where: { id: "rollback-one" } }),
+    null,
+  );
 });

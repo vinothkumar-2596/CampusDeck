@@ -143,10 +143,10 @@ test("browse → preview → personalise → edit → PPTX and PDF downloads →
   await page.getByLabel("Your name", { exact: true }).fill("Campus QA");
   await page
     .getByLabel("Email address", { exact: true })
-    .fill("qa@campusdeck.test");
+    .fill(process.env.E2E_EMAIL || "qa@campusdeck.test");
   await page
     .getByLabel("Password", { exact: true })
-    .fill("Very-strong-test-password-2026");
+    .fill(process.env.E2E_PASSWORD || "Very-strong-test-password-2026");
   await page
     .getByRole("button", { name: "Create your account", exact: true })
     .click();
@@ -180,6 +180,12 @@ test("browse → preview → personalise → edit → PPTX and PDF downloads →
     path: "artifacts/workspace-desktop.png",
     fullPage: true,
   });
+  // Public deployment verification uses a normal account; admin mutation is
+  // covered against isolated SQLite and MongoDB databases instead.
+  if (process.env.E2E_BASE_URL) {
+    expect(errors).toEqual([]);
+    return;
+  }
   await page.getByRole("link", { name: "Administration", exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "A considered collection." }),

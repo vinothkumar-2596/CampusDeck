@@ -1,3 +1,4 @@
+import { storage, type Mutation } from "./store";
 import { z } from "zod";
 import {
   deckSchema,
@@ -116,20 +117,39 @@ export function validateImage(image?: string) {
   }
 }
 async function seed(env: Env) {
-  const exists = await env.DB.prepare(
-    "SELECT id FROM templates LIMIT 1",
-  ).first();
+  const exists = await storage(env).first({
+    table: "templates",
+    fields: ["id"],
+    limit: 1,
+  });
   if (exists) return;
-  await env.DB.batch([
-    ...initialCategories.map((c) =>
-      env.DB.prepare(
-        "INSERT OR IGNORE INTO categories (id,name,parent) VALUES (?,?,?)",
-      ).bind(c.id, c.name, c.parent),
+  await storage(env).batch([
+    ...initialCategories.map(
+      (c) =>
+        ({
+          table: "categories",
+          action: "put",
+          values: { id: c.id, name: c.name, parent: c.parent },
+          ignore: true,
+        }) satisfies Mutation,
     ),
-    ...templates.map((t) =>
-      env.DB.prepare(
-        "INSERT OR IGNORE INTO templates (id,name,category,data,published,premium,created_at) VALUES (?,?,?,?,1,0,?)",
-      ).bind(t.id, t.name, t.category, JSON.stringify(t), now()),
+    ...templates.map(
+      (t) =>
+        ({
+          table: "templates",
+          action: "put",
+          values: {
+            id: t.id,
+            name: t.name,
+            category: t.category,
+            data: JSON.stringify(t),
+            published: 1,
+            premium: 0,
+            created_at: now(),
+            version: 1,
+          },
+          ignore: true,
+        }) satisfies Mutation,
     ),
   ]);
 }
@@ -163,22 +183,26 @@ async function getUser(req: Request, env: Env): Promise<User | null> {
       .includes(email.toLowerCase())
       ? "admin"
       : "user";
-    await env.DB.prepare(
-      "INSERT INTO users (id,email,name,role,created_at) VALUES (?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET email=excluded.email,name=excluded.name,role=excluded.role",
-    )
-      .bind(`platform:${id}`, email, name, role, now())
-      .run();
+    await storage(env).write({
+      table: "users",
+      action: "put",
+      values: {
+        id: `platform:${id}`,
+        email: email,
+        name: name,
+        role: role,
+        created_at: now(),
+      },
+      keys: ["id"],
+      update: ["email", "name", "role"],
+    });
     return { id: `platform:${id}`, email, name, role, platform: true };
   }
   const token = req.headers
     .get("cookie")
     ?.match(/(?:^|;\s*)campus_session=([^;]+)/)?.[1];
   if (!token) return null;
-  const user = await env.DB.prepare(
-    "SELECT u.* FROM users u JOIN sessions s ON s.user_id=u.id WHERE s.id=? AND s.expires_at>?",
-  )
-    .bind(await hash(token), Date.now())
-    .first();
+  const user = await sessionUser(env, await hash(token), Date.now());
   return user ? cleanUser(user) : null;
 }
 async function rateLimit(req: Request, env: Env, scope: string, max: number) {
@@ -188,36 +212,51 @@ async function rateLimit(req: Request, env: Env, scope: string, max: number) {
       : req.headers.get("x-local-client-ip") || "local";
   const bucket = Math.floor(Date.now() / 300000);
   const key = await hash(`${scope}:${ip}:${bucket}`);
-  await env.DB.prepare(
-    "INSERT INTO rate_limits (key,count,expires_at) VALUES (?,1,?) ON CONFLICT(key) DO UPDATE SET count=count+1",
-  )
-    .bind(key, Date.now() + 300000)
-    .run();
-  const row = await env.DB.prepare("SELECT count FROM rate_limits WHERE key=?")
-    .bind(key)
-    .first<{ count: number }>();
+  await storage(env).write({
+    table: "rate_limits",
+    action: "put",
+    values: { key: key, count: 1, expires_at: Date.now() + 300000 },
+    keys: ["key"],
+    update: [],
+    increment: { count: 1 },
+  });
+  const row = await storage(env).first<{ count: number }>({
+    table: "rate_limits",
+    where: { key: key },
+    fields: ["count"],
+  });
   if ((row?.count || 0) > max)
     fail(429, "Too many attempts. Please try again in five minutes.");
   if (Math.random() < 0.02)
-    await env.DB.prepare("DELETE FROM rate_limits WHERE expires_at<?")
-      .bind(Date.now())
-      .run();
+    await storage(env).write({
+      table: "rate_limits",
+      action: "delete",
+      where: { expires_at: { lt: Date.now() } },
+    });
 }
 async function session(userId: string, env: Env) {
   const token = crypto.randomUUID() + crypto.randomUUID();
-  await env.DB.prepare(
-    "INSERT INTO sessions (id,user_id,expires_at) VALUES (?,?,?)",
-  )
-    .bind(await hash(token), userId, Date.now() + 2592000000)
-    .run();
+  await storage(env).write({
+    table: "sessions",
+    action: "insert",
+    values: {
+      id: await hash(token),
+      user_id: userId,
+      expires_at: Date.now() + 2592000000,
+    },
+  });
   return `campus_session=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000${env.SECURE_COOKIES === "true" ? "; Secure" : ""}`;
 }
 async function getTemplate(id: string, env: Env, admin = false) {
-  const row = await env.DB.prepare(
-    `SELECT data,premium,published FROM templates WHERE id=?${admin ? "" : " AND published=1"}`,
-  )
-    .bind(id)
-    .first<{ data: string; premium: number; published: number }>();
+  const row = await storage(env).first<{
+    data: string;
+    premium: number;
+    published: number;
+  }>({
+    table: "templates",
+    where: { id, ...(!admin ? { published: 1 } : {}) },
+    fields: ["data", "premium", "published"],
+  });
   if (!row) fail(404, "Template not found.");
   return {
     ...JSON.parse(row.data),
@@ -229,11 +268,11 @@ async function entitlement(t: Template, user: User | null, env: Env) {
   if (!t.premium) return;
   const allowed =
     user &&
-    (await env.DB.prepare(
-      "SELECT user_id FROM entitlements WHERE user_id=? AND template_id=?",
-    )
-      .bind(user.id, t.id)
-      .first());
+    (await storage(env).first({
+      table: "entitlements",
+      where: { user_id: user.id, template_id: t.id },
+      fields: ["user_id"],
+    }));
   if (!allowed)
     fail(
       403,
@@ -292,17 +331,17 @@ export async function api(req: Request, env: Env): Promise<Response> {
           message: z.string().trim().min(10).max(3000),
         })
         .parse(await readBody(req));
-      await env.DB.prepare(
-        "INSERT INTO contact_messages (id,name,email,message,created_at) VALUES (?,?,?,?,?)",
-      )
-        .bind(
-          crypto.randomUUID(),
-          input.name,
-          input.email,
-          input.message,
-          now(),
-        )
-        .run();
+      await storage(env).write({
+        table: "contact_messages",
+        action: "insert",
+        values: {
+          id: crypto.randomUUID(),
+          name: input.name,
+          email: input.email,
+          message: input.message,
+          created_at: now(),
+        },
+      });
       return json({ ok: true }, 201);
     }
     if (path === "/auth/register" && req.method === "POST") {
@@ -316,9 +355,11 @@ export async function api(req: Request, env: Env): Promise<Response> {
         })
         .parse(await readBody(req));
       const email = input.email.toLowerCase().trim();
-      const exists = await env.DB.prepare("SELECT id FROM users WHERE email=?")
-        .bind(email)
-        .first();
+      const exists = await storage(env).first({
+        table: "users",
+        where: { email: email },
+        fields: ["id"],
+      });
       if (exists)
         fail(409, "An account with this email already exists. Please sign in.");
       const id = crypto.randomUUID(),
@@ -329,11 +370,19 @@ export async function api(req: Request, env: Env): Promise<Response> {
           .includes(email)
           ? "admin"
           : "user";
-      await env.DB.prepare(
-        "INSERT INTO users (id,email,name,password_hash,salt,role,created_at) VALUES (?,?,?,?,?,?,?)",
-      )
-        .bind(id, email, input.name, password, salt, role, now())
-        .run();
+      await storage(env).write({
+        table: "users",
+        action: "insert",
+        values: {
+          id: id,
+          email: email,
+          name: input.name,
+          password_hash: password,
+          salt: salt,
+          role: role,
+          created_at: now(),
+        },
+      });
       return json({ user: { id, email, name: input.name, role } }, 201, {
         "set-cookie": await session(id, env),
       });
@@ -347,9 +396,10 @@ export async function api(req: Request, env: Env): Promise<Response> {
           password: z.string().min(1).max(128),
         })
         .parse(await readBody(req));
-      const row = await env.DB.prepare("SELECT * FROM users WHERE email=?")
-        .bind(input.email.toLowerCase().trim())
-        .first();
+      const row = await storage(env).first({
+        table: "users",
+        where: { email: input.email.toLowerCase().trim() },
+      });
       const candidate = await passwordHash(
         input.password,
         String(row?.salt || "nonexistent-user-salt"),
@@ -365,9 +415,11 @@ export async function api(req: Request, env: Env): Promise<Response> {
         .get("cookie")
         ?.match(/campus_session=([^;]+)/)?.[1];
       if (token)
-        await env.DB.prepare("DELETE FROM sessions WHERE id=?")
-          .bind(await hash(token))
-          .run();
+        await storage(env).write({
+          table: "sessions",
+          action: "delete",
+          where: { id: await hash(token) },
+        });
       return json({ ok: true }, 200, {
         "set-cookie":
           "campus_session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0",
@@ -375,14 +427,21 @@ export async function api(req: Request, env: Env): Promise<Response> {
     }
     if (path === "/categories" && req.method === "GET")
       return json(
-        (await env.DB.prepare("SELECT * FROM categories ORDER BY name").all())
+        (await storage(env).all({ table: "categories", sort: { name: 1 } }))
           .results,
       );
     if (path === "/templates" && req.method === "GET") {
       const rows = (
-        await env.DB.prepare(
-          "SELECT data,published,premium FROM templates WHERE published=1 ORDER BY json_extract(data,'$.family'),created_at,id",
-        ).all<{ data: string; published: number; premium: number }>()
+        await storage(env).all<{
+          data: string;
+          published: number;
+          premium: number;
+        }>({
+          table: "templates",
+          where: { published: 1 },
+          fields: ["data", "published", "premium"],
+          sort: { "data.family": 1, created_at: 1, id: 1 },
+        })
       ).results;
       return json(
         findTemplates(
@@ -413,19 +472,28 @@ export async function api(req: Request, env: Env): Promise<Response> {
       const owned =
         user &&
         input.snapshot &&
-        (await env.DB.prepare(
-          "SELECT id FROM projects WHERE id=? AND user_id=? AND template_id=?",
-        )
-          .bind(input.snapshot.id, user.id, input.templateId)
-          .first());
+        (await storage(env).first({
+          table: "projects",
+          where: {
+            id: input.snapshot.id,
+            user_id: user.id,
+            template_id: input.templateId,
+          },
+          fields: ["id"],
+        }));
       const previous =
         user &&
         input.snapshot &&
-        (await env.DB.prepare(
-          "SELECT id FROM downloads WHERE user_id=? AND template_id=? AND json_extract(snapshot,'$.id')=? LIMIT 1",
-        )
-          .bind(user.id, input.templateId, input.snapshot.id)
-          .first());
+        (await storage(env).first({
+          table: "downloads",
+          where: {
+            user_id: user.id,
+            template_id: input.templateId,
+            "snapshot.id": input.snapshot.id,
+          },
+          fields: ["id"],
+          limit: 1,
+        }));
       const t = await getTemplate(input.templateId, env, !!owned || !!previous);
       await entitlement(t, user, env);
       if (input.snapshot) {
@@ -433,19 +501,20 @@ export async function api(req: Request, env: Env): Promise<Response> {
         validateImage(input.snapshot.profile.logo);
         if (input.snapshot.templateId !== t.id) fail(400, "Template mismatch.");
       }
-      await env.DB.prepare(
-        "INSERT INTO downloads (id,user_id,template_id,title,format,snapshot,created_at) VALUES (?,?,?,?,?,?,?)",
-      )
-        .bind(
-          crypto.randomUUID(),
-          user?.id || null,
-          t.id,
-          input.title,
-          input.format,
-          user && input.snapshot ? JSON.stringify(input.snapshot) : null,
-          now(),
-        )
-        .run();
+      await storage(env).write({
+        table: "downloads",
+        action: "insert",
+        values: {
+          id: crypto.randomUUID(),
+          user_id: user?.id || null,
+          template_id: t.id,
+          title: input.title,
+          format: input.format,
+          snapshot:
+            user && input.snapshot ? JSON.stringify(input.snapshot) : null,
+          created_at: now(),
+        },
+      });
       return json({ ok: true }, 201);
     }
     if (path === "/checkout")
@@ -454,41 +523,44 @@ export async function api(req: Request, env: Env): Promise<Response> {
       fail(401, "Please sign in to save and manage your presentations.");
     if (path === "/profile") {
       if (req.method === "GET") {
-        const row = await env.DB.prepare(
-          "SELECT data FROM profiles WHERE user_id=?",
-        )
-          .bind(user.id)
-          .first<{ data: string }>();
+        const row = await storage(env).first<{ data: string }>({
+          table: "profiles",
+          where: { user_id: user.id },
+          fields: ["data"],
+        });
         return json(row ? JSON.parse(row.data) : null);
       }
       if (req.method === "PUT") {
         const p = profileSchema.parse(await readBody(req));
         validateImage(p.logo);
-        await env.DB.prepare(
-          "INSERT INTO profiles (user_id,data) VALUES (?,?) ON CONFLICT(user_id) DO UPDATE SET data=excluded.data",
-        )
-          .bind(user.id, JSON.stringify(p))
-          .run();
+        await storage(env).write({
+          table: "profiles",
+          action: "put",
+          values: { user_id: user.id, data: JSON.stringify(p) },
+          keys: ["user_id"],
+          update: ["data"],
+        });
         return json(p);
       }
     }
     if (path === "/projects" && req.method === "GET")
       return json(
         (
-          await env.DB.prepare(
-            "SELECT data FROM projects WHERE user_id=? ORDER BY updated_at DESC",
-          )
-            .bind(user.id)
-            .all<{ data: string }>()
+          await storage(env).all<{ data: string }>({
+            table: "projects",
+            where: { user_id: user.id },
+            fields: ["data"],
+            sort: { updated_at: -1 },
+          })
         ).results.map((r) => JSON.parse(r.data)),
       );
     if (path.startsWith("/projects/")) {
       const id = path.split("/")[2];
-      const row = await env.DB.prepare(
-        "SELECT user_id,data FROM projects WHERE id=?",
-      )
-        .bind(id)
-        .first<{ user_id: string; data: string }>();
+      const row = await storage(env).first<{ user_id: string; data: string }>({
+        table: "projects",
+        where: { id: id },
+        fields: ["user_id", "data"],
+      });
       if (row && row.user_id !== user.id) fail(404, "Presentation not found.");
       if (req.method === "GET") {
         if (!row) fail(404, "Presentation not found.");
@@ -502,72 +574,83 @@ export async function api(req: Request, env: Env): Promise<Response> {
         const t = await getTemplate(deck.templateId, env, !!row);
         await entitlement(t, user, env);
         deck.updatedAt = now();
-        await env.DB.prepare(
-          "INSERT INTO projects (id,user_id,template_id,title,data,updated_at) VALUES (?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET title=excluded.title,data=excluded.data,updated_at=excluded.updated_at WHERE projects.user_id=excluded.user_id",
-        )
-          .bind(
-            id,
-            user.id,
-            deck.templateId,
-            deck.title,
-            JSON.stringify(deck),
-            deck.updatedAt,
-          )
-          .run();
+        await storage(env).write({
+          table: "projects",
+          action: "put",
+          values: {
+            id: id,
+            user_id: user.id,
+            template_id: deck.templateId,
+            title: deck.title,
+            data: JSON.stringify(deck),
+            updated_at: deck.updatedAt,
+          },
+          keys: ["id"],
+          update: ["title", "data", "updated_at"],
+          guard: { user_id: user.id },
+        });
         return json(deck);
       }
       if (req.method === "DELETE") {
         if (!row) fail(404, "Presentation not found.");
-        await env.DB.prepare("DELETE FROM projects WHERE id=? AND user_id=?")
-          .bind(id, user.id)
-          .run();
+        await storage(env).write({
+          table: "projects",
+          action: "delete",
+          where: { id: id, user_id: user.id },
+        });
         return json({ ok: true });
       }
     }
     if (path === "/saved" && req.method === "GET")
       return json(
         (
-          await env.DB.prepare(
-            "SELECT template_id FROM saved_templates WHERE user_id=?",
-          )
-            .bind(user.id)
-            .all<{ template_id: string }>()
+          await storage(env).all<{ template_id: string }>({
+            table: "saved_templates",
+            where: { user_id: user.id },
+            fields: ["template_id"],
+          })
         ).results.map((r) => r.template_id),
       );
     if (path.startsWith("/saved/")) {
       const id = path.split("/")[2];
       await getTemplate(id, env);
       if (req.method === "PUT")
-        await env.DB.prepare(
-          "INSERT OR IGNORE INTO saved_templates (user_id,template_id) VALUES (?,?)",
-        )
-          .bind(user.id, id)
-          .run();
+        await storage(env).write({
+          table: "saved_templates",
+          action: "put",
+          values: { user_id: user.id, template_id: id },
+          ignore: true,
+        });
       else if (req.method === "DELETE")
-        await env.DB.prepare(
-          "DELETE FROM saved_templates WHERE user_id=? AND template_id=?",
-        )
-          .bind(user.id, id)
-          .run();
+        await storage(env).write({
+          table: "saved_templates",
+          action: "delete",
+          where: { user_id: user.id, template_id: id },
+        });
       else fail(405, "Method not supported.");
       return json({ ok: true });
     }
     if (path === "/downloads" && req.method === "GET")
       return json(
         (
-          await env.DB.prepare(
-            "SELECT id,title,template_id,format,created_at FROM downloads WHERE user_id=? ORDER BY created_at DESC LIMIT 100",
-          )
-            .bind(user.id)
-            .all()
+          await storage(env).all({
+            table: "downloads",
+            where: { user_id: user.id },
+            fields: ["id", "title", "template_id", "format", "created_at"],
+            sort: { created_at: -1 },
+            limit: 100,
+          })
         ).results,
       );
     if (path.startsWith("/downloads/") && req.method === "GET") {
-      const row = await env.DB.prepare(
-        "SELECT snapshot,template_id FROM downloads WHERE id=? AND user_id=?",
-      )
-        .bind(path.split("/")[2], user.id)
-        .first<{ snapshot: string | null; template_id: string }>();
+      const row = await storage(env).first<{
+        snapshot: string | null;
+        template_id: string;
+      }>({
+        table: "downloads",
+        where: { id: path.split("/")[2], user_id: user.id },
+        fields: ["snapshot", "template_id"],
+      });
       if (!row) fail(404, "Download not found.");
       await entitlement(
         await getTemplate(row.template_id, env, true),
@@ -579,37 +662,44 @@ export async function api(req: Request, env: Env): Promise<Response> {
     if (path === "/purchases" && req.method === "GET")
       return json(
         (
-          await env.DB.prepare(
-            "SELECT id,status,amount,currency,created_at FROM purchases WHERE user_id=? ORDER BY created_at DESC",
-          )
-            .bind(user.id)
-            .all()
+          await storage(env).all({
+            table: "purchases",
+            where: { user_id: user.id },
+            fields: ["id", "status", "amount", "currency", "created_at"],
+            sort: { created_at: -1 },
+          })
         ).results,
       );
     if (path.startsWith("/admin")) {
       if (user.role !== "admin") fail(403, "Administrator access required.");
       if (path === "/admin" && req.method === "GET") {
         const [ts, us, ds, logs] = await Promise.all([
-          env.DB.prepare(
-            "SELECT data,published,premium,version FROM templates",
-          ).all<{
+          storage(env).all<{
             data: string;
             published: number;
             premium: number;
             version: number;
-          }>(),
-          env.DB.prepare(
-            "SELECT id,name,email,role,created_at FROM users",
-          ).all(),
-          env.DB.prepare("SELECT COUNT(*) AS count FROM downloads").first(),
-          env.DB.prepare(
-            "SELECT * FROM audit_logs ORDER BY created_at DESC LIMIT 20",
-          ).all(),
+          }>({
+            table: "templates",
+            fields: ["data", "published", "premium", "version"],
+          }),
+          storage(env).all({
+            table: "users",
+            fields: ["id", "name", "email", "role", "created_at"],
+          }),
+          storage(env).count("downloads"),
+          storage(env).all({
+            table: "audit_logs",
+            sort: { created_at: -1 },
+            limit: 20,
+          }),
         ]);
         const messages = (
-          await env.DB.prepare(
-            "SELECT * FROM contact_messages ORDER BY created_at DESC LIMIT 100",
-          ).all()
+          await storage(env).all({
+            table: "contact_messages",
+            sort: { created_at: -1 },
+            limit: 100,
+          })
         ).results;
         return json({
           templates: ts.results.map((r) => ({
@@ -628,26 +718,30 @@ export async function api(req: Request, env: Env): Promise<Response> {
       if (path.startsWith("/admin/templates/") && req.method === "PUT") {
         const t = templateSchema.parse(await readBody(req));
         if (t.id !== target) fail(400, "Template ID mismatch.");
-        const category = await env.DB.prepare(
-          "SELECT id FROM categories WHERE name=?",
-        )
-          .bind(t.category)
-          .first();
+        const category = await storage(env).first({
+          table: "categories",
+          where: { name: t.category },
+          fields: ["id"],
+        });
         if (!category)
           fail(400, "Create or choose an existing category first.");
-        await env.DB.prepare(
-          "INSERT INTO templates (id,name,category,data,published,premium,created_at) VALUES (?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,category=excluded.category,data=excluded.data,published=excluded.published,premium=excluded.premium,version=templates.version+1",
-        )
-          .bind(
-            t.id,
-            t.name,
-            t.category,
-            JSON.stringify(t),
-            +t.published,
-            +t.premium,
-            now(),
-          )
-          .run();
+        await storage(env).write({
+          table: "templates",
+          action: "put",
+          values: {
+            id: t.id,
+            name: t.name,
+            category: t.category,
+            data: JSON.stringify(t),
+            published: +t.published,
+            premium: +t.premium,
+            created_at: now(),
+            version: 1,
+          },
+          keys: ["id"],
+          update: ["name", "category", "data", "published", "premium"],
+          increment: { version: 1 },
+        });
       } else if (path === "/admin/categories" && req.method === "POST") {
         const c = z
           .object({
@@ -655,11 +749,11 @@ export async function api(req: Request, env: Env): Promise<Response> {
             parent: z.string().max(80).nullable(),
           })
           .parse(await readBody(req));
-        await env.DB.prepare(
-          "INSERT INTO categories (id,name,parent) VALUES (?,?,?)",
-        )
-          .bind(crypto.randomUUID(), c.name, c.parent)
-          .run();
+        await storage(env).write({
+          table: "categories",
+          action: "insert",
+          values: { id: crypto.randomUUID(), name: c.name, parent: c.parent },
+        });
       } else if (
         path.startsWith("/admin/categories/") &&
         req.method === "PUT"
@@ -670,29 +764,40 @@ export async function api(req: Request, env: Env): Promise<Response> {
             parent: z.string().max(80).nullable(),
           })
           .parse(await readBody(req));
-        const existing = await env.DB.prepare(
-          "SELECT name FROM categories WHERE id=?",
-        )
-          .bind(target)
-          .first<{ name: string }>();
+        const existing = await storage(env).first<{ name: string }>({
+          table: "categories",
+          where: { id: target },
+          fields: ["name"],
+        });
         if (!existing) fail(404, "Category not found.");
         const rows = (
-          await env.DB.prepare("SELECT id,data FROM templates WHERE category=?")
-            .bind(existing.name)
-            .all<{ id: string; data: string }>()
+          await storage(env).all<{ id: string; data: string }>({
+            table: "templates",
+            where: { category: existing.name },
+            fields: ["id", "data"],
+          })
         ).results;
-        await env.DB.batch([
-          env.DB.prepare(
-            "UPDATE categories SET name=?,parent=? WHERE id=?",
-          ).bind(c.name, c.parent, target),
-          ...rows.map((r) =>
-            env.DB.prepare(
-              "UPDATE templates SET category=?,data=? WHERE id=?",
-            ).bind(
-              c.name,
-              JSON.stringify({ ...JSON.parse(r.data), category: c.name }),
-              r.id,
-            ),
+        await storage(env).batch([
+          {
+            table: "categories",
+            action: "update",
+            values: { name: c.name, parent: c.parent },
+            where: { id: target },
+          } satisfies Mutation,
+          ...rows.map(
+            (r) =>
+              ({
+                table: "templates",
+                action: "update",
+                values: {
+                  category: c.name,
+                  data: JSON.stringify({
+                    ...JSON.parse(r.data),
+                    category: c.name,
+                  }),
+                },
+                where: { id: r.id },
+              }) satisfies Mutation,
           ),
         ]);
       } else if (path.startsWith("/admin/users/") && req.method === "PUT") {
@@ -706,25 +811,38 @@ export async function api(req: Request, env: Env): Promise<Response> {
             400,
             "Hosted roles are managed through the ADMIN_EMAILS server setting.",
           );
-        await env.DB.prepare("UPDATE users SET role=? WHERE id=?")
-          .bind(role, target)
-          .run();
+        await storage(env).write({
+          table: "users",
+          action: "update",
+          values: { role: role },
+          where: { id: target },
+        });
       } else fail(404, "Admin action not found.");
-      await env.DB.prepare(
-        "INSERT INTO audit_logs (id,user_id,action,target,created_at) VALUES (?,?,?,?,?)",
-      )
-        .bind(
-          crypto.randomUUID(),
-          user.id,
-          req.method + " " + path,
-          target || "category",
-          now(),
-        )
-        .run();
+      await storage(env).write({
+        table: "audit_logs",
+        action: "insert",
+        values: {
+          id: crypto.randomUUID(),
+          user_id: user.id,
+          action: req.method + " " + path,
+          target: target || "category",
+          created_at: now(),
+        },
+      });
       return json({ ok: true });
     }
     fail(404, "This endpoint does not exist.");
   } catch (error) {
+    if (
+      error &&
+      typeof error === "object" &&
+      "code" in error &&
+      error.code === 11000
+    )
+      return json(
+        { error: "This record already exists. Refresh and try again." },
+        409,
+      );
     if (error instanceof z.ZodError)
       return json(
         {
@@ -748,4 +866,17 @@ export async function api(req: Request, env: Env): Promise<Response> {
       500,
     );
   }
+}
+
+async function sessionUser(env: Env, token: string, time: number) {
+  const session = await storage(env).first({
+    table: "sessions",
+    where: { id: token, expires_at: { gt: time } },
+  });
+  return session
+    ? storage(env).first({
+        table: "users",
+        where: { id: String(session.user_id) },
+      })
+    : null;
 }
