@@ -25,110 +25,46 @@ const slidePaths = (zip: JSZip) =>
 const nativeText = (xml: string) =>
   [...xml.matchAll(/<a:t>(.*?)<\/a:t>/gs)].map((match) => match[1]).join(" ");
 
-test("homepage presentation controls render real slides and continue into an editable guest deck", async ({
+test("homepage hero shows a wall of real template covers that open their templates", async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
-  const playground = page.getByRole("region", {
-    name: "Interactive presentation preview",
+  await expect(
+    page.getByRole("heading", { name: "Present Your Best Work.", exact: true }),
+  ).toBeVisible();
+  const cards = page.locator(".cd-wall-card");
+  await expect(cards).toHaveCount(16);
+  const names = await page
+    .locator(".cd-wall-name")
+    .evaluateAll((labels) => labels.map((label) => label.textContent || ""));
+  expect(names.every((name) => / template$/.test(name))).toBeTruthy();
+  expect(new Set(names).size).toBeGreaterThanOrEqual(12);
+  await expect(cards.first().locator(".slide-view")).toBeVisible();
+  const card = page.getByRole("link", {
+    name: "Meridian template",
     exact: true,
   });
-  await expect(playground).toBeVisible();
-  const title = playground.getByRole("textbox", {
-    name: "Presentation title",
-    exact: true,
-  });
-  await title.fill("My live presentation from the homepage");
-  await expect(
-    playground.locator(".cd-playground-stage .slide-view"),
-  ).toHaveAttribute("aria-label", "My live presentation from the homepage");
-  const backgrounds = new Set<string>();
-  for (const name of ["Navy", "Teal", "Plum"]) {
-    const theme = playground.getByRole("button", {
-      name: `Use ${name} theme`,
-      exact: true,
-    });
-    await theme.click();
-    await expect(theme).toHaveAttribute("aria-pressed", "true");
-    backgrounds.add(
-      (await playground
-        .locator(".cd-playground-stage svg > rect")
-        .first()
-        .getAttribute("fill"))!,
-    );
-  }
-  expect(backgrounds.size).toBe(3);
-  for (const design of ["Halcyon", "Meridian", "Kepler"]) {
-    const button = playground.getByRole("button", {
-      name: `Use ${design} design`,
-      exact: true,
-    });
-    await button.click();
-    await expect(button).toHaveAttribute("aria-pressed", "true");
-    await expect(title).toHaveValue("My live presentation from the homepage");
-    await expect(playground.locator(".cd-playground-status")).toContainText(
-      design,
-    );
-  }
-  await playground
-    .getByRole("button", { name: "Use Amber theme", exact: true })
+  await card.hover();
+  await expect(card.locator(".cd-wall-name")).toHaveCSS("opacity", "1");
+  await card.click();
+  await expect(page).toHaveURL(/\/templates\/meridian$/);
+  await expect(page.locator("h1")).toHaveText("Meridian");
+  await page.goBack();
+  await page
+    .locator(".cd-wall-content")
+    .getByRole("link", { name: "Explore Templates", exact: true })
     .click();
-  const previewTitles = new Set<string>();
-  for (const name of ["problem", "results", "cover"]) {
-    const button = playground.getByRole("button", {
-      name: `Preview ${name} slide`,
-      exact: true,
-    });
-    await button.click();
-    await expect(button).toHaveAttribute("aria-pressed", "true");
-    previewTitles.add(
-      (await playground
-        .locator(".cd-playground-stage .slide-view")
-        .getAttribute("aria-label"))!,
-    );
-  }
-  expect(previewTitles.size).toBe(3);
-  await playground
-    .getByRole("button", { name: "Preview results slide", exact: true })
-    .click();
-  await title.fill("A live title ready for PowerPoint");
-  await expect(
-    playground.getByRole("button", {
-      name: "Preview cover slide",
-      exact: true,
-    }),
-  ).toHaveAttribute("aria-pressed", "true");
-  await playground
-    .getByRole("button", { name: "Continue editing", exact: true })
-    .click();
-  await expect(page.getByLabel("Heading", { exact: true })).toHaveValue(
-    "A live title ready for PowerPoint",
-  );
-  await expect(
-    page.getByLabel("Presentation name", { exact: true }),
-  ).toHaveValue("A live title ready for PowerPoint");
-  await expect(page.locator(".editor-deck-meta")).toContainText(
-    "Kepler · Amber theme",
-  );
-  const slideCount = await page.locator(".slides-list > button").count();
-  expect(slideCount).toBeGreaterThan(10);
-  await page.reload();
-  await expect(page.getByLabel("Heading", { exact: true })).toHaveValue(
-    "A live title ready for PowerPoint",
-  );
-  await expect(page.locator(".editor-deck-meta")).toContainText(
-    "Kepler · Amber theme",
-  );
-  const zip = await JSZip.loadAsync(await downloadEditor(page, "pptx"));
-  expect(slidePaths(zip)).toHaveLength(slideCount);
-  const cover = await zip.file("ppt/slides/slide1.xml")!.async("string");
-  expect(nativeText(cover)).toContain("A live title ready for PowerPoint");
-  expect(cover).toContain("FFB547");
+  await expect(page).toHaveURL(/\/templates$/);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
   expect(
-    Object.keys(zip.files).some((path) =>
-      /^ppt\/charts\/chart\d+\.xml$/.test(path),
+    await page.locator(".cd-wall-card:visible").count(),
+  ).toBeGreaterThanOrEqual(6);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
     ),
   ).toBeTruthy();
   expect(errors).toEqual([]);

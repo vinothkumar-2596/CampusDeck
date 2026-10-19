@@ -232,10 +232,7 @@ export default function Auth() {
           <span className="cd-eyebrow">
             Your next presentation, considered.
           </span>
-          <h2>
-            A better starting point for your{" "}
-            <em className="cd-serif">best work</em>.
-          </h2>
+          <h2>A better starting point for your best work.</h2>
           <p>
             From the first review to the final viva, keep your presentations and
             ideas together.

@@ -6,6 +6,7 @@ import {
   ArrowUp,
   ArrowUpRight,
   Check,
+  FileUp,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
@@ -25,6 +26,7 @@ import {
   Undo2,
   X,
 } from "lucide-react";
+import { LogoMark } from "../components/LogoMark";
 import { useApp } from "../lib/context";
 import { api, readImage, send } from "../lib/api";
 import {
@@ -40,7 +42,14 @@ import { getTemplateThemes, resolveSlideDesign } from "../lib/slides/resolve";
 import { switchDeckDesign, resetDeckText } from "../lib/editor";
 import editorConfig from "../data/editor.json" with { type: "json" };
 import { SlideView } from "../components/SlideView";
+import {
+  CanvasEditor,
+  ShortcutsButton,
+  modKey,
+} from "../components/CanvasEditor";
+import { useEditorShortcuts } from "../lib/useEditorShortcuts";
 import { Field } from "../components/Fields";
+import { DocumentImport } from "../components/DocumentImport";
 import {
   Empty,
   Modal,
@@ -70,7 +79,8 @@ export default function Editor() {
     future = useRef<Deck[]>([]),
     current = useRef<Deck | null>(null),
     saveQueue = useRef(Promise.resolve()),
-    revision = useRef(0);
+    revision = useRef(0),
+    lastGroup = useRef<string | undefined>(undefined);
   const t =
       deck?.templateSnapshot ||
       templates.find((t) => t.id === deck?.templateId),
@@ -204,11 +214,18 @@ export default function Editor() {
     window.addEventListener("beforeunload", warn);
     return () => window.removeEventListener("beforeunload", warn);
   }, [status]);
-  const change = useCallback((fn: (d: Deck) => void) => {
+  // Edits that share a group (one run of typing on the canvas) undo together.
+  const change = useCallback((fn: (d: Deck) => void, group?: string) => {
     setDeck((prev) => {
       if (!prev) return prev;
-      history.current = [...history.current.slice(-29), structuredClone(prev)];
-      future.current = [];
+      if (!group || group !== lastGroup.current) {
+        history.current = [
+          ...history.current.slice(-29),
+          structuredClone(prev),
+        ];
+        future.current = [];
+      }
+      lastGroup.current = group;
       const next = structuredClone(prev);
       fn(next);
       next.updatedAt = new Date().toISOString();
@@ -221,6 +238,7 @@ export default function Editor() {
       d.slides[index] = { ...d.slides[index], ...updates };
     });
   const undo = () => {
+    lastGroup.current = undefined;
     const previous = history.current.pop();
     if (previous && current.current) {
       future.current.push(structuredClone(current.current));
@@ -230,6 +248,7 @@ export default function Editor() {
     }
   };
   const redo = () => {
+    lastGroup.current = undefined;
     const next = future.current.pop();
     if (next && current.current) {
       history.current.push(structuredClone(current.current));
@@ -246,6 +265,57 @@ export default function Editor() {
     });
     setIndex(dest);
   };
+  const duplicate = () => {
+    if (!deck || deck.slides.length >= 40) return;
+    change((d) => {
+      const copy = structuredClone(d.slides[index]);
+      copy.id = uid();
+      d.slides.splice(index + 1, 0, copy);
+    });
+    setIndex(index + 1);
+  };
+  // Opens the inspector on the control that edits what the canvas selected.
+  const reveal = (label: string) => {
+    setPanel("content");
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        const target = document.querySelector<HTMLElement>(
+          `.inspector [aria-label="${CSS.escape(label)}"]`,
+        );
+        if (!target) return;
+        target.scrollIntoView({ block: "center", behavior: "smooth" });
+        target.focus({ preventScroll: true });
+        target.classList.remove("cd-field-flash");
+        void target.offsetWidth;
+        target.classList.add("cd-field-flash");
+      }),
+    );
+  };
+  useEditorShortcuts(
+    {
+      undo,
+      redo,
+      duplicate,
+      go: (to) => {
+        if (!deck) return;
+        const last = deck.slides.length - 1;
+        setIndex(
+          to === "first"
+            ? 0
+            : to === "last"
+              ? last
+              : Math.min(Math.max(index + to, 0), last),
+        );
+      },
+      present: () => setPreview(true),
+    },
+    !!deck &&
+      !preview &&
+      !addOpen &&
+      !exportOpen &&
+      !confirmDelete &&
+      !resetOpen,
+  );
   const download = async (format: "pptx" | "pdf") => {
     if (!deck || !t) return;
     setBusy(format);
@@ -323,11 +393,7 @@ export default function Editor() {
           <ArrowLeft size={20} />
         </Link>
         <Link className="editor-logo" to="/" aria-label="CampusDeck home">
-          <span className="logo-mark">
-            <span />
-            <span />
-            <span />
-          </span>
+          <LogoMark size={30} />
         </Link>
         <div className="editor-title">
           <input
@@ -363,6 +429,7 @@ export default function Editor() {
               disabled={!history.current.length}
               onClick={undo}
               aria-label="Undo"
+              title={`Undo (${modKey}+Z)`}
             >
               <Undo2 size={18} />
             </button>
@@ -371,6 +438,7 @@ export default function Editor() {
               disabled={!future.current.length}
               onClick={redo}
               aria-label="Redo"
+              title={`Redo (${modKey}+Shift+Z)`}
             >
               <Redo2 size={18} />
             </button>
@@ -489,7 +557,7 @@ export default function Editor() {
                 {s.layout} layout
               </span>
               <span className="canvas-hint">
-                Edit your content in the panel on the right
+                Double-click any text on the slide to edit it
               </span>
             </div>
             <div>
@@ -512,15 +580,9 @@ export default function Editor() {
               <button
                 className="icon-btn"
                 disabled={deck.slides.length >= 40}
-                onClick={() => {
-                  change((d) => {
-                    const copy = structuredClone(d.slides[index]);
-                    copy.id = uid();
-                    d.slides.splice(index + 1, 0, copy);
-                  });
-                  setIndex(index + 1);
-                }}
+                onClick={duplicate}
                 aria-label="Duplicate slide"
+                title={`Duplicate slide (${modKey}+D)`}
               >
                 <Copy size={16} />
               </button>
@@ -539,12 +601,15 @@ export default function Editor() {
               className="editor-canvas"
               style={{ width: zoom + "%", minWidth: zoom + "%" }}
             >
-              <SlideView
+              <CanvasEditor
                 template={t}
                 deck={deck}
-                slide={s}
                 index={index}
-                total={deck.slides.length}
+                change={change}
+                undo={undo}
+                redo={redo}
+                reveal={reveal}
+                notify={toast}
               />
             </div>
           </div>
@@ -572,6 +637,50 @@ export default function Editor() {
                 >
                   Add a heading <ArrowUpRight size={14} />
                 </button>
+                {deck.slides.length === 1 && (
+                  <DocumentImport
+                    actionLabel="Use these slides"
+                    onOpen={(imported) => {
+                      change((d) => {
+                        const keepTitle =
+                          d.title.trim() && d.title !== "Untitled presentation";
+                        Object.assign(d, {
+                          ...imported,
+                          id: d.id,
+                          title: keepTitle ? d.title : imported.title,
+                          profile: {
+                            ...imported.profile,
+                            logo: d.profile.logo,
+                          },
+                        });
+                      });
+                      setIndex(0);
+                      toast(
+                        "Document imported. Undo brings back your blank slide.",
+                      );
+                    }}
+                  >
+                    {(importer) => (
+                      <>
+                        <button
+                          className="link-button"
+                          onClick={importer.choose}
+                          disabled={importer.busy}
+                        >
+                          {importer.busy
+                            ? "Designing your slides…"
+                            : "Import a document"}{" "}
+                          <FileUp size={14} />
+                        </button>
+                        {importer.error && (
+                          <span className="editor-import-error" role="alert">
+                            {importer.error}
+                          </span>
+                        )}
+                      </>
+                    )}
+                  </DocumentImport>
+                )}
               </div>
             )}
           <div className="canvas-bottom">
@@ -599,6 +708,7 @@ export default function Editor() {
               <button className="link-button" onClick={() => setZoom(100)}>
                 Fit
               </button>
+              <ShortcutsButton />
             </div>
           </div>
           <details className="speaker-notes">

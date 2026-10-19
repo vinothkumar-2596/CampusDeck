@@ -8,6 +8,8 @@ import {
 } from "react-router-dom";
 import {
   ArrowRight,
+  ArrowUpRight,
+  CornerDownLeft,
   ChevronDown,
   GraduationCap,
   Menu,
@@ -18,11 +20,17 @@ import {
   HeartPulse,
   Microscope,
   CalendarDays,
+  ListChecks,
+  Layers,
+  Presentation,
+  Rocket,
+  type LucideIcon,
 } from "lucide-react";
 import { useApp } from "../lib/context";
 import { makeDeck } from "../lib/model";
 import { SlideView } from "./SlideView";
 import { Modal } from "./Common";
+import { LogoMark } from "./LogoMark";
 import navigation from "../data/navigation.json" with { type: "json" };
 import "../styles/site.css";
 import "../styles/refine.css";
@@ -30,38 +38,30 @@ import "../styles/refine.css";
 export function Logo() {
   return (
     <Link to="/" className="cd-logo" aria-label="CampusDeck home">
-      <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
-        <defs>
-          <linearGradient id="cd-logo-bg" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#22365A" />
-            <stop offset="1" stopColor="#0F1A2E" />
-          </linearGradient>
-        </defs>
-        <rect width="28" height="28" rx="8" fill="url(#cd-logo-bg)" />
-        <rect x="5.5" y="7" width="12" height="8" rx="1.6" fill="#3B4A63" />
-        <rect x="7.75" y="9.25" width="12" height="8" rx="1.6" fill="#315CFD" />
-        <rect x="10" y="11.5" width="12" height="8" rx="1.6" fill="#fff" />
-        <rect x="12" y="13.5" width="5" height="1.5" rx="0.75" fill="#315CFD" />
-        <rect
-          x="12"
-          y="16.25"
-          width="3.2"
-          height="1.1"
-          rx="0.55"
-          fill="#CBD5E1"
-        />
-      </svg>
+      <LogoMark />
       <span>CampusDeck</span>
     </Link>
   );
 }
-const categoryIcons = [
-  GraduationCap,
-  Building2,
-  Briefcase,
-  HeartPulse,
-  Microscope,
-  CalendarDays,
+type IconMotion =
+  "tip" | "tick" | "rise" | "pop" | "swing" | "launch" | "beat" | "tilt";
+type MenuIcon = { Icon: LucideIcon; motion: IconMotion };
+// Each menu row gets its own glyph; every tile shares one neutral style.
+const requirementIcons: MenuIcon[] = [
+  { Icon: GraduationCap, motion: "tip" },
+  { Icon: ListChecks, motion: "tick" },
+  { Icon: Layers, motion: "rise" },
+  { Icon: Presentation, motion: "pop" },
+  { Icon: Briefcase, motion: "swing" },
+  { Icon: Rocket, motion: "launch" },
+];
+const categoryIcons: MenuIcon[] = [
+  { Icon: GraduationCap, motion: "tip" },
+  { Icon: Building2, motion: "rise" },
+  { Icon: Briefcase, motion: "swing" },
+  { Icon: HeartPulse, motion: "beat" },
+  { Icon: Microscope, motion: "tilt" },
+  { Icon: CalendarDays, motion: "pop" },
 ];
 export function Shell() {
   const { user, templates } = useApp();
@@ -93,6 +93,15 @@ export function Shell() {
       const target = event.target as HTMLElement;
       const typing =
         target.matches("input,textarea,select") || target.isContentEditable;
+      const pageSearch =
+        document.querySelector<HTMLInputElement>("[data-page-search]");
+      if (event.key === "/" && !typing && pageSearch) {
+        // Pages with their own search field take "/"; Ctrl+K stays global.
+        event.preventDefault();
+        pageSearch.focus();
+        pageSearch.select();
+        return;
+      }
       if (
         ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") ||
         (event.key === "/" && !typing)
@@ -210,21 +219,27 @@ export function Shell() {
                 <div className="cd-mega-menu" id="cd-college-menu">
                   <div>
                     <span className="cd-eyebrow">By requirement</span>
-                    {navigation.header.collegeMenu.byRequirement.map((item) => (
-                      <Link
-                        key={item.href}
-                        to={item.href}
-                        className="cd-menu-item"
-                      >
-                        <span className="cd-menu-icon">
-                          <GraduationCap size={18} />
-                        </span>
-                        <span>
-                          <strong>{item.label}</strong>
-                          <small>{item.text}</small>
-                        </span>
-                      </Link>
-                    ))}
+                    {navigation.header.collegeMenu.byRequirement.map(
+                      (item, index) => {
+                        const { Icon, motion } =
+                          requirementIcons[index % requirementIcons.length];
+                        return (
+                          <Link
+                            key={item.href}
+                            to={item.href}
+                            className="cd-menu-item"
+                          >
+                            <span className="cd-menu-icon" data-motion={motion}>
+                              <Icon size={17} strokeWidth={1.8} />
+                            </span>
+                            <span>
+                              <strong>{item.label}</strong>
+                              <small>{item.text}</small>
+                            </span>
+                          </Link>
+                        );
+                      },
+                    )}
                     <Link className="cd-text-link cd-menu-all" to="/college">
                       All college templates <ArrowRight size={15} />
                     </Link>
@@ -251,13 +266,15 @@ export function Shell() {
                         />
                         <strong>{feature.name}</strong>
                         <small>Featured · Final Year Project</small>
+                        <span className="cd-menu-feature-go">
+                          <ArrowUpRight size={14} />
+                        </span>
                       </Link>
                     )}
                   </div>
                 </div>
               )}
             </div>
-            <NavLink to="/corporate">Corporate</NavLink>
             <div
               className="cd-nav-dropdown"
               onMouseEnter={() => setDropdown("categories")}
@@ -275,7 +292,7 @@ export function Shell() {
               {dropdown === "categories" && (
                 <div className="cd-category-menu" id="cd-categories-menu">
                   {navigation.header.categoriesMenu.map((item, index) => {
-                    const Icon = categoryIcons[index];
+                    const { Icon, motion } = categoryIcons[index] ?? {};
                     return (
                       <Link
                         key={item.href}
@@ -283,8 +300,8 @@ export function Shell() {
                         className="cd-menu-item"
                       >
                         {Icon && (
-                          <span className="cd-menu-icon">
-                            <Icon size={18} />
+                          <span className="cd-menu-icon" data-motion={motion}>
+                            <Icon size={17} strokeWidth={1.8} />
                           </span>
                         )}
                         <span>
@@ -304,9 +321,11 @@ export function Shell() {
             <button
               className="cd-search-trigger"
               aria-label="Search templates"
+              aria-keyshortcuts="/ Control+K"
+              title="Search  ( / )"
               onClick={openSearch}
             >
-              <Search size={17} />
+              <Search size={16} />
               <span>Search</span>
               <kbd>/</kbd>
             </button>
@@ -318,17 +337,13 @@ export function Shell() {
                 My workspace
               </Link>
             ) : (
-              <>
-                <Link className="cd-header-signin" to="/sign-in">
-                  Sign In
-                </Link>
-                <Link
-                  className="cd-btn cd-btn-dark cd-btn-small cd-header-start"
-                  to="/sign-up"
-                >
-                  Get Started <ArrowRight size={14} />
-                </Link>
-              </>
+              <Link
+                className="cd-btn cd-btn-dark cd-btn-small cd-header-start"
+                to="/sign-up"
+              >
+                Get Started
+                <ArrowRight size={15} aria-hidden="true" />
+              </Link>
             )}
             <button
               ref={mobileRef}
@@ -375,14 +390,9 @@ export function Shell() {
                     )}
                   </>
                 ) : (
-                  <>
-                    <Link className="cd-btn cd-btn-white" to="/sign-in">
-                      Sign In
-                    </Link>
-                    <Link className="cd-btn cd-btn-primary" to="/sign-up">
-                      Get Started
-                    </Link>
-                  </>
+                  <Link className="cd-btn cd-btn-dark" to="/sign-up">
+                    Get Started
+                  </Link>
                 )}
               </div>
             </div>
@@ -394,7 +404,11 @@ export function Shell() {
       </main>
       <Footer />
       {search && (
-        <Modal title="Search templates" onClose={() => setSearch(false)}>
+        <Modal
+          title="Search templates"
+          className="modal-search"
+          onClose={() => setSearch(false)}
+        >
           <div className="cd-search-panel">
             <form
               onSubmit={(event) => {
@@ -408,97 +422,141 @@ export function Shell() {
               <input
                 ref={inputRef}
                 aria-label="Search all templates"
-                placeholder="Search by topic, template or department…"
+                placeholder="Topic, template or department"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
               />
-              <button
-                type="submit"
-                className="cd-icon-button"
-                aria-label="Search catalogue"
-              >
-                <ArrowRight size={18} />
-              </button>
             </form>
-            {terms.length ? (
-              <>
-                <p className="cd-eyebrow">Templates</p>
-                <div className="cd-search-results">
-                  {matches.map((t) => (
-                    <Link
-                      key={t.id}
-                      to={`/templates/${t.id}`}
-                      onClick={() => setSearch(false)}
-                    >
-                      <div>
-                        <SlideView template={t} slide={makeDeck(t).slides[0]} />
-                      </div>
-                      <span>
-                        <strong>{t.name}</strong>
-                        <small>
-                          {t.category} · {t.slides} slides
-                        </small>
-                      </span>
-                      <ArrowRight size={16} />
-                    </Link>
-                  ))}
-                  {!matches.length && (
-                    <p>
-                      No template names match yet. Search the full catalogue to
-                      include topics and departments.
-                    </p>
-                  )}
-                </div>
-                <Link
-                  className="cd-search-all"
-                  to={`/templates?q=${encodeURIComponent(query.trim())}`}
-                  onClick={() => setSearch(false)}
-                >
-                  Search all templates for “{query.trim()}”{" "}
-                  <ArrowRight size={16} />
-                </Link>
-              </>
-            ) : (
-              <>
-                <p className="cd-eyebrow">Popular searches</p>
-                <div className="cd-menu-pills">
-                  {[
-                    "Final Year Project",
-                    "Project Review",
-                    "Seminar",
-                    "Hackathon",
-                    "Business",
-                  ].map((item) => (
-                    <button
-                      key={item}
-                      onClick={() => {
-                        setQuery(item);
-                        inputRef.current?.focus();
-                      }}
-                    >
-                      {item}
-                    </button>
-                  ))}
-                </div>
-                <p className="cd-eyebrow">Browse categories</p>
-                <div className="cd-search-categories">
-                  {navigation.header.categoriesMenu.slice(0, 6).map((item) => (
-                    <Link
-                      key={item.href}
-                      to={item.href}
-                      onClick={() => setSearch(false)}
-                    >
-                      {item.label}
-                      <ArrowRight size={14} />
-                    </Link>
-                  ))}
-                </div>
-              </>
-            )}
+            <div className="cd-search-body">
+              {terms.length ? (
+                <>
+                  <p className="cd-eyebrow">Templates</p>
+                  <div className="cd-search-results">
+                    {matches.map((t) => (
+                      <Link
+                        key={t.id}
+                        to={`/templates/${t.id}`}
+                        onClick={() => setSearch(false)}
+                      >
+                        <div>
+                          <SlideView
+                            template={t}
+                            slide={makeDeck(t).slides[0]}
+                          />
+                        </div>
+                        <span>
+                          <strong>{t.name}</strong>
+                          <small>
+                            {t.category} · {t.slides} slides
+                          </small>
+                        </span>
+                        <ArrowRight size={16} />
+                      </Link>
+                    ))}
+                    {!matches.length && (
+                      <p>
+                        No template names match yet. Search the full catalogue
+                        to include topics and departments.
+                      </p>
+                    )}
+                  </div>
+                  <Link
+                    className="cd-search-all"
+                    to={`/templates?q=${encodeURIComponent(query.trim())}`}
+                    onClick={() => setSearch(false)}
+                  >
+                    <span className="cd-search-all-icon">
+                      <Search size={16} />
+                    </span>
+                    <span>
+                      Search all templates for “<strong>{query.trim()}</strong>”
+                    </span>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <p className="cd-eyebrow">Popular searches</p>
+                  <div className="cd-menu-pills">
+                    {[
+                      "Final Year Project",
+                      "Project Review",
+                      "Seminar",
+                      "Hackathon",
+                      "Business",
+                    ].map((item) => (
+                      <button
+                        key={item}
+                        onClick={() => {
+                          setQuery(item);
+                          inputRef.current?.focus();
+                        }}
+                      >
+                        {item}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="cd-eyebrow">Browse categories</p>
+                  <div className="cd-search-categories">
+                    {navigation.header.categoriesMenu
+                      .slice(0, 6)
+                      .map((item, index) => {
+                        const { Icon, motion } = categoryIcons[index] ?? {};
+                        return (
+                          <Link
+                            key={item.href}
+                            to={item.href}
+                            className="cd-menu-item"
+                            onClick={() => setSearch(false)}
+                          >
+                            {Icon && (
+                              <span
+                                className="cd-menu-icon"
+                                data-motion={motion}
+                              >
+                                <Icon size={17} strokeWidth={1.9} />
+                              </span>
+                            )}
+                            <span>
+                              <strong>{item.label}</strong>
+                              {"text" in item && <small>{item.text}</small>}
+                            </span>
+                          </Link>
+                        );
+                      })}
+                  </div>
+                </>
+              )}
+            </div>
+            <div className="cd-search-footer" aria-hidden="true">
+              <span>
+                <kbd>
+                  <CornerDownLeft size={12} strokeWidth={2.2} />
+                </kbd>{" "}
+                Search catalogue
+              </span>
+              <span>
+                <kbd>esc</kbd> Close
+              </span>
+            </div>
           </div>
         </Modal>
       )}
     </div>
+  );
+}
+const footerSteps = ["Choose", "Customise", "Present"];
+function FooterHeading({
+  index,
+  children,
+}: {
+  index: number;
+  children: string;
+}) {
+  return (
+    <h3>
+      <span aria-hidden="true">{String(index).padStart(2, "0")}</span>
+      {children}
+    </h3>
   );
 }
 export function Footer() {
@@ -513,18 +571,36 @@ export function Footer() {
               Presentation templates for college, work and everything you are
               building next.
             </p>
-            <span className="cd-eyebrow">Choose. Customise. Present.</span>
+            <ol
+              className="cd-footer-steps"
+              aria-label="Choose. Customise. Present."
+            >
+              {footerSteps.map((step, index) => (
+                <li key={step}>
+                  <span aria-hidden="true">{index + 1}</span>
+                  {step}
+                </li>
+              ))}
+            </ol>
+          </div>
+          <div className="cd-footer-explore">
+            <FooterHeading index={1}>Explore</FooterHeading>
+            <div className="cd-footer-links">
+              {navigation.header.categoriesMenu
+                .slice(0, 6)
+                .map((item, index) => {
+                  const Icon = categoryIcons[index]?.Icon;
+                  return (
+                    <Link key={item.href} to={item.href}>
+                      {Icon && <Icon size={14} aria-hidden="true" />}
+                      {item.label}
+                    </Link>
+                  );
+                })}
+            </div>
           </div>
           <div>
-            <h3>Explore</h3>
-            {navigation.header.categoriesMenu.slice(0, 6).map((item) => (
-              <Link key={item.href} to={item.href}>
-                {item.label}
-              </Link>
-            ))}
-          </div>
-          <div>
-            <h3>For students</h3>
+            <FooterHeading index={2}>For students</FooterHeading>
             {navigation.header.collegeMenu.byRequirement
               .slice(0, 5)
               .map((item) => (
@@ -534,7 +610,7 @@ export function Footer() {
               ))}
           </div>
           <div>
-            <h3>CampusDeck</h3>
+            <FooterHeading index={3}>CampusDeck</FooterHeading>
             <Link to="/how-it-works">How it works</Link>
             <Link to="/workspace">My workspace</Link>
             <Link to="/workspace?tab=profile">Academic profile</Link>
@@ -542,7 +618,7 @@ export function Footer() {
             {user?.role === "admin" && <Link to="/admin">Administration</Link>}
           </div>
           <div>
-            <h3>Support</h3>
+            <FooterHeading index={4}>Support</FooterHeading>
             <Link to="/help">Help centre</Link>
             <Link to="/contact">Contact us</Link>
             <Link to="/privacy">Privacy policy</Link>
@@ -553,12 +629,18 @@ export function Footer() {
           <span>
             © {new Date().getFullYear()} CampusDeck. All rights reserved.
           </span>
-          <span>Made for your next presentation.</span>
+          <span className="cd-footer-sign">
+            <span className="cd-footer-pips" aria-hidden="true">
+              <i />
+              <i />
+              <i />
+              <i />
+              <i />
+            </span>
+            Made for your next presentation.
+          </span>
         </div>
       </div>
-      <span className="cd-footer-watermark" aria-hidden="true">
-        CampusDeck
-      </span>
     </footer>
   );
 }

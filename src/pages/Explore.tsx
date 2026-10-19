@@ -6,7 +6,6 @@ import {
   ChevronRight,
   Grid3X3,
   LayoutGrid,
-  Search,
   SlidersHorizontal,
   X,
 } from "lucide-react";
@@ -14,6 +13,7 @@ import { useApp } from "../lib/context";
 import { makeDeck, type Template } from "../lib/model";
 import { Empty, Spinner } from "../components/Common";
 import { TemplateCard } from "../components/TemplateCard";
+import { MarketSearch } from "../components/MarketSearch";
 import { SlideView } from "../components/SlideView";
 import {
   categoryFor,
@@ -261,6 +261,17 @@ export default function Explore() {
         : [...current, value]
       ).join(","),
     );
+  const pickFacet = (cat: string, use = "") => {
+    const next = new URLSearchParams(params);
+    ["q", "use", "category"].forEach((k) => next.delete(k));
+    if (cat !== category) {
+      ["dept", "department"].forEach((k) => next.delete(k));
+      if (!fixedCategory) next.set("cat", cat);
+    }
+    if (use) next.set("use", use);
+    setQueryDraft("");
+    setParams(next, { replace: true });
+  };
   const clear = () => {
     const next = new URLSearchParams();
     if (!fixedCategory && category !== "all") next.set("cat", category);
@@ -414,31 +425,29 @@ export default function Explore() {
           </div>
         )}
         <div className="cd-market-toolbar">
-          <div className="cd-market-search">
-            <Search size={19} />
-            <input
-              aria-label="Search templates"
-              autoFocus={params.has("search")}
-              placeholder={
-                fixedCategory
-                  ? `Search ${categoryLabel(fixedCategory).toLowerCase()} templates`
-                  : `Search ${templates.length} templates by name, requirement or topic`
-              }
-              value={queryDraft}
-              onChange={(event) => setQueryDraft(event.target.value)}
-            />
-            {queryDraft && (
-              <button
-                aria-label="Clear search"
-                onClick={() => {
-                  setQueryDraft("");
-                  set("q", "");
-                }}
-              >
-                <X size={17} />
-              </button>
-            )}
-          </div>
+          <MarketSearch
+            templates={templates}
+            category={category}
+            fixedCategory={fixedCategory}
+            value={queryDraft}
+            autoFocus={params.has("search")}
+            placeholder={
+              fixedCategory
+                ? `Search ${categoryLabel(fixedCategory).toLowerCase()} templates`
+                : `Search ${templates.length} templates by name, requirement or topic`
+            }
+            hintLead={
+              fixedCategory
+                ? `Search ${categoryLabel(fixedCategory).toLowerCase()} templates for`
+                : `Search ${templates.length} templates for`
+            }
+            onChange={setQueryDraft}
+            onCommit={(value) => {
+              setQueryDraft(value);
+              set("q", value);
+            }}
+            onFacet={pickFacet}
+          />
           <button
             className="cd-market-button cd-filter-toggle"
             aria-expanded={filtersOpen}

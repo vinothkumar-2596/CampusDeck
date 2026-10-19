@@ -75,7 +75,7 @@ src/lib/slides/        New family resolution, content and native scene construct
 src/lib/marketplace.ts Category, requirement and filter helpers
 src/lib/scene.ts        Shared, deterministic layout and text fitting
 src/components/SlideView.tsx   SVG preview of that same scene
-src/styles/refine.css   Visual refinement layer over the handoff chrome
+src/styles/refine.css   Interaction and finish rules, token-only (docs: artifacts/design-handoff/.../02-design-system.md)
 src/lib/export.ts       Native PPTX and vector PDF renderers
 src/pages/             Marketplace, editor, account, workspace, admin
 server/api.ts          Validated API, identity, ownership and admin gates

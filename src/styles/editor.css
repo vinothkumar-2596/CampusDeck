@@ -1,8 +1,11 @@
 .editor-app {
+  /* Same contrast exception as .cd-site: secondary text also sits on tinted
+     panels (selected slide thumbnails), which need more than 4.5:1. */
+  --cd-text-2: #52627a;
   background: var(--cd-bg);
 }
 .editor-app .slide-thumb small {
-  color: #52627a;
+  color: var(--cd-text-2);
 }
 .editor-topbar {
   height: 80px;
@@ -77,17 +80,20 @@
   min-height: 48px;
 }
 .editor-workarea {
-  background: #eef1f5;
+  background: var(--cd-hover);
 }
 .canvas-scroll {
   padding: 32px;
-  background-image: radial-gradient(#d5dce6 0.8px, transparent 0.8px);
+  background-image: radial-gradient(
+    var(--cd-border-strong) 0.8px,
+    transparent 0.8px
+  );
   background-size: 20px 20px;
   justify-content: center;
 }
 .editor-canvas {
   max-width: min(100%, 1000px, calc((100dvh - 290px) * 1.7778));
-  box-shadow: 0 16px 40px -16px rgb(20 38 63/0.24);
+  box-shadow: var(--cd-shadow-lift);
 }
 .canvas-toolbar {
   order: 2;
@@ -295,7 +301,7 @@
   color: white;
 }
 .modal-fullscreen .icon-btn:hover {
-  background: rgb(255 255 255/0.12);
+  background: var(--cd-on-dark-hover);
 }
 .modal-fullscreen .full-preview {
   min-height: 0;
@@ -333,7 +339,7 @@
   overflow: hidden;
 }
 .presentation-thumbnails button[aria-current="true"] {
-  border-color: #a9bbff;
+  border-color: var(--cd-accent);
 }
 @media (max-width: 1280px) and (min-width: 1024px) {
   .editor-body {
@@ -506,14 +512,14 @@
   justify-content: center;
   gap: 6px 16px;
   padding: 12px 20px;
-  background: #fff;
-  border-top: 1px solid #e2e8f0;
+  background: var(--cd-surface);
+  border-top: 1px solid var(--cd-border);
   font-size: 12px;
   line-height: 1.6;
-  color: #52627a;
+  color: var(--cd-text-2);
 }
 .editor-blank-help strong {
-  color: #172033;
+  color: var(--cd-ink);
   font-weight: 550;
 }
 .editor-blank-help .link-button {
@@ -521,4 +527,9 @@
   align-items: center;
   gap: 4px;
   white-space: nowrap;
+}
+.editor-import-error {
+  flex-basis: 100%;
+  text-align: center;
+  color: var(--cd-error);
 }

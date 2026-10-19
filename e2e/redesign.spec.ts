@@ -82,7 +82,7 @@ test("new category routes, filters, URL restoration, keyboard menus and header s
     .getByRole("link", { name: "Search all templates for “meridian”" })
     .click();
   await expect(
-    page.getByRole("textbox", { name: "Search templates", exact: true }),
+    page.getByRole("combobox", { name: "Search templates", exact: true }),
   ).toHaveValue("meridian");
   await expect(
     page.locator(".cd-market-results .cd-template-card"),

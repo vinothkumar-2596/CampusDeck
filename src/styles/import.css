@@ -1,0 +1,265 @@
+/* Document import review dialog. Rendered in a portal, so it carries its own
+   tokens rather than relying on the page wrapper. */
+.cd-import {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 28px;
+  color: var(--cd-ink);
+  font-family: var(--cd-font-sans, Geist, sans-serif);
+}
+.modal:has(> .cd-import):focus-visible,
+.modal:has(.cd-import):focus {
+  outline: none;
+}
+.cd-import-preview {
+  min-width: 0;
+}
+.cd-import-caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 12px 2px 0;
+  font-size: 12px;
+  color: var(--cd-text-2);
+}
+.cd-import-caption strong {
+  overflow: hidden;
+  font-weight: 500;
+  color: var(--cd-text-strong);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.cd-import-stage {
+  overflow: hidden;
+  border-radius: var(--cd-radius-lg);
+  border: 1px solid var(--cd-border);
+  box-shadow: var(--cd-shadow-slide);
+}
+.cd-import-stage .slide-view {
+  display: block;
+}
+.cd-import-strip {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 3px 3px 8px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+.cd-import-strip button {
+  position: relative;
+  flex: 0 0 104px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--cd-border);
+  border-radius: var(--cd-radius-xs);
+  background: var(--cd-subtle);
+  aspect-ratio: 16 / 9;
+  transition:
+    transform 0.16s,
+    box-shadow 0.16s,
+    border-color 0.16s;
+}
+.cd-import-strip button:hover {
+  transform: translateY(-2px);
+}
+.cd-import-strip button[aria-current="true"] {
+  border-color: var(--cd-accent);
+  box-shadow: 0 0 0 2px var(--cd-accent);
+}
+.cd-import-strip button > span {
+  position: absolute;
+  left: 4px;
+  bottom: 3px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  background: var(--cd-ink);
+  color: var(--cd-on-dark);
+  font: 500 8px/1 var(--cd-font-mono, monospace);
+}
+.cd-import-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+.cd-import-file {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--cd-border);
+  border-radius: var(--cd-radius-lg);
+  background: var(--cd-bg);
+}
+.cd-import-file-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--cd-radius-md);
+  background: var(--cd-accent-tint);
+  color: var(--cd-accent);
+}
+.cd-import-file > span:last-child {
+  min-width: 0;
+}
+.cd-import-file strong {
+  display: block;
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.cd-import-file small {
+  display: block;
+  font-size: 12px;
+  color: var(--cd-text-2);
+}
+.cd-import fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.cd-import legend {
+  margin-bottom: 10px;
+  padding: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cd-text-strong);
+}
+.cd-import-designs > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.cd-import-designs button {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  padding: 5px 5px 7px;
+  border: 1px solid var(--cd-border);
+  border-radius: var(--cd-radius-md);
+  background: var(--cd-surface);
+  text-align: left;
+  transition:
+    border-color 0.16s,
+    box-shadow 0.16s;
+}
+.cd-import-designs button:hover {
+  border-color: var(--cd-border-strong);
+}
+.cd-import-designs button[aria-pressed="true"] {
+  border-color: var(--cd-accent);
+  box-shadow: 0 0 0 1px var(--cd-accent);
+  background: var(--cd-accent-selected);
+}
+.cd-import-designs button > div {
+  overflow: hidden;
+  border-radius: var(--cd-radius-xs);
+  aspect-ratio: 16 / 9;
+  background: var(--cd-subtle);
+}
+.cd-import-designs button > span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 0 3px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.cd-import-designs em {
+  padding: 1px 6px;
+  border-radius: var(--cd-radius-pill);
+  background: var(--cd-subtle);
+  color: var(--cd-teal);
+  font-size: 9.5px;
+  font-style: normal;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.cd-import-themes > div {
+  display: flex;
+  gap: 8px;
+}
+.cd-import-themes button {
+  position: relative;
+  display: flex;
+  width: 46px;
+  height: 32px;
+  padding: 4px;
+  overflow: visible;
+  border: 1px solid var(--cd-border);
+  border-radius: var(--cd-radius-sm);
+  background: var(--cd-surface);
+}
+.cd-import-themes button i {
+  flex: 1;
+  height: 100%;
+}
+.cd-import-themes button i:first-child {
+  flex: 2;
+  border-radius: 4px 0 0 4px;
+}
+.cd-import-themes button i:nth-child(2) {
+  border-radius: 0 4px 4px 0;
+}
+.cd-import-themes button[aria-pressed="true"] {
+  border-color: var(--cd-accent);
+  box-shadow: 0 0 0 1px var(--cd-accent);
+}
+.cd-import-themes button > svg {
+  position: absolute;
+  right: -5px;
+  bottom: -5px;
+  box-sizing: content-box;
+  padding: 2px;
+  border: 2px solid var(--cd-surface);
+  border-radius: 50%;
+  background: var(--cd-accent);
+  color: var(--cd-on-dark);
+}
+.cd-import-note {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--cd-text-2);
+}
+.cd-import-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+}
+.cd-import-actions .cd-btn {
+  width: 100%;
+  min-height: 44px;
+  font-size: 14px;
+}
+@media (max-width: 860px) {
+  .cd-import {
+    grid-template-columns: 1fr;
+  }
+  .cd-import-designs > div {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 520px) {
+  .cd-import-designs > div {
+    grid-template-columns: 1fr 1fr;
+  }
+  .cd-import-strip button {
+    flex-basis: 84px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cd-import-strip button {
+    transition: none;
+  }
+}

@@ -30,10 +30,9 @@ import {
 } from "lucide-react";
 import { useApp } from "../lib/context";
 import { makeDeck, type Profile, type Template } from "../lib/model";
-import { listedTemplates, templateFamily } from "../lib/marketplace";
 import { SlideView } from "../components/SlideView";
 import { TemplateCard, Spinner } from "../components/Common";
-import { HeroPlayground } from "../components/HeroPlayground";
+import { HeroWall } from "../components/HeroWall";
 import home from "../data/homepage.json" with { type: "json" };
 import taxonomy from "../data/taxonomy.json" with { type: "json" };
 import navigation from "../data/navigation.json" with { type: "json" };
@@ -344,66 +343,34 @@ export default function Home() {
       </div>
     );
   const featured = get(home.featured.hero.id);
-  const listed = listedTemplates(templates);
-  const familyCount = new Set(
-    listed.map((t) => templateFamily(t)?.id).filter(Boolean),
-  ).size;
   return (
     <div className="cd-home">
-      <section className="cd-home-hero">
-        <div className="cd-container cd-hero-grid">
-          <div className="cd-hero-copy">
-            <Link className="cd-announcement" to={home.hero.chip.href}>
-              <span>{home.hero.chip.label}</span>
-              {home.hero.chip.text}
-              <ChevronRight size={14} />
+      <section className="cd-wall-hero">
+        <div className="cd-wall-content cd-container">
+          <Link className="cd-wall-chip" to={home.hero.chip.href}>
+            <span>{home.hero.chip.label}</span>
+            {home.hero.chip.text}
+            <ChevronRight size={14} />
+          </Link>
+          <h1>
+            <span>Present Your</span>{" "}
+            <span className="cd-wall-muted">
+              Best Work<span className="cd-wall-dot">.</span>
+            </span>
+          </h1>
+          <p>{home.hero.supporting}</p>
+          <div className="cd-actions">
+            <Link className="cd-btn cd-btn-primary" to="/templates">
+              Explore Templates
+              <ArrowRight size={17} />
             </Link>
-            <h1>
-              Present Your
-              <br />
-              <em className="cd-serif">Best Work</em>
-              <span>.</span>
-            </h1>
-            <p>{home.hero.supporting}</p>
-            <div className="cd-actions">
-              <Link className="cd-btn cd-btn-primary" to="/templates">
-                Explore Templates
-                <ArrowRight size={18} />
-              </Link>
-              <Link className="cd-btn cd-btn-white" to="/create">
-                <PenLine size={18} />
-                Create a Presentation
-              </Link>
-            </div>
-            <div className="cd-popular-links">
-              <span className="cd-eyebrow">Popular</span>
-              {home.hero.popularLinks.map((item) => (
-                <Link key={item.href} to={item.href}>
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-            <ul className="cd-hero-proof" aria-label="What you get">
-              <li>
-                <strong>{listed.length}</strong>
-                <span>Editable templates</span>
-              </li>
-              <li>
-                <strong>{familyCount}</strong>
-                <span>Design families</span>
-              </li>
-              <li>
-                <strong>PPTX · PDF</strong>
-                <span>Native exports</span>
-              </li>
-              <li>
-                <strong>Free</strong>
-                <span>No account needed</span>
-              </li>
-            </ul>
+            <Link className="cd-btn cd-btn-white" to="/create">
+              <PenLine size={17} />
+              Create a Presentation
+            </Link>
           </div>
-          <HeroPlayground />
         </div>
+        <HeroWall />
       </section>
       <section className="cd-section cd-container">
         <SectionHeading {...home.popularCollege} />

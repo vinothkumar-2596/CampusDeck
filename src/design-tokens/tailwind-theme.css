@@ -32,8 +32,8 @@
   --color-error: #B42318;
   --color-error-border: #D92D20;
 
-  --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans: 'Manrope', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: var(--font-sans);
   --font-sora: 'Sora', 'Geist', system-ui, sans-serif;
   --font-grotesk: 'Space Grotesk', 'Geist', system-ui, sans-serif;
   --font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;

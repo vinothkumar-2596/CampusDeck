@@ -43,12 +43,14 @@ export function Modal({
   children,
   wide = false,
   fullScreen = false,
+  className = "",
 }: {
   title: string;
   onClose: () => void;
   children: ReactNode;
   wide?: boolean;
   fullScreen?: boolean;
+  className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null),
     close = useRef(onClose);
@@ -104,7 +106,8 @@ export function Modal({
         className={
           "modal " +
           (wide ? "modal-wide " : "") +
-          (fullScreen ? "modal-fullscreen" : "")
+          (fullScreen ? "modal-fullscreen " : "") +
+          className
         }
       >
         <div className="modal-heading">

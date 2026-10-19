@@ -96,9 +96,7 @@ export default function HowItWorks() {
         <div className="cd-container">
           <span className="cd-eyebrow">How it works</span>
           <h1>
-            From blank slide to final review in{" "}
-            <em className="cd-serif">four steps</em>
-            <span>.</span>
+            From blank slide to final review in four steps<span>.</span>
           </h1>
           <p>
             Pick the structure that matches your requirement, add your details

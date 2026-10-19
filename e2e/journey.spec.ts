@@ -21,13 +21,13 @@ test("browse → preview → personalise → edit → PPTX and PDF downloads →
     page.getByRole("heading", { name: "Explore templates", exact: true }),
   ).toBeVisible();
   await page
-    .getByRole("textbox", { name: "Search templates", exact: true })
+    .getByRole("combobox", { name: "Search templates", exact: true })
     .fill("meridian");
   await expect(
     page.locator(".cd-market-results .cd-template-card"),
   ).toHaveCount(1);
   await page
-    .getByRole("textbox", { name: "Search templates", exact: true })
+    .getByRole("combobox", { name: "Search templates", exact: true })
     .fill("not-a-real-design");
   await expect(
     page.getByRole("heading", { name: "No templates match these filters" }),

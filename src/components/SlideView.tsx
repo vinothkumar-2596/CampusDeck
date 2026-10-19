@@ -222,6 +222,7 @@ export const SlideView = memo(function SlideView({
   index = 0,
   total = 16,
   className = "",
+  hidden,
 }: {
   slide: Slide;
   template: Template;
@@ -229,6 +230,8 @@ export const SlideView = memo(function SlideView({
   index?: number;
   total?: number;
   className?: string;
+  /** Element indexes to keep laid out but invisible (text being edited in place). */
+  hidden?: number[];
 }) {
   const scene = buildScene(slide, template, deck, index, total);
   return (
@@ -243,9 +246,15 @@ export const SlideView = memo(function SlideView({
       xmlns="http://www.w3.org/2000/svg"
     >
       <rect width="1200" height="675" fill={scene.background} />
-      {scene.elements.map((el, i) => (
-        <Draw key={i} el={el} font={scene.font} />
-      ))}
+      {scene.elements.map((el, i) =>
+        hidden?.includes(i) ? (
+          <g key={i} opacity={0}>
+            <Draw el={el} font={scene.font} />
+          </g>
+        ) : (
+          <Draw key={i} el={el} font={scene.font} />
+        ),
+      )}
     </svg>
   );
 });

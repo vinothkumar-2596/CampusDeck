@@ -1,325 +1,314 @@
-.cd-hero-playground {
+/* Homepage hero: a wall of real template covers in staggered columns that
+   fades in from the top, with the headline centred in the valley below.
+   Card height is derived from the hero's width (cqw), so the headline offset
+   tracks the wall at every size. */
+.cd-wall-hero {
+  --cols: 7;
+  --gap: 14px;
+  --card-h: calc(
+    (100cqw - (var(--cols) + 1) * var(--gap)) / var(--cols) * 0.5625
+  );
+  /* Bottom of the lowest column that sits over the copy, in card heights. */
+  --valley: 2.8;
   position: relative;
-  min-width: 0;
-  width: 100%;
-  border: 1px solid var(--cd-border);
-  border-radius: 20px;
-  background: #fff;
-  box-shadow:
-    0 28px 70px -34px #14263f4d,
-    0 3px 10px #14263f08;
   overflow: hidden;
-}
-.cd-playground-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 18px 22px 12px;
-}
-.cd-playground-heading > span:first-child {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  color: var(--cd-ink);
-  font-size: 14px;
-  font-weight: 600;
-}
-.cd-playground-heading > span:first-child svg {
-  color: var(--cd-accent);
-}
-.cd-playground-live {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: #096b63;
-  font-family: var(--cd-font-mono);
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-}
-.cd-playground-live i {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: currentColor;
-}
-.cd-playground-designs {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 0 22px 16px;
-}
-.cd-playground-designs button {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 30px;
-  padding: 4px 11px;
-  border: 1px solid var(--cd-border);
-  border-radius: 7px;
-  background: #fff;
-  color: var(--cd-text-strong);
-  font-size: 11px;
-  transition:
-    background 0.15s,
-    border-color 0.15s;
-}
-.cd-playground-designs button:hover {
-  background: var(--cd-subtle);
-  border-color: var(--cd-border-strong);
-}
-.cd-playground-designs button[aria-pressed="true"] {
-  background: var(--cd-accent-tint);
-  border-color: #b8c7ff;
-  color: #2449c4;
-  font-weight: 600;
-}
-.cd-playground-stage {
-  padding: 18px;
-  border-block: 1px solid var(--cd-border);
-  background: #edf1f7;
-}
-.cd-playground-stage > .slide-view {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 6px;
-  box-shadow: var(--cd-shadow-slide);
-}
-.cd-playground-slidebar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 9px 20px;
+  container-type: inline-size;
+  background: linear-gradient(180deg, var(--cd-surface) 0%, var(--cd-bg) 100%);
   border-bottom: 1px solid var(--cd-border);
-  background: #f8fafc;
 }
-.cd-playground-slidebar > div {
+
+/* ---------- Wall ---------- */
+.cd-wall {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  gap: var(--gap);
+  padding-inline: var(--gap);
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 0,
+    #000 calc(var(--card-h) * 1.25)
+  );
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0,
+    #000 calc(var(--card-h) * 1.25)
+  );
+}
+.cd-wall-col {
+  /* --depth scales pointer parallax; --speed is the rise, in px, over one
+     hero height of scrolling. Outer columns read as nearer, so move more. */
+  --shift: 0;
+  --depth: 1;
+  --speed: 80;
   display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  min-width: 0;
+  margin-top: calc(var(--shift) * var(--card-h) - var(--card-h) * 0.35);
+}
+.cd-wall-live .cd-wall-col {
+  transform: translate3d(
+    calc(var(--cd-px, 0) * var(--depth) * -12px),
+    calc(
+      var(--cd-py, 0) * var(--depth) * -8px - var(--cd-scroll, 0) *
+        var(--speed) * 1px
+    ),
+    0
+  );
+  transition: transform 0.9s var(--cd-ease-out);
+  will-change: transform;
+}
+.cd-wall-col:nth-child(1),
+.cd-wall-col:nth-child(7) {
+  --shift: 1.2;
+  --depth: 1.5;
+  --speed: 170;
+}
+.cd-wall-col:nth-child(2),
+.cd-wall-col:nth-child(6) {
+  --shift: 0.45;
+  --depth: 1.1;
+  --speed: 120;
+}
+.cd-wall-col:nth-child(3),
+.cd-wall-col:nth-child(5) {
+  --shift: 0.15;
+  --depth: 0.75;
+  --speed: 85;
+}
+.cd-wall-col:nth-child(4) {
+  --shift: -0.1;
+  --depth: 0.5;
+  --speed: 55;
+}
+/* Dashed guide line running down from each column. */
+.cd-wall-col::after {
+  content: "";
+  flex: none;
+  align-self: center;
+  width: 0;
+  height: calc(var(--card-h) * 2.4);
+  border-left: 1px dashed var(--cd-border-strong);
+  -webkit-mask-image: linear-gradient(180deg, #000, transparent);
+  mask-image: linear-gradient(180deg, #000, transparent);
+}
+.cd-wall-ghost {
+  display: block;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--cd-radius-sm);
+  background: var(--cd-subtle);
+}
+.cd-wall-card {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--cd-radius-sm);
+  background: var(--cd-surface);
+  box-shadow: var(--cd-shadow-slide);
+  transition:
+    transform 0.35s var(--cd-ease-out),
+    box-shadow 0.35s var(--cd-ease-out),
+    opacity 0.3s var(--cd-ease-out);
+  transform-origin: 50% 60%;
+}
+.cd-wall-card > div {
+  overflow: hidden;
+  height: 100%;
+  border-radius: inherit;
+}
+.cd-wall-card .slide-view {
+  display: block;
+}
+.cd-wall-name {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  display: inline-flex;
   align-items: center;
   gap: 4px;
-}
-.cd-playground-slidebar button {
-  min-height: 29px;
-  padding: 4px 10px;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  background: transparent;
-  color: #52627a;
+  padding: 3px 8px;
+  border-radius: var(--cd-radius-pill);
+  background: var(--cd-ink);
+  color: var(--cd-on-dark);
   font-size: 11px;
-}
-.cd-playground-slidebar button:hover {
-  background: var(--cd-hover);
-  color: var(--cd-ink);
-}
-.cd-playground-slidebar button[aria-pressed="true"] {
-  background: #fff;
-  border-color: var(--cd-border);
-  box-shadow: var(--cd-shadow-xs);
-  color: var(--cd-ink);
   font-weight: 600;
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
+  pointer-events: none;
 }
-.cd-playground-counter {
-  white-space: nowrap;
-  font: 500 10px var(--cd-font-mono);
-  color: var(--cd-ink);
+/* Hover: the cover lifts and tilts toward the cursor (--cd-tx/--cd-ty are
+   -0.5..0.5, set while the pointer moves over it); the rest step back. */
+.cd-wall-card:hover,
+.cd-wall-card:focus-visible {
+  z-index: 2;
+  transform: perspective(900px) rotateX(calc(var(--cd-ty, 0) * -6deg))
+    rotateY(calc(var(--cd-tx, 0) * 8deg)) translateY(-4px) scale(1.03);
+  box-shadow: var(--cd-shadow-lift);
 }
-.cd-playground-counter > span {
-  color: #52627a;
+.cd-wall:has(.cd-wall-card:hover) .cd-wall-card:not(:hover) {
+  opacity: 0.8;
 }
-.cd-playground-controls {
+.cd-wall-card:hover .cd-wall-name,
+.cd-wall-card:focus-visible .cd-wall-name {
+  opacity: 1;
+  transform: none;
+}
+.cd-wall-card:focus-visible {
+  outline: 2px solid var(--cd-accent);
+  outline-offset: 3px;
+}
+
+/* ---------- Copy ---------- */
+.cd-wall-content {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 17px;
-  padding: 20px 22px 14px;
-}
-.cd-playground-title {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-}
-.cd-playground-title > span {
-  display: flex;
   align-items: center;
-  justify-content: space-between;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--cd-text-strong);
+  max-width: 760px;
+  margin-inline: auto;
+  padding-top: calc(var(--valley) * var(--card-h) + 2 * var(--gap) + 36px);
+  padding-bottom: clamp(64px, 7vw, 96px);
+  text-align: center;
+  pointer-events: none;
 }
-.cd-playground-title > span > span {
-  font: 400 10px var(--cd-font-mono);
-  color: #52627a;
+.cd-wall-content > * {
+  pointer-events: auto;
 }
-.cd-playground-title input {
-  min-height: 43px;
-  width: 100%;
-  min-width: 0;
-  padding: 9px 12px;
-  border: 1px solid var(--cd-border-strong);
-  border-radius: 9px;
-  background: #fff;
-  color: var(--cd-ink);
-  font-size: 13px;
-}
-.cd-playground-title input:hover {
-  border-color: #99aac2;
-}
-.cd-playground-title input:focus {
-  border-color: var(--cd-accent);
-  outline: none;
-  box-shadow: var(--cd-focus-ring);
-}
-.cd-playground-bottom {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 16px;
-}
-.cd-playground-palettes {
-  border: 0;
-  padding: 0;
-  margin: 0;
-  min-width: 0;
-}
-.cd-playground-palettes legend {
-  padding: 0;
-  margin-bottom: 7px;
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--cd-text-strong);
-}
-.cd-playground-palettes > div {
-  display: flex;
+.cd-wall-chip {
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-}
-.cd-playground-palettes button {
-  display: flex;
-  position: relative;
-  justify-content: center;
-  align-items: center;
-  width: 42px;
-  height: 34px;
-  padding: 4px;
-  border-radius: 8px;
+  padding: 4px 12px 4px 4px;
   border: 1px solid var(--cd-border);
-  background: #fff;
-  transition:
-    border-color 0.15s,
-    box-shadow 0.15s;
+  border-radius: var(--cd-radius-pill);
+  background: var(--cd-surface);
+  color: var(--cd-text-strong);
+  font-size: 12.5px;
+  transition: border-color 0.16s;
 }
-.cd-playground-palettes button > svg:first-child {
+.cd-wall-chip:hover {
+  border-color: var(--cd-border-strong);
+}
+.cd-wall-chip > span {
+  padding: 2px 8px;
+  border-radius: var(--cd-radius-pill);
+  background: var(--cd-subtle);
+  color: var(--cd-ink);
+  font-size: 11px;
+  font-weight: 600;
+}
+.cd-wall-content h1 {
+  margin: 22px 0 0;
+  font-size: var(--cd-text-display);
+  font-weight: 600;
+  line-height: 0.97;
+  letter-spacing: -0.04em;
+}
+.cd-wall-content h1 > span {
   display: block;
-  border-radius: 5px;
-  overflow: hidden;
 }
-.cd-playground-palettes button > svg:last-child:not(:first-child) {
-  position: absolute;
-  right: -3px;
-  bottom: -4px;
-  box-sizing: content-box;
-  padding: 2px;
-  border: 2px solid #fff;
-  border-radius: 50%;
-  background: var(--cd-accent);
-  color: #fff;
+.cd-wall-content h1 .cd-wall-dot {
+  color: var(--cd-accent);
 }
-.cd-playground-palettes button:hover {
-  border-color: #99aac2;
+.cd-wall-content h1 > .cd-wall-muted {
+  color: var(--cd-text-2);
 }
-.cd-playground-palettes button[aria-pressed="true"] {
-  border-color: var(--cd-accent);
-  box-shadow: 0 0 0 1px var(--cd-accent);
+.cd-wall-content > p {
+  max-width: 520px;
+  margin-top: 20px;
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--cd-text-2);
 }
-.cd-playground-bottom > .cd-btn {
-  min-height: 42px;
-  padding-inline: 16px;
-  border-radius: 10px;
-  font-size: 12px;
+.cd-wall-content .cd-actions {
+  justify-content: center;
+  margin-top: 30px;
 }
-.cd-playground-status {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #52627a;
-  font-size: 10px;
-  line-height: 1.4;
+.cd-wall-content .cd-btn {
+  min-height: 48px;
+  padding-inline: 20px;
+  border-radius: var(--cd-radius-lg);
+  font-size: 15px;
 }
-.cd-playground-note {
-  padding: 0 22px 16px;
-  color: #52627a;
-  font-size: 10px;
-  line-height: 1.5;
+
+/* ---------- Entrance ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  /* Covers settle in column by column; the copy is static so it reads at once. Fill mode is
+     "backwards" so hover opacity still applies once the entrance ends. */
+  @keyframes cd-wall-in {
+    from {
+      opacity: 0;
+      translate: 0 -12px;
+      scale: 0.97;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+      scale: 1;
+    }
+  }
+  .cd-wall-card {
+    animation: cd-wall-in 0.7s var(--cd-ease-out) backwards;
+    animation-delay: calc(var(--cd-i, 0) * 40ms);
+  }
 }
-.cd-hero-playground-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 20px;
-  padding: 40px;
+@media (prefers-reduced-motion: reduce) {
+  .cd-wall-col,
+  .cd-wall-card,
+  .cd-wall-name {
+    transition: none;
+  }
+  .cd-wall-live .cd-wall-col,
+  .cd-wall-card:hover,
+  .cd-wall-card:focus-visible {
+    transform: none;
+  }
 }
-.cd-hero-playground-empty > p {
-  color: #52627a;
-}
+
+/* ---------- Responsive ---------- */
 @media (max-width: 1120px) {
-  .cd-hero-playground {
-    width: 100%;
-    max-width: 680px;
-    justify-self: center;
+  .cd-wall-hero {
+    --cols: 5;
+  }
+  .cd-wall-col:nth-child(1),
+  .cd-wall-col:nth-child(7) {
+    display: none;
+  }
+  .cd-wall-col:nth-child(2),
+  .cd-wall-col:nth-child(6) {
+    --shift: 0.9;
   }
 }
-@media (max-width: 520px) {
-  .cd-hero-playground {
-    border-radius: 16px;
+@media (max-width: 640px) {
+  .cd-wall-hero {
+    --cols: 3;
+    --gap: 10px;
+    --valley: 3.05;
   }
-  .cd-playground-heading {
-    padding: 16px 16px 12px;
+  .cd-wall-col:nth-child(2),
+  .cd-wall-col:nth-child(6) {
+    display: none;
   }
-  .cd-playground-designs {
-    padding: 0 16px 14px;
-    gap: 6px;
+  .cd-wall-col:nth-child(3),
+  .cd-wall-col:nth-child(5) {
+    --shift: 0.4;
   }
-  .cd-playground-designs button {
-    padding-inline: 10px;
-    font-size: 11px;
+  .cd-wall-content > p {
+    font-size: 16px;
   }
-  .cd-playground-stage {
-    padding: 10px;
+  .cd-wall-content .cd-actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
   }
-  .cd-playground-slidebar {
-    padding: 8px 12px;
-    gap: 8px;
-  }
-  .cd-playground-slidebar button {
-    padding-inline: 8px;
-  }
-  .cd-playground-controls {
-    padding: 18px 16px 12px;
-    gap: 17px;
-  }
-  .cd-playground-bottom {
-    gap: 12px;
-  }
-  .cd-playground-bottom > .cd-btn {
-    padding-inline: 12px;
-    font-size: 11px;
-    gap: 6px;
-  }
-  .cd-playground-palettes > div {
-    gap: 6px;
-  }
-  .cd-playground-palettes button {
-    width: 36px;
-    height: 32px;
-    padding: 3px;
-  }
-  .cd-playground-palettes button > svg:first-child {
-    width: 28px;
-  }
-  .cd-playground-note {
-    padding: 0 16px 16px;
+  .cd-wall-name {
+    display: none;
   }
 }

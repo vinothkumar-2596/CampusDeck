@@ -132,16 +132,24 @@ export function buildHandoffScene(
   ) => T(value.toUpperCase(), x, y, w, 26, size, color, mono, false, align);
   const sample = raw.sample,
     profile = deck?.profile;
-  const team = profile?.students?.trim() || sample.team.join(" · ");
-  const guide = profile?.guide?.trim() || sample.guide;
-  const department = profile?.department?.trim() || sample.department;
-  const date = profile?.year?.trim() || sample.date;
+  // Sample names, dates and figures only fill in for decks that still carry
+  // the template's sample slides. A deck built from the user's own content
+  // (blank starts, imported documents) shows only what the user provided.
+  const sampleBacked =
+    !deck?.slides || deck.slides.some((item) => Boolean(item.sampleKey));
+  const fallback = (value: string | undefined, sampleValue: string) =>
+    value?.trim() || (sampleBacked ? sampleValue : "");
+  const team = fallback(profile?.students, sample.team.join(" · "));
+  const guide = fallback(profile?.guide, sample.guide);
+  const department = fallback(profile?.department, sample.department);
+  const date = fallback(profile?.year, sample.date);
   const coverSlide = deck?.slides?.find((s) => s.layout === "cover");
-  const eyebrow =
-    (slide.layout === "cover"
+  const eyebrow = fallback(
+    slide.layout === "cover"
       ? slide.eyebrow
-      : coverSlide?.eyebrow || slide.eyebrow
-    )?.trim() || sample.eyebrow;
+      : coverSlide?.eyebrow || slide.eyebrow,
+    sample.eyebrow,
+  );
   const title = slide.title;
   const meta = (
     x: number,
@@ -150,7 +158,8 @@ export function buildHandoffScene(
     fields: [string, string][],
     pal: Palette = c,
   ) => {
-    const cw = width / fields.length;
+    fields = fields.filter(([, value]) => value);
+    const cw = width / Math.max(fields.length, 1);
     fields.forEach(([label, value], n) => {
       M(label, x + n * cw, y, cw - 20, pal.sub, 10.6);
       T(value, x + n * cw, y + 26, cw - 20, 61, 14.5, pal.ink);
@@ -279,10 +288,25 @@ export function buildHandoffScene(
         T(slide.subtitle, 72, 488, 610, 60, 18, c.sub);
         T(department, 72, 606, 530, 35, 14, c.ink);
         M(date, 72, 637, 600, c.sub, 10);
-        M("Highlights", 816, 61, 336, c.psub || c.sub, 11.4);
-        H(sample.coverKpi || "+18%", 816, 276, 336, 92, 62.4, "#ffffff");
+        M(
+          sampleBacked ? "Highlights" : "",
+          816,
+          61,
+          336,
+          c.psub || c.sub,
+          11.4,
+        );
+        H(
+          sampleBacked ? sample.coverKpi || "+18%" : "",
+          816,
+          276,
+          336,
+          92,
+          62.4,
+          "#ffffff",
+        );
         T(
-          sample.coverKpiLabel || "Growth, year on year",
+          sampleBacked ? sample.coverKpiLabel || "Growth, year on year" : "",
           816,
           377,
           336,
@@ -484,7 +508,15 @@ export function buildHandoffScene(
       });
       R(666, 207, 467, 374, p.panel, undefined, 14);
       M(set.questionLabel, 700, 239, 398, p.sub, 11.4);
-      H(slide.question || sample.question, 700, 315, 398, 196, 31.2, p.ink);
+      H(
+        fallback(slide.question, sample.question),
+        700,
+        315,
+        398,
+        196,
+        31.2,
+        p.ink,
+      );
       R(700, 542, 38, 5, p.acc);
       R(746, 542, 14, 5, p.acc2);
     } else if (slide.layout === "architecture" || slide.layout === "process") {
@@ -509,7 +541,7 @@ export function buildHandoffScene(
         M(group, x, 489, spans[n] - 20, p.sub, 11.4);
       });
     } else if (slide.layout === "chart") {
-      M(slide.subtitle || set.chart.title, 67, 205, 620, p.sub, 11.4);
+      M(fallback(slide.subtitle, set.chart.title), 67, 205, 620, p.sub, 11.4);
       const max = Math.max(...slide.chart.map((b) => b.value), 1),
         highlight =
           set.chart.highlight === "max"
@@ -526,7 +558,7 @@ export function buildHandoffScene(
         ink: p.ink,
         light: p.line,
         colors: slide.chart.map((_, n) => (n === highlight ? p.acc : p.bar!)),
-        unit: set.chart.unit,
+        unit: sampleBacked ? set.chart.unit : "",
       });
       body.slice(0, 2).forEach((k, n) => {
         const y = 246 + n * 170,
