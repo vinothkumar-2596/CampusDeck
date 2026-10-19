@@ -1,5 +1,5 @@
 {
-  "_note": "All 33 sample templates. Names, people and figures are fictional sample content. Order = prototype catalogue order.",
+  "_note": "41 working presentation templates: the original 33 handoff designs plus 8 scenario-specific additions. Actual slide counts follow each content set's editable outline.",
   "templates": [
     {
       "id": "meridian",
@@ -1859,6 +1859,482 @@
           "Finale"
         ],
         "coverIndex": "08—10",
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "prospectus",
+      "name": "Prospectus",
+      "category": "college",
+      "useCase": "Capstone Proposal",
+      "requirement": "capstone",
+      "requirementLabel": "Capstone Proposal",
+      "department": "cse",
+      "departmentLabel": "Computer Science",
+      "style": "Academic",
+      "styleLabel": "Academic",
+      "colour": "Plum",
+      "slideCount": 15,
+      "popularity": 0,
+      "addedOn": "2026-10-19",
+      "premium": false,
+      "badge": "New",
+      "keywords": [
+        "capstone proposal",
+        "prospectus",
+        "proposal studio",
+        "campus",
+        "energy",
+        "monitor",
+        "actionable"
+      ],
+      "family": "meridian",
+      "contentSet": "proposal-studio",
+      "defaultTheme": 2,
+      "sample": {
+        "eyebrow": "Capstone proposal · sample",
+        "title": "A Campus\nEnergy Monitor\nRoom-Level Insights",
+        "subtitle": "A scoped proposal for a student engineering team",
+        "team": [
+          "Nila S",
+          "Rohan P",
+          "Devika M"
+        ],
+        "guide": "Dr. Anitha Raman",
+        "department": "Computer Science & Engineering",
+        "date": "November 2026",
+        "question": "Can room-level feedback help a campus team find avoidable energy use?",
+        "problem": "Campus electricity reports combine buildings, hiding when and where energy is wasted.",
+        "problemPoints": [
+          "Monthly totals cannot identify individual rooms",
+          "Facilities staff need actionable exceptions, not another dashboard",
+          "Student access to meters and building data is limited"
+        ],
+        "architecture": [
+          "Meter feed",
+          "Data checks",
+          "Usage baseline",
+          "Exception rules",
+          "Facilities view"
+        ],
+        "coverIndex": "01",
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "synthesis",
+      "name": "Synthesis",
+      "category": "college",
+      "useCase": "Literature Review",
+      "requirement": "research",
+      "requirementLabel": "Research",
+      "department": "aids",
+      "departmentLabel": "AI & Data Science",
+      "style": "Editorial",
+      "styleLabel": "Editorial serif",
+      "colour": "Green",
+      "slideCount": 14,
+      "popularity": 0,
+      "addedOn": "2026-10-19",
+      "premium": false,
+      "badge": "New",
+      "keywords": [
+        "research",
+        "synthesis",
+        "literature synthesis",
+        "edge-based",
+        "monitoring:",
+        "evidence",
+        "actually",
+        "literature review"
+      ],
+      "family": "halcyon",
+      "contentSet": "literature-synthesis",
+      "defaultTheme": 1,
+      "sample": {
+        "eyebrow": "Literature review · sample",
+        "title": "Edge-Based Crop Monitoring: What the Evidence Actually Shows",
+        "subtitle": "A structured review and research-gap presentation",
+        "team": [
+          "Isha N",
+          "Vikram R"
+        ],
+        "guide": "Dr. Farah Ali",
+        "department": "AI & Data Science",
+        "date": "December 2026",
+        "question": "Which trade-offs remain unresolved when crop-monitoring models run on low-cost devices?",
+        "problem": "Reported model accuracy is difficult to compare because datasets, devices and field conditions differ.",
+        "problemPoints": [
+          "Laboratory datasets may not represent field conditions",
+          "Studies report inconsistent latency and energy measures",
+          "Reproducibility depends on access to code and evaluation details"
+        ],
+        "architecture": [
+          "Search databases",
+          "Screen records",
+          "Extract evidence",
+          "Appraise quality",
+          "Synthesize gaps"
+        ],
+        "coverIndex": "01",
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "benchwork",
+      "name": "Benchwork",
+      "category": "college",
+      "useCase": "Lab Report",
+      "requirement": "lab",
+      "requirementLabel": "Lab Report",
+      "department": "mech",
+      "departmentLabel": "Mechanical",
+      "style": "Swiss",
+      "styleLabel": "Swiss grid",
+      "colour": "Blue",
+      "slideCount": 14,
+      "popularity": 0,
+      "addedOn": "2026-10-19",
+      "premium": false,
+      "badge": "New",
+      "keywords": [
+        "lab report",
+        "benchwork",
+        "experimental report",
+        "transfer",
+        "through",
+        "insulated",
+        "plate"
+      ],
+      "family": "swiss",
+      "contentSet": "experimental-report",
+      "defaultTheme": 1,
+      "sample": {
+        "eyebrow": "Laboratory report · sample",
+        "title": "Heat Transfer Through an Insulated Plate",
+        "subtitle": "Experimental method, observations and uncertainty",
+        "team": [
+          "Aditya K",
+          "Sana R",
+          "Meera V"
+        ],
+        "guide": "Prof. J. Prakash",
+        "department": "Mechanical Engineering",
+        "date": "January 2027",
+        "question": "How does insulation thickness affect the steady-state temperature difference?",
+        "problem": "A thermal model needs measured observations and uncertainty estimates before its predictions can be trusted.",
+        "problemPoints": [
+          "Readings change while the apparatus approaches steady state",
+          "Sensor position can introduce systematic differences",
+          "Repeated trials are needed to assess variability"
+        ],
+        "architecture": [
+          "Inspect apparatus",
+          "Calibrate sensors",
+          "Run controlled trial",
+          "Record readings",
+          "Analyse uncertainty"
+        ],
+        "coverIndex": "01",
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "practicum",
+      "name": "Practicum",
+      "category": "college",
+      "useCase": "Internship Case Study",
+      "requirement": "intern",
+      "requirementLabel": "Internship",
+      "department": "it",
+      "departmentLabel": "Information Technology",
+      "style": "Corporate",
+      "styleLabel": "Corporate",
+      "colour": "Teal",
+      "slideCount": 14,
+      "popularity": 0,
+      "addedOn": "2026-10-19",
+      "premium": false,
+      "badge": "New",
+      "keywords": [
+        "internship",
+        "practicum",
+        "internship case",
+        "improving",
+        "internal",
+        "support",
+        "request",
+        "internship case study"
+      ],
+      "family": "ledger",
+      "contentSet": "internship-case",
+      "defaultTheme": 1,
+      "sample": {
+        "eyebrow": "Internship case study · sample",
+        "title": "Improving the Internal Support Request Workflow",
+        "subtitle": "A contribution-led internship report",
+        "team": [
+          "Kavya S"
+        ],
+        "guide": "Ms. R. Devi",
+        "department": "Information Technology",
+        "date": "February 2027",
+        "question": "How can a small internal team make incoming requests easier to triage and track?",
+        "problem": "Support requests arrive through several channels, making ownership and status difficult to see.",
+        "problemPoints": [
+          "Requests often lack the details needed for triage",
+          "Repeated follow-ups interrupt both requesters and staff",
+          "A clear handover is needed when the intern's placement ends"
+        ],
+        "architecture": [
+          "Request form",
+          "Validation",
+          "Triage queue",
+          "Owner update",
+          "Status dashboard"
+        ],
+        "coverKpi": "4 weeks",
+        "coverKpiLabel": "Illustrative delivery period",
+        "coverIndex": "01"
+      }
+    },
+    {
+      "id": "portfolio",
+      "name": "Portfolio",
+      "category": "college",
+      "useCase": "Placement Portfolio",
+      "requirement": "portfolio",
+      "requirementLabel": "Placement Portfolio",
+      "department": "cse",
+      "departmentLabel": "Computer Science",
+      "style": "Minimal",
+      "styleLabel": "Minimal",
+      "colour": "Black",
+      "slideCount": 14,
+      "popularity": 0,
+      "addedOn": "2026-10-19",
+      "premium": false,
+      "badge": "New",
+      "keywords": [
+        "placement portfolio",
+        "portfolio",
+        "placement portfolio",
+        "building",
+        "useful",
+        "software,",
+        "verified"
+      ],
+      "family": "atlas",
+      "contentSet": "placement-portfolio",
+      "defaultTheme": 2,
+      "sample": {
+        "eyebrow": "Placement portfolio · sample",
+        "title": "Building Useful Software, One Verified Project at a Time",
+        "subtitle": "Projects, evidence and a focused learning plan",
+        "team": [
+          "Aarav N"
+        ],
+        "guide": "Dr. P. Menon",
+        "department": "Computer Science & Engineering",
+        "date": "Placement season 2027",
+        "question": "What evidence shows that I can take a feature from a user need to a reliable delivery?",
+        "problem": "A skills list says little about how a candidate makes decisions, handles feedback and verifies their work.",
+        "problemPoints": [
+          "Interviewers need evidence of individual contribution",
+          "Project choices should connect to real user needs",
+          "Claims should link to a demo, repository or documented result"
+        ],
+        "architecture": [
+          "User need",
+          "Design decision",
+          "Implementation",
+          "Verification",
+          "Reflection"
+        ],
+        "coverIndex": "01",
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "site-notes",
+      "name": "Site Notes",
+      "category": "college",
+      "useCase": "Industrial Visit",
+      "requirement": "visit",
+      "requirementLabel": "Industrial Visit",
+      "department": "civil",
+      "departmentLabel": "Civil",
+      "style": "Organic",
+      "styleLabel": "Organic",
+      "colour": "Orange",
+      "slideCount": 13,
+      "popularity": 0,
+      "addedOn": "2026-10-19",
+      "premium": false,
+      "badge": "New",
+      "keywords": [
+        "industrial visit",
+        "site notes",
+        "industrial visit",
+        "classroom",
+        "concepts",
+        "working",
+        "materials"
+      ],
+      "family": "canopy",
+      "contentSet": "industrial-visit",
+      "defaultTheme": 2,
+      "sample": {
+        "eyebrow": "Industrial visit · sample",
+        "title": "From Classroom Concepts to a Working Materials Facility",
+        "subtitle": "Observations, process flow and lessons from a site visit",
+        "team": [
+          "Ananya P",
+          "Harish K",
+          "Zoya M"
+        ],
+        "guide": "Prof. M. Kumar",
+        "department": "Civil Engineering",
+        "date": "March 2027",
+        "question": "How are classroom quality-control concepts applied in a working materials facility?",
+        "problem": "A short site visit provides valuable observations, but they must be separated from assumptions about day-to-day performance.",
+        "problemPoints": [
+          "Only part of the operation may be visible during the visit",
+          "Photos, measurements and process details may require permission",
+          "Observed practice needs context from the host and course concepts"
+        ],
+        "architecture": [
+          "Material receipt",
+          "Storage checks",
+          "Batch preparation",
+          "Quality sampling",
+          "Dispatch records"
+        ],
+        "coverIndex": "01",
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "ripple",
+      "name": "Ripple",
+      "category": "business",
+      "useCase": "Nonprofit Impact Report",
+      "requirement": "impact",
+      "requirementLabel": "Impact Report",
+      "department": null,
+      "departmentLabel": null,
+      "style": "Organic",
+      "styleLabel": "Organic",
+      "colour": "Green",
+      "slideCount": 14,
+      "popularity": 0,
+      "addedOn": "2026-10-19",
+      "premium": false,
+      "badge": "New",
+      "keywords": [
+        "impact report",
+        "ripple",
+        "nonprofit impact",
+        "opening",
+        "doors",
+        "digital",
+        "learning",
+        "nonprofit impact report"
+      ],
+      "family": "canopy",
+      "contentSet": "nonprofit-impact",
+      "defaultTheme": 0,
+      "sample": {
+        "eyebrow": "Programme impact review · sample",
+        "title": "Opening More Doors to Digital Learning",
+        "subtitle": "A community programme's activities, outcomes and next steps",
+        "team": [
+          "Maya Rao",
+          "Imran S",
+          "Leela N"
+        ],
+        "guide": "Programme advisory group",
+        "department": "Community Learning Initiative",
+        "date": "Annual review 2027",
+        "question": "Are participants gaining useful digital skills beyond attending sessions?",
+        "problem": "Attendance alone cannot show whether a learning programme is creating useful, lasting change.",
+        "problemPoints": [
+          "Participants begin with different levels of confidence and access",
+          "Anecdotes need context and consent before publication",
+          "The next programme cycle needs clear evidence and resource priorities"
+        ],
+        "architecture": [
+          "Community needs",
+          "Learning access",
+          "Guided practice",
+          "Outcome checks",
+          "Follow-up support"
+        ],
+        "coverIndex": "01",
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "compass",
+      "name": "Compass",
+      "category": "corporate",
+      "useCase": "Strategy Workshop",
+      "requirement": "strategy",
+      "requirementLabel": "Strategy",
+      "department": null,
+      "departmentLabel": null,
+      "style": "Minimal",
+      "styleLabel": "Minimal",
+      "colour": "Blue",
+      "slideCount": 14,
+      "popularity": 0,
+      "addedOn": "2026-10-19",
+      "premium": false,
+      "badge": "New",
+      "keywords": [
+        "strategy",
+        "compass",
+        "strategy workshop",
+        "choosing",
+        "focus"
+      ],
+      "family": "mono",
+      "contentSet": "strategy-workshop",
+      "defaultTheme": 1,
+      "sample": {
+        "eyebrow": "Strategy workshop · sample",
+        "title": "Choosing the Next 90 Days with Focus",
+        "subtitle": "A facilitated decision and action-planning session",
+        "team": [
+          "Priya Shah",
+          "Daniel K",
+          "Rhea M"
+        ],
+        "guide": "Executive sponsor",
+        "department": "Strategy & Operations",
+        "date": "Q1 2027",
+        "question": "Which growth constraint should we address first with the team and resources available?",
+        "problem": "A long list of initiatives spreads attention without an agreed view of the most important constraint.",
+        "problemPoints": [
+          "Teams bring different assumptions about customers and capacity",
+          "Options are difficult to compare without explicit criteria",
+          "A decision needs an owner, a learning goal and a review date"
+        ],
+        "architecture": [
+          "Agree the question",
+          "Surface evidence",
+          "Compare options",
+          "Choose experiments",
+          "Assign ownership"
+        ],
+        "coverIndex": "01",
         "coverKpi": null,
         "coverKpiLabel": null
       }

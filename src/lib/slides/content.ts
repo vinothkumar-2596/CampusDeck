@@ -2,6 +2,11 @@ import templateData from "../../data/templates.json" with { type: "json" };
 import contentData from "../../data/content-sets.json" with { type: "json" };
 import type { Layout, Slide } from "../model";
 
+type AuthoredSlide = Pick<Slide, "layout" | "title"> &
+  Partial<
+    Pick<Slide, "subtitle" | "body" | "table" | "chart" | "question" | "notes">
+  >;
+
 export const handoffTemplates = templateData.templates;
 export const contentSets = contentData.contentSets;
 export function getHandoffTemplate(id: string) {
@@ -22,7 +27,9 @@ export function makeHandoffSlides(
 ): Slide[] {
   const t = getHandoffTemplate(id),
     set = getContentSet(id),
-    s = t.sample;
+    s = t.sample,
+    authoredSlides = (set as { authoredSlides?: AuthoredSlide[] })
+      .authoredSlides;
   return set.detailPage.insideList.map((heading, index, all) => {
     let layout: Layout = "text";
     if (!index) layout = "cover";
@@ -59,6 +66,8 @@ export function makeHandoffSlides(
       /module|priorities|objectives|learning points|solution/i.test(heading)
     )
       layout = "columns";
+    const authored = authoredSlides?.[index];
+    if (authored) layout = authored.layout;
     const slide = create(layout, heading);
     slide.eyebrow = s.eyebrow;
     slide.subtitle = "";
@@ -135,6 +144,6 @@ export function makeHandoffSlides(
         `Explain how ${heading.toLowerCase()} informs your approach, supported by your own evidence.`,
       ];
     }
-    return slide;
+    return authored ? { ...slide, ...authored } : slide;
   });
 }

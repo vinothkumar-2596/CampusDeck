@@ -1,5 +1,6 @@
 import type { Deck, Slide, Template } from "./model";
 import { buildHandoffScene } from "./slides/render";
+import { resolveSlideDesign } from "./slides/resolve";
 export type Shape = {
   kind: "rect" | "ellipse" | "line";
   x: number;
@@ -124,6 +125,63 @@ export function buildScene(
   index = 0,
   total = 16,
 ): Scene {
+  if (slide.layout === "blank") {
+    const design = t.handoffId ? resolveSlideDesign(t, deck) : undefined;
+    const font =
+      design?.bodyFont ||
+      (deck?.font && deck.font !== "default" ? deck.font : "Arial");
+    const ink = design?.inner.ink || t.ink;
+    const elements: Element[] = [];
+    const addText = (
+      value: string,
+      y: number,
+      h: number,
+      size: number,
+      bold = false,
+    ) => {
+      if (!value.trim()) return;
+      const w = slide.image && y >= 240 ? 510 : 1056;
+      const fitted = fitText(value, size, w, h);
+      elements.push({
+        kind: "text",
+        text: value,
+        x: 72,
+        y,
+        w,
+        h,
+        size: fitted.size,
+        lines: fitted.lines,
+        color:
+          bold && (design || deck?.customAccent)
+            ? design?.inner.acc || deck!.accent
+            : ink,
+        font: bold ? design?.displayFont || font : font,
+        bold,
+      });
+    };
+    addText(slide.title, 62, 122, 48, true);
+    addText(slide.subtitle, 188, 70, 24);
+    addText(slide.body.filter(Boolean).join("\n"), 280, 323, 28);
+    if (slide.image)
+      elements.push({
+        kind: "image",
+        src: slide.image,
+        x: 635,
+        y: 280,
+        w: 493,
+        h: 323,
+      });
+    if (deck?.profile.logo)
+      elements.push({
+        kind: "image",
+        src: deck.profile.logo,
+        x: 1080,
+        y: 612,
+        w: 40,
+        h: 40,
+      });
+    return { background: design?.inner.bg || t.bg, elements, font };
+  }
   if (t.handoffId) return buildHandoffScene(slide, t, deck, index, total);
   const accent = deck?.accent || t.accent,
     bg = t.bg,
@@ -422,7 +480,44 @@ export function buildScene(
           );
           text(item, x + 102, y + 25, 380, 82, 23, ink);
         });
-      if (slide.layout === "process" || slide.layout === "timeline") {
+      if (slide.layout === "problem") {
+        text(items.join("\n\n"), 64, 280, 530, 300, 26, ink);
+        rect(640, 278, 484, 300, light, undefined, 12);
+        text(
+          slide.question || "Add your key question",
+          672,
+          310,
+          420,
+          236,
+          34,
+          ink,
+          true,
+        );
+      }
+      if (slide.layout === "team") {
+        const names = (
+          deck?.profile.students?.trim()
+            ? deck.profile.students.split(/\s*[·,;\n]\s*/)
+            : items
+        )
+          .filter(Boolean)
+          .slice(0, 8);
+        const count = Math.max(1, Math.min(names.length, 4)),
+          width = 1060 / count;
+        names.forEach((name, i) => {
+          const x = 64 + (i % 4) * width,
+            y = 280 + Math.floor(i / 4) * 140;
+          rect(x, y, width - 18, 116, light, undefined, 8);
+          text(name, x + 20, y + 22, width - 58, 74, 25, ink, true);
+        });
+        if (deck?.profile.guide)
+          text(`Guide: ${deck.profile.guide}`, 64, 576, 1060, 34, 18, ink);
+      }
+      if (
+        slide.layout === "process" ||
+        slide.layout === "timeline" ||
+        slide.layout === "architecture"
+      ) {
         const count = Math.min(items.length, 6),
           cw = 1060 / count;
         line(100, 360, 980, 0, accent, 2);

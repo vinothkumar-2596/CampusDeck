@@ -329,7 +329,7 @@ export default function Workspace() {
             </p>
           </div>
           {["overview", "presentations"].includes(tab) && (
-            <Link className="btn btn-primary" to="/explore">
+            <Link className="btn btn-primary" to="/create">
               <Plus size={17} />
               New presentation
             </Link>

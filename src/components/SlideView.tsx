@@ -236,7 +236,10 @@ export const SlideView = memo(function SlideView({
       className={`slide-view ${className}`}
       viewBox="0 0 1200 675"
       role="img"
-      aria-label={slide.title}
+      aria-label={
+        slide.title.trim() ||
+        (slide.layout === "blank" ? "Blank slide" : "Untitled slide")
+      }
       xmlns="http://www.w3.org/2000/svg"
     >
       <rect width="1200" height="675" fill={scene.background} />

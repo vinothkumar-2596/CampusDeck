@@ -39,6 +39,22 @@
         {
           "id": "hackathon",
           "label": "Hackathon"
+        },
+        {
+          "id": "capstone",
+          "label": "Capstone Proposal"
+        },
+        {
+          "id": "lab",
+          "label": "Lab Report"
+        },
+        {
+          "id": "portfolio",
+          "label": "Placement Portfolio"
+        },
+        {
+          "id": "visit",
+          "label": "Industrial Visit"
         }
       ]
     },
@@ -83,6 +99,10 @@
         {
           "id": "marketing",
           "label": "Marketing Plan"
+        },
+        {
+          "id": "impact",
+          "label": "Impact Report"
         }
       ]
     },

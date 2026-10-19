@@ -17,6 +17,7 @@ import {
 } from "../src/lib/model";
 import { buildScene, fitText } from "../src/lib/scene";
 import { createPptx, createPdf } from "../src/lib/export";
+import { getContentSet, getHandoffTemplate } from "../src/lib/slides/content";
 import {
   designFamilies,
   getTemplateThemes,
@@ -188,8 +189,8 @@ test("PDF rejects unsupported scripts instead of silently corrupting the content
   await assert.rejects(() => createPdf(deck, templates[0]), /PowerPoint/);
 });
 
-test("33 handoff designs cover 12 families with honest counts and compatible legacy snapshots", () => {
-  assert.equal(handoffTemplates.length, 33);
+test("41 working designs cover 12 families with honest counts and compatible legacy snapshots", () => {
+  assert.equal(handoffTemplates.length, 41);
   assert.equal(new Set(handoffTemplates.map((t) => t.familyKey)).size, 12);
   assert.equal(designFamilies.length, 12);
   assert.equal(
@@ -290,7 +291,7 @@ test("every handoff template and theme has a complete vector scene with bounded 
     }
 });
 
-test("all 33 handoff PPTX exports retain editable text, shapes, charts and real slide counts", async () => {
+test("every catalogue PPTX export retains editable text, shapes, charts and real slide counts", async () => {
   await mkdir("artifacts/pptx-handoff", { recursive: true });
   for (const t of handoffTemplates) {
     const deck = makeDeck(t);
@@ -322,6 +323,40 @@ test("all 33 handoff PPTX exports retain editable text, shapes, charts and real 
     );
     await writeFile(`artifacts/pptx-handoff/${t.id}.pptx`, bytes);
   }
+});
+
+test("eight scenario-specific additions ship distinct outlines and substantial editable content", () => {
+  const additions = [
+    ["prospectus", "proposal-studio", "Scope and exclusions"],
+    ["synthesis", "literature-synthesis", "Search strategy"],
+    ["benchwork", "experimental-report", "Analysis and uncertainty"],
+    ["practicum", "internship-case", "My contribution and boundaries"],
+    ["portfolio", "placement-portfolio", "Skills backed by evidence"],
+    ["site-notes", "industrial-visit", "Observation log"],
+    ["ripple", "nonprofit-impact", "Outcomes and evidence"],
+    ["compass", "strategy-workshop", "Action register"],
+  ];
+  const outlines = new Set<string>();
+  for (const [id, contentSet, distinguishingSlide] of additions) {
+    const template = handoffTemplates.find((t) => t.id === id)!;
+    assert.ok(template, id);
+    const deck = makeDeck(template), source = getContentSet(id);
+    assert.equal(getHandoffTemplate(id).contentSet, contentSet);
+    assert.equal(deck.slides.length, source.detailPage.insideList.length);
+    assert.equal(template.slides, deck.slides.length);
+    assert.ok(deck.slides.length >= 12 && deck.slides.length <= 17);
+    assert.ok(deck.slides.some((s) => s.title === distinguishingSlide), id);
+    assert.ok(deck.slides.some((s) => s.layout === "table" && s.table.length >= 4), id);
+    assert.ok(deck.slides.some((s) => s.layout === "architecture" && s.body.length === 5), id);
+    const charts = deck.slides.filter((s) => s.layout === "chart");
+    assert.ok(charts.length >= 1, id);
+    assert.ok(charts.every((s) => /illustrative/i.test(s.subtitle)), id);
+    assert.ok(deck.slides.filter((s) => ["text", "columns"].includes(s.layout) && s.body.length >= 3).length >= 2, id);
+    assert.ok(deck.slides.slice(1, -1).every((s, n) => s.title === source.detailPage.insideList[n + 1]), id);
+    outlines.add(deck.slides.map((s) => s.title).join("|"));
+    assert.ok(deckSchema.safeParse(deck).success, id);
+  }
+  assert.equal(outlines.size, additions.length);
 });
 
 test("handoff personalisation selects semantic sections and PDF emits every real slide", async () => {

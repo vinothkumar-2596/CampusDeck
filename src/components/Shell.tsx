@@ -108,6 +108,7 @@ export function Shell() {
   const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
   const matches = templates
     .filter((t) => {
+      if (!t.published || t.starter) return false;
       const record = navigation.header.search.index.find(
         (entry) => entry.id === t.id,
       );

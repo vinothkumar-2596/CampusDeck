@@ -45,6 +45,7 @@ const urls = [
   "/",
   "/explore",
   "/templates",
+  "/create",
   "/college",
   "/corporate",
   "/business",

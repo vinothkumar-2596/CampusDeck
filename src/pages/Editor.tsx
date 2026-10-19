@@ -82,7 +82,7 @@ export default function Editor() {
       setLoadError("");
       try {
         const startingTemplate = templates.find(
-          (template) => template.id === (id || "meridian"),
+          (template) => template.id === (id || "blank"),
         );
         if (startingTemplate) {
           const profile = user
@@ -467,7 +467,7 @@ export default function Editor() {
                       total={deck.slides.length}
                     />
                   </div>
-                  <small>{slide.title}</small>
+                  <small>{slide.title || "Blank slide"}</small>
                 </div>
               </button>
             ))}
@@ -548,6 +548,32 @@ export default function Editor() {
               />
             </div>
           </div>
+          {s.layout === "blank" &&
+            ![s.title, s.subtitle, ...s.body].some((value) => value.trim()) &&
+            !s.image && (
+              <div className="editor-blank-help">
+                <strong>Your first words start here.</strong>
+                <span>
+                  Add a heading and content in the Content panel, or choose a
+                  layout in Design.
+                </span>
+                <button
+                  className="link-button"
+                  onClick={() => {
+                    setPanel("content");
+                    requestAnimationFrame(() =>
+                      document
+                        .querySelector<HTMLTextAreaElement>(
+                          'textarea[aria-label="Heading"]',
+                        )
+                        ?.focus(),
+                    );
+                  }}
+                >
+                  Add a heading <ArrowUpRight size={14} />
+                </button>
+              </div>
+            )}
           <div className="canvas-bottom">
             <span>
               Slide {index + 1} of {deck.slides.length} <i>·</i> {t.name}
@@ -769,7 +795,9 @@ export default function Editor() {
                       </button>
                       <button
                         className="link-button"
-                        disabled={(s.table[0]?.length || 0) >= 5}
+                        disabled={
+                          !s.table.length || (s.table[0]?.length || 0) >= 5
+                        }
                         onClick={() =>
                           edit({ table: s.table.map((r) => [...r, ""]) })
                         }
@@ -855,7 +883,7 @@ export default function Editor() {
                     </button>
                   </div>
                 )}
-                {s.layout === "image" && (
+                {(s.layout === "image" || s.layout === "blank") && (
                   <div>
                     <label className="upload-zone">
                       <ImagePlus size={26} />
@@ -888,7 +916,8 @@ export default function Editor() {
                     )}
                   </div>
                 )}
-                {(t.handoffId || ["cover", "closing"].includes(s.layout)) && (
+                {(t.handoffId ||
+                  ["cover", "closing", "team"].includes(s.layout)) && (
                   <>
                     <div className="inspector-divider" />
                     <h4>Your details</h4>
@@ -933,7 +962,7 @@ export default function Editor() {
                   <span>THE LOOK & FEEL</span>
                   <h3>Make it your own</h3>
                 </div>
-                {t.handoffId && (
+                {(t.handoffId || t.starter) && (
                   <>
                     <h4>Template</h4>
                     <p className="editor-design-help">
@@ -963,7 +992,11 @@ export default function Editor() {
                                 accent: design.accent,
                                 customAccent: false,
                               }}
-                              slide={coverSlide}
+                              slide={
+                                coverSlide.layout === "blank"
+                                  ? makeDeck(design).slides[0]
+                                  : coverSlide
+                              }
                             />
                           </div>
                           <span>
@@ -973,7 +1006,7 @@ export default function Editor() {
                         </button>
                       ))}
                     </div>
-                    <h4>Colour theme</h4>
+                    {themes.length > 0 && <h4>Colour theme</h4>}
                     <div className="editor-themes">
                       {themes.map((theme, i) => (
                         <button
@@ -1004,27 +1037,29 @@ export default function Editor() {
                         </button>
                       ))}
                     </div>
-                    <label className="field">
-                      <span>Headline typeface</span>
-                      <select
-                        value={deck.headlineFont || "default"}
-                        onChange={(event) =>
-                          change((d) => {
-                            d.headlineFont = event.target
-                              .value as Deck["headlineFont"];
-                          })
-                        }
-                      >
-                        <option value="default">Original typeface</option>
-                        <option value="serif">Editorial serif</option>
-                        <option value="geo">Geometric · Sora</option>
-                        <option value="grotesk">
-                          Technical · Space Grotesk
-                        </option>
-                        <option value="neutral">Neutral · Geist</option>
-                        <option value="condensed">Condensed · Archivo</option>
-                      </select>
-                    </label>
+                    {t.handoffId && (
+                      <label className="field">
+                        <span>Headline typeface</span>
+                        <select
+                          value={deck.headlineFont || "default"}
+                          onChange={(event) =>
+                            change((d) => {
+                              d.headlineFont = event.target
+                                .value as Deck["headlineFont"];
+                            })
+                          }
+                        >
+                          <option value="default">Original typeface</option>
+                          <option value="serif">Editorial serif</option>
+                          <option value="geo">Geometric · Sora</option>
+                          <option value="grotesk">
+                            Technical · Space Grotesk
+                          </option>
+                          <option value="neutral">Neutral · Geist</option>
+                          <option value="condensed">Condensed · Archivo</option>
+                        </select>
+                      </label>
+                    )}
                     <div className="inspector-divider" />
                   </>
                 )}
@@ -1094,7 +1129,7 @@ export default function Editor() {
                       })
                     }
                   >
-                    {t.handoffId && (
+                    {(t.handoffId || t.starter) && (
                       <option value="default">Original body typeface</option>
                     )}
                     <option>Arial</option>

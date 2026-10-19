@@ -40,7 +40,7 @@ export const styleLabel = (style: string) =>
 export const departmentLabel = (id: string) =>
   taxonomy.departments.find((d) => d.id === id)?.label || id;
 export const listedTemplates = (templates: Template[]) =>
-  templates.filter((t) => t.published && !t.legacy);
+  templates.filter((t) => t.published && !t.legacy && !t.starter);
 
 export type MarketFilters = {
   query: string;

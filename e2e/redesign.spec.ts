@@ -9,7 +9,7 @@ test("new category routes, filters, URL restoration, keyboard menus and header s
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/templates");
-  await expect(page.locator(".cd-results-count")).toContainText("33 templates");
+  await expect(page.locator(".cd-results-count")).toContainText("41 templates");
   await expect(
     page.locator(".cd-market-results .cd-template-card"),
   ).toHaveCount(12);
@@ -25,7 +25,7 @@ test("new category routes, filters, URL restoration, keyboard menus and header s
   await expect(
     page.locator(".cd-market-results .cd-template-grid"),
   ).toHaveClass(/cd-compact-grid/);
-  await page.getByRole("button", { name: "College 16", exact: true }).click();
+  await page.getByRole("button", { name: "College 22", exact: true }).click();
   await expect(
     page.locator(".cd-market-results .cd-template-card"),
   ).toHaveCount(12);
@@ -47,12 +47,12 @@ test("new category routes, filters, URL restoration, keyboard menus and header s
     page.getByRole("combobox", { name: "Sort templates" }),
   ).toHaveValue("az");
   await expect(page.locator(".cd-results-count")).toContainText(
-    "16 templates in College",
+    "22 templates in College",
   );
   const categoryCounts = {
-    college: 16,
-    corporate: 4,
-    business: 4,
+    college: 22,
+    corporate: 5,
+    business: 5,
     healthcare: 3,
     research: 3,
     events: 3,
@@ -110,7 +110,7 @@ test("new category routes, filters, URL restoration, keyboard menus and header s
     page.getByRole("checkbox", { name: /^Computer Science/ }),
   ).toBeChecked();
   await expect(page.getByRole("checkbox", { name: /^Academic/ })).toBeChecked();
-  await expect(page.locator(".cd-results-count")).toContainText("1 template");
+  await expect(page.locator(".cd-results-count")).toContainText("2 templates");
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= window.innerWidth,
@@ -242,9 +242,11 @@ test("redesigned public pages and editor meet serious accessibility checks and r
     "/events",
     "/templates/meridian",
     "/how-it-works",
+    "/create",
     "/sign-in",
     "/sign-up",
     "/editor/meridian",
+    "/editor/blank",
     "/customise/the-final-year",
     "/about",
     "/help",
@@ -256,7 +258,7 @@ test("redesigned public pages and editor meet serious accessibility checks and r
     await test.step(path, async () => {
       await page.goto(path);
       await expect(page.locator(".loading-state")).toHaveCount(0);
-      if (path === "/editor/meridian")
+      if (path.startsWith("/editor/"))
         await expect(page.getByLabel("Heading", { exact: true })).toBeVisible();
       else await expect(page.locator("h1")).toBeVisible();
       const results = await new AxeBuilder({ page })
@@ -285,10 +287,13 @@ test("redesigned public pages and editor meet serious accessibility checks and r
   for (const width of [360, 390, 768, 1024, 1280, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     for (const path of [
+      "/",
+      "/create",
       "/templates",
       "/college",
       "/templates/meridian",
       "/editor/meridian",
+      "/editor/blank",
     ]) {
       await page.goto(path);
       await expect(page.locator(".loading-state")).toHaveCount(0);

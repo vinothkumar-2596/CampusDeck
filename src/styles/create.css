@@ -1,0 +1,219 @@
+.cd-create {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 66px 32px 72px;
+  color: #172033;
+}
+.cd-create-intro {
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto 42px;
+}
+.cd-create-kicker,
+.cd-create-kind {
+  font-size: 11px;
+  letter-spacing: 0.11em;
+  font-weight: 650;
+  color: #52627a;
+}
+.cd-create-intro h1 {
+  font: 600 clamp(32px, 4vw, 46px)/1.14
+    var(--font-sans, "Geist Variable", sans-serif);
+  letter-spacing: -0.045em;
+  margin: 16px 0;
+}
+.cd-create-intro p,
+.cd-create-blank p,
+.cd-create-section-head p {
+  color: #52627a;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.cd-create-blank {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 52px;
+  align-items: center;
+  padding: 36px;
+  border: 1px solid #dde4ee;
+  border-radius: 20px;
+  background: linear-gradient(115deg, #f4f7fc, #fff 60%);
+}
+.cd-create-paper {
+  aspect-ratio: 16 / 9;
+  position: relative;
+  display: grid;
+  place-items: center;
+  background: white;
+  border: 1px solid #d9e1ed;
+  border-radius: 8px;
+  box-shadow: 0 14px 35px #17335a0d;
+}
+.cd-create-paper > span {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border: 1px dashed #b7c4d8;
+  border-radius: 12px;
+  color: #52627a;
+}
+.cd-create-paper small {
+  position: absolute;
+  bottom: 16px;
+  font-size: 9px;
+  color: #52627a;
+  letter-spacing: 0.12em;
+}
+.cd-create-kind {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+.cd-create h2 {
+  font-size: 25px;
+  line-height: 1.25;
+  letter-spacing: -0.035em;
+  margin: 12px 0 8px;
+}
+.cd-create-name {
+  display: grid;
+  gap: 8px;
+  margin: 21px 0 16px;
+  font-size: 12px;
+  font-weight: 550;
+}
+.cd-create-name small {
+  color: #52627a;
+  font-weight: 400;
+}
+.cd-create-name input {
+  width: 100%;
+  padding: 12px 14px;
+  font: inherit;
+  font-size: 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: white;
+  color: #172033;
+}
+.cd-create-save-note {
+  display: block;
+  color: #52627a;
+  font-size: 11px;
+  line-height: 1.6;
+  margin-top: 12px;
+}
+.cd-create-starters {
+  margin-top: 52px;
+}
+.cd-create-section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+.cd-create-section-head h2 {
+  font-size: 23px;
+}
+.cd-create-section-head p {
+  margin: 0;
+}
+.cd-create-section-head > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #294fdb;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.cd-create-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+.cd-create-template {
+  display: block;
+  border: 1px solid #dde4ee;
+  border-radius: 10px;
+  overflow: hidden;
+  background: white;
+  transition:
+    box-shadow 160ms,
+    transform 160ms;
+}
+.cd-create-template:hover {
+  box-shadow: 0 8px 22px #17335a12;
+  transform: translateY(-2px);
+}
+.cd-create-template > div {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+.cd-create-template > span {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+}
+.cd-create-template strong {
+  font-size: 14px;
+  font-weight: 550;
+}
+.cd-create-template small {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 11px;
+  color: #52627a;
+}
+.cd-create-footnote {
+  text-align: center;
+  margin: 36px 0 0;
+  color: #52627a;
+  font-size: 12px;
+}
+@media (max-width: 760px) {
+  .cd-create {
+    padding: 40px 20px;
+  }
+  .cd-create-blank {
+    gap: 28px;
+    padding: 24px;
+    grid-template-columns: 1fr;
+  }
+  .cd-create-paper {
+    max-width: 390px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .cd-create-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .cd-create-section-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+@media (max-width: 430px) {
+  .cd-create {
+    padding-inline: 16px;
+  }
+  .cd-create-grid {
+    grid-template-columns: 1fr;
+  }
+  .cd-create-blank {
+    padding: 20px;
+  }
+  .cd-create h2 {
+    font-size: 23px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cd-create-template {
+    transition: none;
+  }
+}

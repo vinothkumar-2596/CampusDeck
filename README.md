@@ -26,7 +26,9 @@ Then refresh the application and open `/admin`. Alternatively, configure `ADMIN_
 
 ## What works
 
-- A responsive blue-and-navy marketplace with **33 working templates across 12 design families**, including **16 college templates**. New templates contain **12–17 complete slides**, depending on their content set; the interface reports the actual generated count.
+- A responsive blue-and-navy marketplace with **41 working templates across 12 design families**, including **22 college templates**. New templates contain **12–17 complete slides**, depending on their content set; the interface reports the actual generated count.
+- An interactive homepage preview lets visitors edit a title, try designs and colour themes, preview cover/problem/results slides, and carry their choices into the editor.
+- Create a Presentation offers a genuine blank start: one empty widescreen slide, optional filename, no sample student details, and native PPTX/PDF export. Add text, images and slides, or apply a design without replacing your content.
 - Search by template, topic, requirement or department. Category, academic requirement, department, style, colour, slide-length and access filters, sorting, grid density, and pagination. Header search opens with `/` or Ctrl/Command+K.
 - Actual slide previews, thumbnail navigation, three coordinated colour themes per new design family, keyboard-controlled full-window presentation mode, and original PPTX downloads.
 - Guided college/project/team customisation, reusable academic profiles, and logo/image uploads.
@@ -43,16 +45,16 @@ Then refresh the application and open `/admin`. Alternatively, configure `ADMIN_
 
 | Collection | Templates |
 | ---------- | --------- |
-| College    | 16        |
-| Corporate  | 4         |
-| Business   | 4         |
+| College    | 22        |
+| Corporate  | 5         |
+| Business   | 5         |
 | Healthcare | 3         |
 | Research   | 3         |
 | Events     | 3         |
 
-The 33 templates use 12 visual families: Meridian, Atlas, Kepler, Halcyon, Vertex, Ledger, Pulse, Gala, Swiss, Strata, Canopy and Mono. They share six complete content sets with template-specific sample projects. Each family has three colour themes. These are working native slide designs, not thumbnail-only entries. Original designs remain available for existing projects and links; they do not inflate the new marketplace's 33-template count.
+The 41 templates use 12 visual families: Meridian, Atlas, Kepler, Halcyon, Vertex, Ledger, Pulse, Gala, Swiss, Strata, Canopy and Mono. They use 14 complete content sets, including dedicated outlines for capstone proposals, literature reviews, lab reports, internships, portfolios, industrial visits, nonprofit impact and strategy workshops. Each family has three colour themes. Original designs remain available for existing projects and links. Legacy designs and the internal blank starter do not inflate the marketplace's 41-template count.
 
-Browse `/templates` or the collection routes `/college`, `/corporate`, `/business`, `/healthcare`, `/research` and `/events`. Template detail pages use `/templates/:id`; `/editor` opens Meridian, while `/editor/:id` opens a selected design or saved deck. `/customise/:id` provides the guided academic form. `/how-it-works` explains the complete workflow. Real account access is available at `/sign-in` and `/sign-up`, with private work under `/workspace` and administration under `/admin`. Existing `/explore` and `/auth` links remain compatible.
+Browse `/templates` or the collection routes `/college`, `/corporate`, `/business`, `/healthcare`, `/research` and `/events`. Template detail pages use `/templates/:id`. `/create` offers a blank start or prepared templates; `/editor` redirects there. `/editor/blank` opens a new empty deck, while `/editor/:id` opens a selected design or saved deck. `/customise/:id` provides the guided academic form. `/how-it-works` explains the complete workflow. Real account access is available at `/sign-in` and `/sign-up`, with private work under `/workspace` and administration under `/admin`. Existing `/explore` and `/auth` links remain compatible.
 
 The interface uses locally bundled Geist and Geist Mono. Slide designs use Sora, Space Grotesk, Instrument Serif, Newsreader and Archivo as well as Geist; the editor allows headline-font changes. Fonts are not fetched from a third-party service at runtime. The receiving PowerPoint application needs the chosen fonts installed for identical appearance.
 

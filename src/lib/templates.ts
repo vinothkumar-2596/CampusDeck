@@ -319,7 +319,29 @@ export const templates: Template[] = handoffTemplates.map((t) => {
     defaultTheme: t.defaultTheme,
   };
 });
+export const blankTemplate: Template = {
+  id: "blank",
+  name: "Blank presentation",
+  category: "College",
+  department: "All departments",
+  style: "Minimal",
+  description:
+    "Start with one empty slide and build a presentation around your own ideas.",
+  tags: ["Blank", "Start from scratch"],
+  accent: "#315cfd",
+  bg: "#ffffff",
+  ink: "#172033",
+  light: "#eef2ff",
+  family: 0,
+  cover: "Untitled presentation",
+  subtitle: "",
+  published: true,
+  premium: false,
+  slides: 1,
+  starter: true,
+};
 export const allTemplates: Template[] = [
+  blankTemplate,
   ...templates,
   ...legacyTemplates.filter((old) => !templates.some((t) => t.id === old.id)),
 ];

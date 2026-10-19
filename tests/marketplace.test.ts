@@ -9,14 +9,16 @@ import {
   readMarketFilters,
   sortTemplates,
 } from "../src/lib/marketplace";
+import taxonomy from "../src/data/taxonomy.json" with { type: "json" };
+import templateData from "../src/data/templates.json" with { type: "json" };
 
-test("the new catalogue exposes 33 real templates and preserves the six category counts", () => {
+test("the catalogue exposes 41 real templates with accurate category counts", () => {
   const visible = listedTemplates(allTemplates);
-  assert.equal(visible.length, 33);
+  assert.equal(visible.length, 41);
   for (const [category, count] of Object.entries({
-    college: 16,
-    corporate: 4,
-    business: 4,
+    college: 22,
+    corporate: 5,
+    business: 5,
     healthcare: 3,
     research: 3,
     events: 3,
@@ -28,6 +30,29 @@ test("the new catalogue exposes 33 real templates and preserves the six category
     );
   }
   assert.equal(listedTemplates([legacyTemplates[0]]).length, 0);
+});
+
+test("scenario additions have valid filter metadata and can be found by their real use case", () => {
+  for (const template of templateData.templates) {
+    const category = taxonomy.categories.find((c) => c.id === template.category);
+    assert.ok(category, template.id);
+    assert.ok(category.requirements.some((r) => r.id === template.requirement), template.id);
+    assert.ok(taxonomy.styles.some((s) => s.id === template.style), template.id);
+    assert.ok(taxonomy.colours.some((c) => c.id === template.colour), template.id);
+    if (template.department) assert.ok(taxonomy.departments.some((d) => d.id === template.department), template.id);
+  }
+  for (const [category, requirement, expected] of [
+    ["college", "capstone", "prospectus"],
+    ["college", "lab", "benchwork"],
+    ["college", "portfolio", "portfolio"],
+    ["college", "visit", "site-notes"],
+    ["business", "impact", "ripple"],
+  ]) {
+    const filter = readMarketFilters(new URLSearchParams({cat: category, use: requirement}));
+    assert.deepEqual(templates.filter((t) => categoryFor(t) === category && matchesFilters(t, filter)).map((t) => t.id), [expected]);
+  }
+  assert.ok(templates.some((t) => t.id === "synthesis" && matchesSearch(t, "literature review")));
+  assert.ok(templates.some((t) => t.id === "compass" && matchesSearch(t, "strategy workshop")));
 });
 
 test("search ANDs terms across metadata and keeps categories relevant", () => {

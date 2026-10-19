@@ -4,7 +4,12 @@ import { api } from "../server/api";
 import { openDatabase } from "../server/sqlite";
 import { makeDeck } from "../src/lib/model";
 import { switchDeckDesign } from "../src/lib/editor";
-import { templates, legacyTemplates, allTemplates } from "../src/lib/templates";
+import {
+  templates,
+  legacyTemplates,
+  allTemplates,
+  blankTemplate,
+} from "../src/lib/templates";
 import { storage, primaryKeys, type Mutation } from "../server/store";
 import { initializeMongo, mongoStore } from "../server/mongo";
 import { MongoClient } from "mongodb";
@@ -149,13 +154,13 @@ test("catalogue filters, search, template details and missing templates", async 
   assert.equal(catalogue.length, allTemplates.length);
   assert.equal(
     catalogue.filter((t: { handoffId?: string }) => t.handoffId).length,
-    33,
+    41,
   );
   assert.equal(
     (await request("/templates?category=College")).body.filter(
       (t: { handoffId?: string }) => t.handoffId,
     ).length,
-    16,
+    22,
   );
   assert.ok(
     (await request("/templates?q=neural")).body.some(
@@ -199,6 +204,37 @@ test("save/reload persists exact edits; other accounts cannot read, update or de
     0,
   );
 });
+test("blank decks persist empty content and can change designs without losing authored slides", async () => {
+  const blank = makeDeck(blankTemplate);
+  assert.equal(
+    (await request("/projects/" + blank.id, "PUT", blank, alice)).status,
+    200,
+  );
+  let loaded = await request("/projects/" + blank.id, "GET", undefined, alice);
+  assert.equal(loaded.body.slides.length, 1);
+  assert.equal(loaded.body.slides[0].title, "");
+  assert.deepEqual(loaded.body.slides[0].body, []);
+  assert.equal(loaded.body.templateSnapshot.starter, true);
+  blank.slides[0].title = "Built from scratch";
+  const styled = switchDeckDesign(blank, templates[0]);
+  assert.equal(
+    (await request("/projects/" + blank.id, "PUT", styled, alice)).status,
+    200,
+  );
+  loaded = await request("/projects/" + blank.id, "GET", undefined, alice);
+  assert.equal(loaded.body.templateId, templates[0].id);
+  assert.equal(loaded.body.slides[0].title, "Built from scratch");
+  assert.equal(loaded.body.slides[0].layout, "blank");
+  assert.equal(
+    (await request("/projects/" + blank.id, "GET", undefined, bob)).status,
+    404,
+  );
+  assert.equal(
+    (await request("/projects/" + blank.id, "DELETE", undefined, alice)).status,
+    200,
+  );
+});
+
 test("profile reuse, bookmarks, download snapshots and ownership", async () => {
   const profile = { ...deck.profile, college: "Test College" };
   assert.equal((await request("/profile", "PUT", profile, alice)).status, 200);

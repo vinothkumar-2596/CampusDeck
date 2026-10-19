@@ -95,7 +95,8 @@ export default function Admin() {
     setEditing((e) => (e ? { ...e, ...patch } : e));
   const familyId = (t: Template) =>
     t.handoffId ? "handoff:" + t.familyKey : "legacy:" + t.family;
-  const designSources = data.templates.filter(
+  const catalogueTemplates = data.templates.filter((t) => !t.starter);
+  const designSources = catalogueTemplates.filter(
     (t, index, list) =>
       list.findIndex((item) => familyId(item) === familyId(t)) === index,
   );
@@ -117,7 +118,9 @@ export default function Admin() {
       <div className="workspace-stats">
         <div>
           <Layers size={22} />
-          <strong>{data.templates.filter((t) => t.published).length}</strong>
+          <strong>
+            {catalogueTemplates.filter((t) => t.published).length}
+          </strong>
           <span>Published designs</span>
         </div>
         <div>
@@ -152,10 +155,12 @@ export default function Admin() {
               className="btn btn-primary btn-small"
               onClick={() =>
                 setEditing({
-                  ...structuredClone(data.templates[0]),
+                  ...structuredClone(catalogueTemplates[0]),
                   id: "design-" + crypto.randomUUID().slice(0, 8),
                   name: "New design",
                   published: false,
+                  starter: false,
+                  legacy: false,
                 })
               }
             >
@@ -175,7 +180,7 @@ export default function Admin() {
                 </tr>
               </thead>
               <tbody>
-                {data.templates.map((t) => (
+                {catalogueTemplates.map((t) => (
                   <tr key={t.id}>
                     <td>
                       <div className="admin-template-name">
@@ -212,6 +217,8 @@ export default function Admin() {
                               crypto.randomUUID().slice(0, 6),
                             name: t.name + " copy",
                             published: false,
+                            starter: false,
+                            legacy: false,
                           })
                         }
                       >

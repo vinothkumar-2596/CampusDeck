@@ -1,5 +1,5 @@
 {
-  "_note": "Shared slide content per presentation type. A template = family (look) + content set (structure and sample copy) + its own sample text in templates.json.",
+  "_note": "Content structures and sample data for editable presentations. authoredSlides supplies scenario-specific layouts and content where present. All numeric sample outcomes are illustrative and must be replaced with verified results.",
   "contentSets": [
     {
       "id": "acad",
@@ -1089,6 +1089,2483 @@
           "Cultural fest"
         ]
       }
+    },
+    {
+      "id": "proposal-studio",
+      "slideLabels": {
+        "cover": "Title",
+        "agenda": "Contents",
+        "problem": "Problem statement",
+        "arch": "Architecture",
+        "results": "Results",
+        "timeline": "Timeline",
+        "team": "Team",
+        "thanks": "Thank you"
+      },
+      "fieldLabels": {
+        "team": "Team members",
+        "guide": "Guided by",
+        "dept": "Department"
+      },
+      "slideFooterLabels": {
+        "team": "Presented by",
+        "guide": "Guided by",
+        "dept": "Department",
+        "date": "Review date"
+      },
+      "slideTitles": {
+        "agenda": "Contents",
+        "problem": "Problem Statement",
+        "arch": "System Architecture",
+        "results": "Results & Discussion",
+        "timeline": "Project Timeline",
+        "team": "Project Team"
+      },
+      "slideNumbers": {
+        "agenda": "02",
+        "problem": "03",
+        "arch": "07",
+        "results": "12",
+        "timeline": "15",
+        "team": "17"
+      },
+      "agenda": [
+        {
+          "n": "01",
+          "title": "The problem and the sponsor",
+          "detail": "Establish context and scope"
+        },
+        {
+          "n": "02",
+          "title": "Success criteria",
+          "detail": "Define the evidence needed"
+        },
+        {
+          "n": "03",
+          "title": "Proposed system architecture",
+          "detail": "Explain the approach"
+        },
+        {
+          "n": "04",
+          "title": "Feasibility review",
+          "detail": "Examine the sample findings"
+        },
+        {
+          "n": "05",
+          "title": "Delivery timeline",
+          "detail": "Identify decisions and next steps"
+        },
+        {
+          "n": "06",
+          "title": "Approval requested",
+          "detail": "Close with ownership and sources"
+        }
+      ],
+      "architectureGroups": [
+        "Context",
+        "Delivery",
+        "Learning"
+      ],
+      "chart": {
+        "title": "Illustrative feasibility score by work package",
+        "unit": " / 5",
+        "highlight": "max",
+        "bars": [
+          {
+            "label": "Data access",
+            "value": 3
+          },
+          {
+            "label": "Hardware",
+            "value": 4
+          },
+          {
+            "label": "Analytics",
+            "value": 3
+          },
+          {
+            "label": "Dashboard",
+            "value": 5
+          }
+        ]
+      },
+      "kpis": [
+        {
+          "value": "12 weeks",
+          "label": "Illustrative delivery window"
+        },
+        {
+          "value": "3 rooms",
+          "label": "Proposed pilot scope"
+        }
+      ],
+      "timeline": {
+        "current": 1,
+        "milestones": [
+          {
+            "when": "Week 1",
+            "title": "Approval",
+            "detail": "Confirm sponsor and access"
+          },
+          {
+            "when": "Week 3",
+            "title": "Discovery",
+            "detail": "Validate meter data"
+          },
+          {
+            "when": "Week 6",
+            "title": "Prototype",
+            "detail": "Build an end-to-end slice"
+          },
+          {
+            "when": "Week 9",
+            "title": "Pilot",
+            "detail": "Observe three rooms"
+          },
+          {
+            "when": "Week 12",
+            "title": "Review",
+            "detail": "Evaluate acceptance criteria"
+          }
+        ]
+      },
+      "teamRoles": [
+        "Lead presenter",
+        "Analysis & evidence",
+        "Delivery & review",
+        "Documentation"
+      ],
+      "guideLabel": "Academic / workplace guide",
+      "questionLabel": "Decision question",
+      "closing": {
+        "title": "Questions and next steps",
+        "subtitle": "Questions, evidence and the next step"
+      },
+      "detailPage": {
+        "description": "A decision-ready capstone proposal with a bounded problem, feasibility checks, work packages, risks and measurable acceptance criteria.",
+        "insideList": [
+          "Title slide",
+          "Proposal overview",
+          "The problem and the sponsor",
+          "Scope and exclusions",
+          "Success criteria",
+          "Options and feasibility",
+          "Proposed system architecture",
+          "Data and access plan",
+          "Feasibility review",
+          "Risks and mitigations",
+          "Delivery timeline",
+          "Project team and responsibilities",
+          "Approval requested",
+          "References and assumptions",
+          "Questions and next steps"
+        ],
+        "perfectFor": [
+          "Capstone Proposal",
+          "Prospectus presentation",
+          "Editable evidence-led report"
+        ]
+      },
+      "authoredSlides": [
+        {
+          "layout": "cover",
+          "title": "Title slide"
+        },
+        {
+          "layout": "agenda",
+          "title": "Proposal overview"
+        },
+        {
+          "layout": "problem",
+          "title": "The problem and the sponsor"
+        },
+        {
+          "layout": "text",
+          "title": "Scope and exclusions",
+          "body": [
+            "Include a three-room pilot using an agreed meter data feed.",
+            "Provide weekly exceptions with an explanation and suggested investigation.",
+            "Exclude billing, automated switching and campus-wide deployment from the first release."
+          ]
+        },
+        {
+          "layout": "columns",
+          "title": "Success criteria",
+          "subtitle": "Define what the review panel can verify",
+          "body": [
+            "Data quality\nDocument missing readings and reject impossible values.",
+            "Usefulness\nAsk facilities staff to assess the relevance of each alert.",
+            "Traceability\nExplain the baseline behind every exception.",
+            "Deliverability\nDemonstrate the complete pilot within the agreed term."
+          ]
+        },
+        {
+          "layout": "table",
+          "title": "Options and feasibility",
+          "subtitle": "Compare realistic routes before committing to a build",
+          "body": [],
+          "table": [
+            [
+              "Option",
+              "Benefit",
+              "Constraint"
+            ],
+            [
+              "Existing meter feed",
+              "Fastest pilot setup",
+              "Requires permission and documentation"
+            ],
+            [
+              "New sensor hardware",
+              "More detailed measurements",
+              "Adds procurement and installation time"
+            ],
+            [
+              "Manual readings",
+              "Low setup cost",
+              "Too sparse for timely alerts"
+            ]
+          ]
+        },
+        {
+          "layout": "architecture",
+          "title": "Proposed system architecture"
+        },
+        {
+          "layout": "text",
+          "title": "Data and access plan",
+          "body": [
+            "Identify the meter owner and obtain permission before collecting readings.",
+            "Keep room identifiers separate from personal information; this proposal does not require individual tracking.",
+            "Record the sampling interval, retention period and process for reporting missing data."
+          ]
+        },
+        {
+          "layout": "chart",
+          "title": "Feasibility review"
+        },
+        {
+          "layout": "table",
+          "title": "Risks and mitigations",
+          "subtitle": "Assign an owner and review these risks each week",
+          "body": [],
+          "table": [
+            [
+              "Risk",
+              "Early signal",
+              "Mitigation"
+            ],
+            [
+              "Delayed data access",
+              "No sample feed by week 2",
+              "Use a documented synthetic feed for prototyping"
+            ],
+            [
+              "Unreliable readings",
+              "Frequent gaps or impossible spikes",
+              "Add validation and a visible data-quality status"
+            ],
+            [
+              "Scope expansion",
+              "Requests outside the pilot",
+              "Review changes against the agreed success criteria"
+            ]
+          ]
+        },
+        {
+          "layout": "timeline",
+          "title": "Delivery timeline"
+        },
+        {
+          "layout": "team",
+          "title": "Project team and responsibilities"
+        },
+        {
+          "layout": "text",
+          "title": "Approval requested",
+          "body": [
+            "Approve the three-room pilot scope and the proposed evaluation plan.",
+            "Nominate a facilities contact and confirm access to a sample meter feed.",
+            "Agree the first review date and the evidence required to continue."
+          ]
+        },
+        {
+          "layout": "text",
+          "title": "References and assumptions",
+          "body": [
+            "Add the meter documentation and any campus energy-policy sources you actually consulted.",
+            "List the assumptions that still need a sponsor or supervisor to confirm.",
+            "Replace illustrative scores and durations with your team's verified estimates."
+          ]
+        },
+        {
+          "layout": "closing",
+          "title": "Questions and next steps"
+        }
+      ]
+    },
+    {
+      "id": "literature-synthesis",
+      "slideLabels": {
+        "cover": "Title",
+        "agenda": "Outline",
+        "problem": "Research question",
+        "arch": "Methodology",
+        "results": "Findings",
+        "timeline": "Research plan",
+        "team": "Team",
+        "thanks": "Thank you"
+      },
+      "fieldLabels": {
+        "team": "Presenter",
+        "guide": "Supervisor",
+        "dept": "Department"
+      },
+      "slideFooterLabels": {
+        "team": "Presenter",
+        "guide": "Supervisor",
+        "dept": "Department",
+        "date": "Session"
+      },
+      "slideTitles": {
+        "agenda": "Outline",
+        "problem": "Research Question",
+        "arch": "Methodology",
+        "results": "Key Findings",
+        "timeline": "Research Plan",
+        "team": "Research Team"
+      },
+      "slideNumbers": {
+        "agenda": "02",
+        "problem": "04",
+        "arch": "08",
+        "results": "13",
+        "timeline": "18",
+        "team": "21"
+      },
+      "agenda": [
+        {
+          "n": "01",
+          "title": "Research question and boundaries",
+          "detail": "Establish context and scope"
+        },
+        {
+          "n": "02",
+          "title": "Inclusion and exclusion criteria",
+          "detail": "Define the evidence needed"
+        },
+        {
+          "n": "03",
+          "title": "Evidence extraction matrix",
+          "detail": "Explain the approach"
+        },
+        {
+          "n": "04",
+          "title": "Evidence coverage",
+          "detail": "Examine the sample findings"
+        },
+        {
+          "n": "05",
+          "title": "The research gap",
+          "detail": "Identify decisions and next steps"
+        },
+        {
+          "n": "06",
+          "title": "References and review limitations",
+          "detail": "Close with ownership and sources"
+        }
+      ],
+      "architectureGroups": [
+        "Context",
+        "Delivery",
+        "Learning"
+      ],
+      "chart": {
+        "title": "Illustrative evidence coverage by evaluation setting",
+        "unit": " studies",
+        "highlight": "max",
+        "bars": [
+          {
+            "label": "Lab only",
+            "value": 12
+          },
+          {
+            "label": "Field pilot",
+            "value": 7
+          },
+          {
+            "label": "Multi-site",
+            "value": 3
+          },
+          {
+            "label": "Long-term",
+            "value": 2
+          }
+        ]
+      },
+      "kpis": [
+        {
+          "value": "24",
+          "label": "Illustrative papers in the review set"
+        },
+        {
+          "value": "4 themes",
+          "label": "Illustrative synthesis framework"
+        }
+      ],
+      "timeline": {
+        "current": 1,
+        "milestones": [
+          {
+            "when": "Week 1",
+            "title": "Question",
+            "detail": "Agree scope and terminology"
+          },
+          {
+            "when": "Week 2",
+            "title": "Search",
+            "detail": "Run and record queries"
+          },
+          {
+            "when": "Week 3",
+            "title": "Screen",
+            "detail": "Apply eligibility criteria"
+          },
+          {
+            "when": "Week 4",
+            "title": "Appraise",
+            "detail": "Compare methods and limitations"
+          },
+          {
+            "when": "Week 5",
+            "title": "Synthesize",
+            "detail": "Write the gap and implications"
+          }
+        ]
+      },
+      "teamRoles": [
+        "Lead presenter",
+        "Analysis & evidence",
+        "Delivery & review",
+        "Documentation"
+      ],
+      "guideLabel": "Academic / workplace guide",
+      "questionLabel": "Decision question",
+      "closing": {
+        "title": "Discussion and research direction",
+        "subtitle": "Questions, evidence and the next step"
+      },
+      "detailPage": {
+        "description": "A structured literature review with a reproducible search strategy, screening criteria, an evidence matrix, quality appraisal and a defensible research gap.",
+        "insideList": [
+          "Title slide",
+          "Review outline",
+          "Research question and boundaries",
+          "Search strategy",
+          "Inclusion and exclusion criteria",
+          "Review methodology",
+          "Evidence extraction matrix",
+          "Quality appraisal",
+          "Evidence coverage",
+          "Cross-study synthesis",
+          "The research gap",
+          "Review completion plan",
+          "References and review limitations",
+          "Discussion and research direction"
+        ],
+        "perfectFor": [
+          "Research",
+          "Synthesis presentation",
+          "Editable evidence-led report"
+        ]
+      },
+      "authoredSlides": [
+        {
+          "layout": "cover",
+          "title": "Title slide"
+        },
+        {
+          "layout": "agenda",
+          "title": "Review outline"
+        },
+        {
+          "layout": "problem",
+          "title": "Research question and boundaries"
+        },
+        {
+          "layout": "text",
+          "title": "Search strategy",
+          "body": [
+            "Specify the scholarly databases searched and the date each search was run.",
+            "Record the full query strings, synonyms, publication window and language limits.",
+            "Track citation chaining separately so another reviewer can reproduce your process."
+          ]
+        },
+        {
+          "layout": "table",
+          "title": "Inclusion and exclusion criteria",
+          "subtitle": "Tailor and register these criteria before screening",
+          "body": [],
+          "table": [
+            [
+              "Criterion",
+              "Include",
+              "Exclude"
+            ],
+            [
+              "Focus",
+              "On-device crop monitoring",
+              "Cloud-only monitoring without an edge comparison"
+            ],
+            [
+              "Evidence",
+              "Reported evaluation method",
+              "Opinion pieces without a method"
+            ],
+            [
+              "Transparency",
+              "Device and dataset described",
+              "Insufficient information to interpret results"
+            ]
+          ]
+        },
+        {
+          "layout": "architecture",
+          "title": "Review methodology"
+        },
+        {
+          "layout": "table",
+          "title": "Evidence extraction matrix",
+          "subtitle": "Populate only from papers you have read; no citations are invented here",
+          "body": [],
+          "table": [
+            [
+              "Study",
+              "Setting and method",
+              "Finding / limitation"
+            ],
+            [
+              "[Author, year]",
+              "[Dataset, device, evaluation]",
+              "[Verified result and caveat]"
+            ],
+            [
+              "[Author, year]",
+              "[Dataset, device, evaluation]",
+              "[Verified result and caveat]"
+            ],
+            [
+              "[Author, year]",
+              "[Dataset, device, evaluation]",
+              "[Verified result and caveat]"
+            ]
+          ]
+        },
+        {
+          "layout": "columns",
+          "title": "Quality appraisal",
+          "subtitle": "Judge confidence before comparing headline numbers",
+          "body": [
+            "Validity\nDoes the evaluation answer the stated question?",
+            "Reproducibility\nAre code, data and settings available?",
+            "Comparability\nAre hardware and datasets sufficiently similar?",
+            "Transferability\nCould the approach work beyond the test site?"
+          ]
+        },
+        {
+          "layout": "chart",
+          "title": "Evidence coverage"
+        },
+        {
+          "layout": "text",
+          "title": "Cross-study synthesis",
+          "body": [
+            "Group findings by device constraints, sensing approach, evaluation setting and deployment needs.",
+            "Separate consistent findings from disagreements and explain the likely source of each difference.",
+            "Avoid ranking models by accuracy when they were tested on incompatible datasets."
+          ]
+        },
+        {
+          "layout": "text",
+          "title": "The research gap",
+          "body": [
+            "State the missing evidence, rather than simply claiming that few papers exist.",
+            "Connect the gap to a practical decision that the current evidence cannot support.",
+            "Propose a bounded next study with outcomes that would reduce that uncertainty."
+          ]
+        },
+        {
+          "layout": "timeline",
+          "title": "Review completion plan"
+        },
+        {
+          "layout": "text",
+          "title": "References and review limitations",
+          "body": [
+            "Add full citations and links or DOIs for every included study.",
+            "Explain database coverage, publication bias and any single-reviewer limitations.",
+            "Keep the search log and exclusion reasons available as an appendix."
+          ]
+        },
+        {
+          "layout": "closing",
+          "title": "Discussion and research direction"
+        }
+      ]
+    },
+    {
+      "id": "experimental-report",
+      "slideLabels": {
+        "cover": "Title",
+        "agenda": "Contents",
+        "problem": "Problem statement",
+        "arch": "Architecture",
+        "results": "Results",
+        "timeline": "Timeline",
+        "team": "Team",
+        "thanks": "Thank you"
+      },
+      "fieldLabels": {
+        "team": "Team members",
+        "guide": "Guided by",
+        "dept": "Department"
+      },
+      "slideFooterLabels": {
+        "team": "Presented by",
+        "guide": "Guided by",
+        "dept": "Department",
+        "date": "Review date"
+      },
+      "slideTitles": {
+        "agenda": "Contents",
+        "problem": "Problem Statement",
+        "arch": "System Architecture",
+        "results": "Results & Discussion",
+        "timeline": "Project Timeline",
+        "team": "Project Team"
+      },
+      "slideNumbers": {
+        "agenda": "02",
+        "problem": "03",
+        "arch": "07",
+        "results": "12",
+        "timeline": "15",
+        "team": "17"
+      },
+      "agenda": [
+        {
+          "n": "01",
+          "title": "Aim and hypothesis",
+          "detail": "Establish context and scope"
+        },
+        {
+          "n": "02",
+          "title": "Variables and controls",
+          "detail": "Define the evidence needed"
+        },
+        {
+          "n": "03",
+          "title": "Safety and setup checks",
+          "detail": "Explain the approach"
+        },
+        {
+          "n": "04",
+          "title": "Results and trend",
+          "detail": "Examine the sample findings"
+        },
+        {
+          "n": "05",
+          "title": "Error sources and improvements",
+          "detail": "Identify decisions and next steps"
+        },
+        {
+          "n": "06",
+          "title": "Conclusion and lab references",
+          "detail": "Close with ownership and sources"
+        }
+      ],
+      "architectureGroups": [
+        "Context",
+        "Delivery",
+        "Learning"
+      ],
+      "chart": {
+        "title": "Illustrative temperature difference by insulation thickness",
+        "unit": " C",
+        "highlight": "last",
+        "bars": [
+          {
+            "label": "5 mm",
+            "value": 12
+          },
+          {
+            "label": "10 mm",
+            "value": 18
+          },
+          {
+            "label": "15 mm",
+            "value": 23
+          },
+          {
+            "label": "20 mm",
+            "value": 27
+          }
+        ]
+      },
+      "kpis": [
+        {
+          "value": "3 trials",
+          "label": "Illustrative repeat-measurement plan"
+        },
+        {
+          "value": "4 levels",
+          "label": "Illustrative thickness settings"
+        }
+      ],
+      "timeline": {
+        "current": 1,
+        "milestones": [
+          {
+            "when": "Step 1",
+            "title": "Prepare",
+            "detail": "Inspect the approved apparatus"
+          },
+          {
+            "when": "Step 2",
+            "title": "Calibrate",
+            "detail": "Check sensor offsets"
+          },
+          {
+            "when": "Step 3",
+            "title": "Measure",
+            "detail": "Record repeated observations"
+          },
+          {
+            "when": "Step 4",
+            "title": "Analyse",
+            "detail": "Estimate variation and uncertainty"
+          },
+          {
+            "when": "Step 5",
+            "title": "Report",
+            "detail": "Explain limitations and findings"
+          }
+        ]
+      },
+      "teamRoles": [
+        "Lead presenter",
+        "Analysis & evidence",
+        "Delivery & review",
+        "Documentation"
+      ],
+      "guideLabel": "Academic / workplace guide",
+      "questionLabel": "Decision question",
+      "closing": {
+        "title": "Questions about the experiment",
+        "subtitle": "Questions, evidence and the next step"
+      },
+      "detailPage": {
+        "description": "An experiment report that separates objectives, apparatus, procedure, raw observations, analysis, uncertainty and a conclusion supported by measured evidence.",
+        "insideList": [
+          "Title slide",
+          "Experiment outline",
+          "Aim and hypothesis",
+          "Apparatus and measurement points",
+          "Variables and controls",
+          "Experimental procedure",
+          "Safety and setup checks",
+          "Observation sheet",
+          "Results and trend",
+          "Analysis and uncertainty",
+          "Error sources and improvements",
+          "Experiment workflow",
+          "Conclusion and lab references",
+          "Questions about the experiment"
+        ],
+        "perfectFor": [
+          "Lab Report",
+          "Benchwork presentation",
+          "Editable evidence-led report"
+        ]
+      },
+      "authoredSlides": [
+        {
+          "layout": "cover",
+          "title": "Title slide"
+        },
+        {
+          "layout": "agenda",
+          "title": "Experiment outline"
+        },
+        {
+          "layout": "problem",
+          "title": "Aim and hypothesis"
+        },
+        {
+          "layout": "image",
+          "title": "Apparatus and measurement points",
+          "subtitle": "Insert your annotated apparatus photograph or schematic",
+          "body": [
+            "Identify the heater, sample, insulation and temperature sensors.",
+            "Label dimensions, sensor positions and the direction of heat flow."
+          ]
+        },
+        {
+          "layout": "table",
+          "title": "Variables and controls",
+          "subtitle": "Record units and the reason for each controlled variable",
+          "body": [],
+          "table": [
+            [
+              "Type",
+              "Variable",
+              "How it is handled"
+            ],
+            [
+              "Independent",
+              "Insulation thickness",
+              "Use the agreed test levels"
+            ],
+            [
+              "Dependent",
+              "Temperature difference",
+              "Record at a defined steady-state condition"
+            ],
+            [
+              "Controlled",
+              "Material, input and environment",
+              "Keep constant or record any change"
+            ]
+          ]
+        },
+        {
+          "layout": "architecture",
+          "title": "Experimental procedure"
+        },
+        {
+          "layout": "text",
+          "title": "Safety and setup checks",
+          "body": [
+            "Follow the laboratory's approved procedure and supervisor instructions for the apparatus.",
+            "Document the equipment checks and operating limits specified for your experiment.",
+            "Record any departure from the approved setup before interpreting the observations."
+          ]
+        },
+        {
+          "layout": "table",
+          "title": "Observation sheet",
+          "subtitle": "Enter raw observations here; do not substitute illustrative chart data",
+          "body": [],
+          "table": [
+            [
+              "Trial",
+              "Thickness (mm)",
+              "Temperature difference (C)"
+            ],
+            [
+              "1",
+              "[Measured level]",
+              "[Measured result]"
+            ],
+            [
+              "2",
+              "[Measured level]",
+              "[Measured result]"
+            ],
+            [
+              "3",
+              "[Measured level]",
+              "[Measured result]"
+            ]
+          ]
+        },
+        {
+          "layout": "chart",
+          "title": "Results and trend"
+        },
+        {
+          "layout": "text",
+          "title": "Analysis and uncertainty",
+          "body": [
+            "Show the equation used to connect the measured variables, defining every symbol and unit.",
+            "Separate instrument resolution, repeated-trial variation and possible systematic effects.",
+            "Compare the observed trend with the hypothesis without claiming more precision than the measurements support."
+          ]
+        },
+        {
+          "layout": "table",
+          "title": "Error sources and improvements",
+          "subtitle": "Support each explanation with observations from your own run",
+          "body": [],
+          "table": [
+            [
+              "Possible source",
+              "Effect to investigate",
+              "Improvement"
+            ],
+            [
+              "Sensor placement",
+              "Differences between measurement points",
+              "Use a repeatable positioning method"
+            ],
+            [
+              "Heat loss",
+              "Departure from the ideal model",
+              "Document exposed surfaces and conditions"
+            ],
+            [
+              "Timing",
+              "Readings before steady state",
+              "Apply and report a consistent stability criterion"
+            ]
+          ]
+        },
+        {
+          "layout": "timeline",
+          "title": "Experiment workflow"
+        },
+        {
+          "layout": "text",
+          "title": "Conclusion and lab references",
+          "body": [
+            "Answer the experimental question using your measured trend and uncertainty.",
+            "State what the experiment does not establish and the most useful next measurement.",
+            "Cite the apparatus manual, course method and sources used in the analysis."
+          ]
+        },
+        {
+          "layout": "closing",
+          "title": "Questions about the experiment"
+        }
+      ]
+    },
+    {
+      "id": "internship-case",
+      "slideLabels": {
+        "cover": "Title",
+        "agenda": "Contents",
+        "problem": "Problem statement",
+        "arch": "Architecture",
+        "results": "Results",
+        "timeline": "Timeline",
+        "team": "Team",
+        "thanks": "Thank you"
+      },
+      "fieldLabels": {
+        "team": "Team members",
+        "guide": "Guided by",
+        "dept": "Department"
+      },
+      "slideFooterLabels": {
+        "team": "Presented by",
+        "guide": "Guided by",
+        "dept": "Department",
+        "date": "Review date"
+      },
+      "slideTitles": {
+        "agenda": "Contents",
+        "problem": "Problem Statement",
+        "arch": "System Architecture",
+        "results": "Results & Discussion",
+        "timeline": "Project Timeline",
+        "team": "Project Team"
+      },
+      "slideNumbers": {
+        "agenda": "02",
+        "problem": "03",
+        "arch": "07",
+        "results": "12",
+        "timeline": "15",
+        "team": "17"
+      },
+      "agenda": [
+        {
+          "n": "01",
+          "title": "Organisation and placement context",
+          "detail": "Establish context and scope"
+        },
+        {
+          "n": "02",
+          "title": "My contribution and boundaries",
+          "detail": "Define the evidence needed"
+        },
+        {
+          "n": "03",
+          "title": "Implementation walkthrough",
+          "detail": "Explain the approach"
+        },
+        {
+          "n": "04",
+          "title": "Observed outcome",
+          "detail": "Examine the sample findings"
+        },
+        {
+          "n": "05",
+          "title": "Skills developed",
+          "detail": "Identify decisions and next steps"
+        },
+        {
+          "n": "06",
+          "title": "Intern and mentor",
+          "detail": "Close with ownership and sources"
+        }
+      ],
+      "architectureGroups": [
+        "Context",
+        "Delivery",
+        "Learning"
+      ],
+      "chart": {
+        "title": "Illustrative requests with complete intake details",
+        "unit": "%",
+        "highlight": "last",
+        "bars": [
+          {
+            "label": "Week 1",
+            "value": 42
+          },
+          {
+            "label": "Week 2",
+            "value": 56
+          },
+          {
+            "label": "Week 3",
+            "value": 68
+          },
+          {
+            "label": "Week 4",
+            "value": 81
+          }
+        ]
+      },
+      "kpis": [
+        {
+          "value": "4 weeks",
+          "label": "Illustrative internship workstream"
+        },
+        {
+          "value": "1 workflow",
+          "label": "A bounded delivery and handover"
+        }
+      ],
+      "timeline": {
+        "current": 1,
+        "milestones": [
+          {
+            "when": "Week 1",
+            "title": "Observe",
+            "detail": "Map requests with the mentor"
+          },
+          {
+            "when": "Week 2",
+            "title": "Prototype",
+            "detail": "Test the intake form"
+          },
+          {
+            "when": "Week 3",
+            "title": "Deliver",
+            "detail": "Pilot the triage queue"
+          },
+          {
+            "when": "Week 4",
+            "title": "Verify",
+            "detail": "Review outcomes and defects"
+          },
+          {
+            "when": "Handover",
+            "title": "Transfer",
+            "detail": "Document support and ownership"
+          }
+        ]
+      },
+      "teamRoles": [
+        "Lead presenter",
+        "Analysis & evidence",
+        "Delivery & review",
+        "Documentation"
+      ],
+      "guideLabel": "Academic / workplace guide",
+      "questionLabel": "Decision question",
+      "closing": {
+        "title": "Thank you and discussion",
+        "subtitle": "Questions, evidence and the next step"
+      },
+      "detailPage": {
+        "description": "A practical internship case study with an honest contribution boundary, stakeholder context, a delivered workflow, verification evidence and a useful handover.",
+        "insideList": [
+          "Title slide",
+          "Placement overview",
+          "Organisation and placement context",
+          "The assigned workflow problem",
+          "My contribution and boundaries",
+          "Delivered workflow",
+          "Implementation walkthrough",
+          "Verification and feedback",
+          "Observed outcome",
+          "Internship delivery timeline",
+          "Skills developed",
+          "Handover and outstanding work",
+          "Intern and mentor",
+          "Thank you and discussion"
+        ],
+        "perfectFor": [
+          "Internship",
+          "Practicum presentation",
+          "Editable evidence-led report"
+        ]
+      },
+      "authoredSlides": [
+        {
+          "layout": "cover",
+          "title": "Title slide"
+        },
+        {
+          "layout": "agenda",
+          "title": "Placement overview"
+        },
+        {
+          "layout": "text",
+          "title": "Organisation and placement context",
+          "body": [
+            "Describe the host team, the service it provides and the duration of your placement.",
+            "Use only information the host has permitted you to share in an academic presentation.",
+            "Explain how your assigned work connected to the team's priorities."
+          ]
+        },
+        {
+          "layout": "problem",
+          "title": "The assigned workflow problem"
+        },
+        {
+          "layout": "columns",
+          "title": "My contribution and boundaries",
+          "subtitle": "Separate individual work from team-owned delivery",
+          "body": [
+            "Owned\nDescribe the components you personally designed or implemented.",
+            "Collaborated\nCredit the mentor and colleagues involved in decisions.",
+            "Reviewed\nExplain which changes required approval or review.",
+            "Outside scope\nList work that remained with the host team."
+          ]
+        },
+        {
+          "layout": "architecture",
+          "title": "Delivered workflow"
+        },
+        {
+          "layout": "image",
+          "title": "Implementation walkthrough",
+          "subtitle": "Add an approved screenshot with confidential details removed",
+          "body": [
+            "Demonstrate the journey from request intake to an owner update.",
+            "Annotate the part you built and explain one decision that improved usability."
+          ]
+        },
+        {
+          "layout": "table",
+          "title": "Verification and feedback",
+          "subtitle": "Record actual tests and attributed feedback",
+          "body": [],
+          "table": [
+            [
+              "Check",
+              "Evidence",
+              "Follow-up"
+            ],
+            [
+              "Required intake fields",
+              "[Observed test result]",
+              "[Fix or acceptance]"
+            ],
+            [
+              "Ownership visibility",
+              "[Mentor or user feedback]",
+              "[Change made]"
+            ],
+            [
+              "Status accuracy",
+              "[Verified scenario]",
+              "[Known limitation]"
+            ]
+          ]
+        },
+        {
+          "layout": "chart",
+          "title": "Observed outcome"
+        },
+        {
+          "layout": "timeline",
+          "title": "Internship delivery timeline"
+        },
+        {
+          "layout": "text",
+          "title": "Skills developed",
+          "body": [
+            "Connect each technical skill to a concrete task, review or troubleshooting example.",
+            "Describe a communication or prioritisation lesson from working with the team.",
+            "Explain what you would do differently on a similar assignment."
+          ]
+        },
+        {
+          "layout": "table",
+          "title": "Handover and outstanding work",
+          "subtitle": "Keep responsibility with named people or roles",
+          "body": [],
+          "table": [
+            [
+              "Item",
+              "Owner",
+              "Next action"
+            ],
+            [
+              "Runbook and setup",
+              "[Team owner]",
+              "[Location and review date]"
+            ],
+            [
+              "Known issues",
+              "[Maintainer]",
+              "[Prioritised follow-up]"
+            ],
+            [
+              "Access and documentation",
+              "[Mentor]",
+              "[Confirm handover complete]"
+            ]
+          ]
+        },
+        {
+          "layout": "team",
+          "title": "Intern and mentor"
+        },
+        {
+          "layout": "closing",
+          "title": "Thank you and discussion"
+        }
+      ]
+    },
+    {
+      "id": "placement-portfolio",
+      "slideLabels": {
+        "cover": "Title",
+        "agenda": "Contents",
+        "problem": "Problem statement",
+        "arch": "Architecture",
+        "results": "Results",
+        "timeline": "Timeline",
+        "team": "Team",
+        "thanks": "Thank you"
+      },
+      "fieldLabels": {
+        "team": "Team members",
+        "guide": "Guided by",
+        "dept": "Department"
+      },
+      "slideFooterLabels": {
+        "team": "Presented by",
+        "guide": "Guided by",
+        "dept": "Department",
+        "date": "Review date"
+      },
+      "slideTitles": {
+        "agenda": "Contents",
+        "problem": "Problem Statement",
+        "arch": "System Architecture",
+        "results": "Results & Discussion",
+        "timeline": "Project Timeline",
+        "team": "Project Team"
+      },
+      "slideNumbers": {
+        "agenda": "02",
+        "problem": "03",
+        "arch": "07",
+        "results": "12",
+        "timeline": "15",
+        "team": "17"
+      },
+      "agenda": [
+        {
+          "n": "01",
+          "title": "About me and target role",
+          "detail": "Establish context and scope"
+        },
+        {
+          "n": "02",
+          "title": "Flagship project: the user need",
+          "detail": "Define the evidence needed"
+        },
+        {
+          "n": "03",
+          "title": "Project demonstration",
+          "detail": "Explain the approach"
+        },
+        {
+          "n": "04",
+          "title": "Reliability and testing evidence",
+          "detail": "Examine the sample findings"
+        },
+        {
+          "n": "05",
+          "title": "Collaboration and reflection",
+          "detail": "Identify decisions and next steps"
+        },
+        {
+          "n": "06",
+          "title": "Interview discussion prompts",
+          "detail": "Close with ownership and sources"
+        }
+      ],
+      "architectureGroups": [
+        "Context",
+        "Delivery",
+        "Learning"
+      ],
+      "chart": {
+        "title": "Illustrative weekly practice sessions by skill",
+        "unit": " sessions",
+        "highlight": "max",
+        "bars": [
+          {
+            "label": "Coding",
+            "value": 5
+          },
+          {
+            "label": "Testing",
+            "value": 4
+          },
+          {
+            "label": "Design",
+            "value": 3
+          },
+          {
+            "label": "Writing",
+            "value": 2
+          }
+        ]
+      },
+      "kpis": [
+        {
+          "value": "3 projects",
+          "label": "Illustrative portfolio selection"
+        },
+        {
+          "value": "1 case study",
+          "label": "A detailed interview walkthrough"
+        }
+      ],
+      "timeline": {
+        "current": 1,
+        "milestones": [
+          {
+            "when": "Now",
+            "title": "Select",
+            "detail": "Choose evidence-rich projects"
+          },
+          {
+            "when": "Week 1",
+            "title": "Document",
+            "detail": "Write concise case studies"
+          },
+          {
+            "when": "Week 2",
+            "title": "Polish",
+            "detail": "Fix demos and repository guides"
+          },
+          {
+            "when": "Week 3",
+            "title": "Practice",
+            "detail": "Rehearse technical explanations"
+          },
+          {
+            "when": "Week 4",
+            "title": "Review",
+            "detail": "Ask for targeted feedback"
+          }
+        ]
+      },
+      "teamRoles": [
+        "Lead presenter",
+        "Analysis & evidence",
+        "Delivery & review",
+        "Documentation"
+      ],
+      "guideLabel": "Academic / workplace guide",
+      "questionLabel": "Decision question",
+      "closing": {
+        "title": "Let us discuss the work",
+        "subtitle": "Questions, evidence and the next step"
+      },
+      "detailPage": {
+        "description": "A placement portfolio that links skills to evidence, walks through a flagship project, explains a decision and prepares clear interview discussion points.",
+        "insideList": [
+          "Title slide",
+          "Portfolio map",
+          "About me and target role",
+          "Skills backed by evidence",
+          "Flagship project: the user need",
+          "My delivery process",
+          "Project demonstration",
+          "One design decision",
+          "Reliability and testing evidence",
+          "Learning practice snapshot",
+          "Collaboration and reflection",
+          "Placement preparation plan",
+          "Interview discussion prompts",
+          "Let us discuss the work"
+        ],
+        "perfectFor": [
+          "Placement Portfolio",
+          "Portfolio presentation",
+          "Editable evidence-led report"
+        ]
+      },
+      "authoredSlides": [
+        {
+          "layout": "cover",
+          "title": "Title slide"
+        },
+        {
+          "layout": "agenda",
+          "title": "Portfolio map"
+        },
+        {
+          "layout": "text",
+          "title": "About me and target role",
+          "body": [
+            "Introduce your degree, current focus and the type of role you are seeking.",
+            "Name two or three strengths that you can demonstrate with project evidence.",
+            "Add a professional contact method and links you are comfortable sharing."
+          ]
+        },
+        {
+          "layout": "table",
+          "title": "Skills backed by evidence",
+          "subtitle": "Replace generic proficiency ratings with specific examples",
+          "body": [],
+          "table": [
+            [
+              "Skill",
+              "Evidence",
+              "What I can explain"
+            ],
+            [
+              "[Technology or method]",
+              "[Repository / project link]",
+              "[A decision or contribution]"
+            ],
+            [
+              "[Testing or analysis skill]",
+              "[Test report / notebook]",
+              "[How the result was verified]"
+            ],
+            [
+              "[Collaboration skill]",
+              "[Review / team example]",
+              "[My responsibility and learning]"
+            ]
+          ]
+        },
+        {
+          "layout": "problem",
+          "title": "Flagship project: the user need"
+        },
+        {
+          "layout": "architecture",
+          "title": "My delivery process"
+        },
+        {
+          "layout": "image",
+          "title": "Project demonstration",
+          "subtitle": "Add your own screenshot or demo storyboard",
+          "body": [
+            "Explain the input, the action and the result a user sees.",
+            "Point to the code or artifact that demonstrates your individual contribution."
+          ]
+        },
+        {
+          "layout": "text",
+          "title": "One design decision",
+          "body": [
+            "State a real trade-off you encountered and the constraints that mattered.",
+            "Compare the alternatives you considered and explain why you chose one.",
+            "Describe what you would revisit if usage, data or team size changed."
+          ]
+        },
+        {
+          "layout": "table",
+          "title": "Reliability and testing evidence",
+          "subtitle": "Show how you tested the work instead of claiming it is bug-free",
+          "body": [],
+          "table": [
+            [
+              "Scenario",
+              "Check performed",
+              "Verified outcome"
+            ],
+            [
+              "Typical use",
+              "[Test or review]",
+              "[Observed result]"
+            ],
+            [
+              "Invalid input",
+              "[Validation test]",
+              "[Observed result]"
+            ],
+            [
+              "Failure recovery",
+              "[Failure scenario]",
+              "[Known limit or recovery path]"
+            ]
+          ]
+        },
+        {
+          "layout": "chart",
+          "title": "Learning practice snapshot"
+        },
+        {
+          "layout": "text",
+          "title": "Collaboration and reflection",
+          "body": [
+            "Describe a specific code review, feedback conversation or team coordination example.",
+            "Credit collaborators and distinguish your work from shared outputs.",
+            "Name one mistake, the correction and the lesson you now apply."
+          ]
+        },
+        {
+          "layout": "timeline",
+          "title": "Placement preparation plan"
+        },
+        {
+          "layout": "text",
+          "title": "Interview discussion prompts",
+          "body": [
+            "Which part of my project would you like to inspect or see demonstrated?",
+            "What constraints would change my approach to this problem?",
+            "Which skill should I strengthen for the responsibilities of this role?"
+          ]
+        },
+        {
+          "layout": "closing",
+          "title": "Let us discuss the work"
+        }
+      ]
+    },
+    {
+      "id": "industrial-visit",
+      "slideLabels": {
+        "cover": "Title",
+        "agenda": "Contents",
+        "problem": "Problem statement",
+        "arch": "Architecture",
+        "results": "Results",
+        "timeline": "Timeline",
+        "team": "Team",
+        "thanks": "Thank you"
+      },
+      "fieldLabels": {
+        "team": "Team members",
+        "guide": "Guided by",
+        "dept": "Department"
+      },
+      "slideFooterLabels": {
+        "team": "Presented by",
+        "guide": "Guided by",
+        "dept": "Department",
+        "date": "Review date"
+      },
+      "slideTitles": {
+        "agenda": "Contents",
+        "problem": "Problem Statement",
+        "arch": "System Architecture",
+        "results": "Results & Discussion",
+        "timeline": "Project Timeline",
+        "team": "Project Team"
+      },
+      "slideNumbers": {
+        "agenda": "02",
+        "problem": "03",
+        "arch": "07",
+        "results": "12",
+        "timeline": "15",
+        "team": "17"
+      },
+      "agenda": [
+        {
+          "n": "01",
+          "title": "Visit purpose and context",
+          "detail": "Establish context and scope"
+        },
+        {
+          "n": "02",
+          "title": "Observed process flow",
+          "detail": "Define the evidence needed"
+        },
+        {
+          "n": "03",
+          "title": "Observation log",
+          "detail": "Explain the approach"
+        },
+        {
+          "n": "04",
+          "title": "Classroom concept and site practice",
+          "detail": "Examine the sample findings"
+        },
+        {
+          "n": "05",
+          "title": "Preparation to report timeline",
+          "detail": "Identify decisions and next steps"
+        }
+      ],
+      "architectureGroups": [
+        "Context",
+        "Delivery",
+        "Learning"
+      ],
+      "chart": {
+        "title": "Illustrative distribution of visit time",
+        "unit": " min",
+        "highlight": "max",
+        "bars": [
+          {
+            "label": "Briefing",
+            "value": 20
+          },
+          {
+            "label": "Process tour",
+            "value": 45
+          },
+          {
+            "label": "Quality lab",
+            "value": 30
+          },
+          {
+            "label": "Discussion",
+            "value": 25
+          }
+        ]
+      },
+      "kpis": [
+        {
+          "value": "5 stages",
+          "label": "Illustrative process map"
+        },
+        {
+          "value": "4 questions",
+          "label": "A focused observation plan"
+        }
+      ],
+      "timeline": {
+        "current": 1,
+        "milestones": [
+          {
+            "when": "Before",
+            "title": "Prepare",
+            "detail": "Review course concepts"
+          },
+          {
+            "when": "Arrival",
+            "title": "Briefing",
+            "detail": "Follow host instructions"
+          },
+          {
+            "when": "On site",
+            "title": "Observe",
+            "detail": "Record permitted evidence"
+          },
+          {
+            "when": "After",
+            "title": "Compare",
+            "detail": "Check observations with the host"
+          },
+          {
+            "when": "Report",
+            "title": "Reflect",
+            "detail": "Link evidence to learning"
+          }
+        ]
+      },
+      "teamRoles": [
+        "Lead presenter",
+        "Analysis & evidence",
+        "Delivery & review",
+        "Documentation"
+      ],
+      "guideLabel": "Academic / workplace guide",
+      "questionLabel": "Decision question",
+      "closing": {
+        "title": "Questions and reflections",
+        "subtitle": "Questions, evidence and the next step"
+      },
+      "detailPage": {
+        "description": "An industrial-visit report built around observable processes, permitted evidence, a comparison with classroom concepts and clear limits on what a short visit can establish.",
+        "insideList": [
+          "Title slide",
+          "Visit report outline",
+          "Visit purpose and context",
+          "Observation question and boundaries",
+          "Observed process flow",
+          "Annotated site observations",
+          "Observation log",
+          "Visit schedule at a glance",
+          "Classroom concept and site practice",
+          "Learning points and limitations",
+          "Preparation to report timeline",
+          "Acknowledgements and sources",
+          "Questions and reflections"
+        ],
+        "perfectFor": [
+          "Industrial Visit",
+          "Site Notes presentation",
+          "Editable evidence-led report"
+        ]
+      },
+      "authoredSlides": [
+        {
+          "layout": "cover",
+          "title": "Title slide"
+        },
+        {
+          "layout": "agenda",
+          "title": "Visit report outline"
+        },
+        {
+          "layout": "text",
+          "title": "Visit purpose and context",
+          "body": [
+            "Name the host organisation, visit date and participating class or group.",
+            "Explain the learning objectives agreed with the faculty and host.",
+            "Describe the portion of the facility visited and any access limits."
+          ]
+        },
+        {
+          "layout": "problem",
+          "title": "Observation question and boundaries"
+        },
+        {
+          "layout": "architecture",
+          "title": "Observed process flow"
+        },
+        {
+          "layout": "image",
+          "title": "Annotated site observations",
+          "subtitle": "Use photographs or sketches that the host has permitted you to share",
+          "body": [
+            "Label the process stage, observation location and relevant equipment.",
+            "Separate what you directly observed from what the host explained."
+          ]
+        },
+        {
+          "layout": "table",
+          "title": "Observation log",
+          "subtitle": "Use dated notes and attribute explanations to their source",
+          "body": [],
+          "table": [
+            [
+              "Stage",
+              "Observed evidence",
+              "Question or implication"
+            ],
+            [
+              "Material receipt",
+              "[Permitted observation]",
+              "[Connection to specifications]"
+            ],
+            [
+              "Quality sampling",
+              "[Permitted observation]",
+              "[Connection to test methods]"
+            ],
+            [
+              "Dispatch records",
+              "[Permitted observation]",
+              "[Connection to traceability]"
+            ]
+          ]
+        },
+        {
+          "layout": "chart",
+          "title": "Visit schedule at a glance"
+        },
+        {
+          "layout": "table",
+          "title": "Classroom concept and site practice",
+          "subtitle": "Compare carefully; a short visit is not a formal compliance assessment",
+          "body": [],
+          "table": [
+            [
+              "Course concept",
+              "Site example",
+              "What needs clarification"
+            ],
+            [
+              "Quality control",
+              "[Observed check]",
+              "[Sampling or acceptance details]"
+            ],
+            [
+              "Material handling",
+              "[Observed arrangement]",
+              "[Reason for the method]"
+            ],
+            [
+              "Process traceability",
+              "[Observed record]",
+              "[How exceptions are handled]"
+            ]
+          ]
+        },
+        {
+          "layout": "text",
+          "title": "Learning points and limitations",
+          "body": [
+            "Describe the strongest connection between a course concept and a permitted observation.",
+            "Record what was not visible or could not be verified during the visit.",
+            "Propose a follow-up question that would deepen understanding without exposing confidential information."
+          ]
+        },
+        {
+          "layout": "timeline",
+          "title": "Preparation to report timeline"
+        },
+        {
+          "layout": "text",
+          "title": "Acknowledgements and sources",
+          "body": [
+            "Thank the host team and faculty who made the visit possible.",
+            "List the permitted handouts, course references and sources actually used.",
+            "Confirm that images and process details are approved for academic sharing."
+          ]
+        },
+        {
+          "layout": "closing",
+          "title": "Questions and reflections"
+        }
+      ]
+    },
+    {
+      "id": "nonprofit-impact",
+      "slideLabels": {
+        "cover": "Title",
+        "agenda": "Agenda",
+        "problem": "The problem",
+        "arch": "How it works",
+        "results": "Traction",
+        "timeline": "Roadmap",
+        "team": "Team",
+        "thanks": "Closing"
+      },
+      "fieldLabels": {
+        "team": "Team members",
+        "guide": "Mentor",
+        "dept": "Department or track"
+      },
+      "slideFooterLabels": {
+        "team": "Team",
+        "guide": "Mentor",
+        "dept": "Track",
+        "date": "Event"
+      },
+      "slideTitles": {
+        "agenda": "Agenda",
+        "problem": "The Problem",
+        "arch": "How It Works",
+        "results": "Traction",
+        "timeline": "Roadmap",
+        "team": "The Team"
+      },
+      "slideNumbers": {
+        "agenda": "02",
+        "problem": "03",
+        "arch": "05",
+        "results": "07",
+        "timeline": "09",
+        "team": "11"
+      },
+      "agenda": [
+        {
+          "n": "01",
+          "title": "Community need and programme question",
+          "detail": "Establish context and scope"
+        },
+        {
+          "n": "02",
+          "title": "Activities and reach",
+          "detail": "Define the evidence needed"
+        },
+        {
+          "n": "03",
+          "title": "Outcomes and evidence",
+          "detail": "Explain the approach"
+        },
+        {
+          "n": "04",
+          "title": "Resource use and stewardship",
+          "detail": "Examine the sample findings"
+        },
+        {
+          "n": "05",
+          "title": "Next programme cycle",
+          "detail": "Identify decisions and next steps"
+        },
+        {
+          "n": "06",
+          "title": "Decisions and support needed",
+          "detail": "Close with ownership and sources"
+        }
+      ],
+      "architectureGroups": [
+        "Context",
+        "Delivery",
+        "Learning"
+      ],
+      "chart": {
+        "title": "Illustrative participants completing each programme stage",
+        "unit": " people",
+        "highlight": "last",
+        "bars": [
+          {
+            "label": "Enrolled",
+            "value": 120
+          },
+          {
+            "label": "Attended",
+            "value": 104
+          },
+          {
+            "label": "Completed",
+            "value": 86
+          },
+          {
+            "label": "Follow-up",
+            "value": 62
+          }
+        ]
+      },
+      "kpis": [
+        {
+          "value": "86",
+          "label": "Illustrative completions, not verified results"
+        },
+        {
+          "value": "3 sites",
+          "label": "Illustrative delivery footprint"
+        }
+      ],
+      "timeline": {
+        "current": 1,
+        "milestones": [
+          {
+            "when": "Listen",
+            "title": "Needs",
+            "detail": "Consult community partners"
+          },
+          {
+            "when": "Prepare",
+            "title": "Access",
+            "detail": "Arrange sites and support"
+          },
+          {
+            "when": "Deliver",
+            "title": "Practice",
+            "detail": "Run guided learning sessions"
+          },
+          {
+            "when": "Assess",
+            "title": "Evidence",
+            "detail": "Review outcome measures"
+          },
+          {
+            "when": "Improve",
+            "title": "Next cycle",
+            "detail": "Agree priorities with partners"
+          }
+        ]
+      },
+      "teamRoles": [
+        "Lead presenter",
+        "Analysis & evidence",
+        "Delivery & review",
+        "Documentation"
+      ],
+      "guideLabel": "Sponsor / advisory group",
+      "questionLabel": "Decision question",
+      "closing": {
+        "title": "Continue the conversation",
+        "subtitle": "Questions, evidence and the next step"
+      },
+      "detailPage": {
+        "description": "A nonprofit programme update that distinguishes activity from outcomes, explains the evidence behind its claims and connects resources to an actionable next-period plan.",
+        "insideList": [
+          "Title slide",
+          "Impact review outline",
+          "Community need and programme question",
+          "Theory of change",
+          "Activities and reach",
+          "Participation and progression",
+          "Outcomes and evidence",
+          "A participant story with context",
+          "Resource use and stewardship",
+          "What we learned",
+          "Next programme cycle",
+          "Delivery team and partners",
+          "Decisions and support needed",
+          "Continue the conversation"
+        ],
+        "perfectFor": [
+          "Impact Report",
+          "Ripple presentation",
+          "Editable evidence-led report"
+        ]
+      },
+      "authoredSlides": [
+        {
+          "layout": "cover",
+          "title": "Title slide"
+        },
+        {
+          "layout": "agenda",
+          "title": "Impact review outline"
+        },
+        {
+          "layout": "problem",
+          "title": "Community need and programme question"
+        },
+        {
+          "layout": "architecture",
+          "title": "Theory of change"
+        },
+        {
+          "layout": "text",
+          "title": "Activities and reach",
+          "body": [
+            "Report the sessions, resources and support actually delivered during the period.",
+            "Define who is counted, the reporting window and how repeat participation is handled.",
+            "Explain which groups or locations were not reached and why."
+          ]
+        },
+        {
+          "layout": "chart",
+          "title": "Participation and progression"
+        },
+        {
+          "layout": "table",
+          "title": "Outcomes and evidence",
+          "subtitle": "Distinguish measured outcomes from expectations and testimonials",
+          "body": [],
+          "table": [
+            [
+              "Intended outcome",
+              "Evidence source",
+              "Limit or caveat"
+            ],
+            [
+              "Practical digital task completion",
+              "[Observed assessment]",
+              "[Who was assessed and when]"
+            ],
+            [
+              "Confidence using services",
+              "[Consented feedback]",
+              "[Self-report limitations]"
+            ],
+            [
+              "Continued learning",
+              "[Follow-up record]",
+              "[Missing follow-up responses]"
+            ]
+          ]
+        },
+        {
+          "layout": "image",
+          "title": "A participant story with context",
+          "subtitle": "Use an approved image or anonymised illustration",
+          "body": [
+            "Use only a story shared with informed permission and agreed wording.",
+            "Explain the person's context and avoid implying that one experience represents everyone."
+          ]
+        },
+        {
+          "layout": "table",
+          "title": "Resource use and stewardship",
+          "subtitle": "Use reconciled figures and link to the appropriate financial report",
+          "body": [],
+          "table": [
+            [
+              "Resource area",
+              "Reported amount",
+              "How it supported delivery"
+            ],
+            [
+              "Learning delivery",
+              "[Verified amount and currency]",
+              "[Staff or facilitator support]"
+            ],
+            [
+              "Access and equipment",
+              "[Verified amount and currency]",
+              "[Sites, devices or connectivity]"
+            ],
+            [
+              "Monitoring and support",
+              "[Verified amount and currency]",
+              "[Assessment and follow-up]"
+            ]
+          ]
+        },
+        {
+          "layout": "text",
+          "title": "What we learned",
+          "body": [
+            "Identify a programme assumption that the evidence supported or challenged.",
+            "Explain a delivery adaptation and what changed after it was introduced.",
+            "Name gaps in the evidence and how the next cycle will address them."
+          ]
+        },
+        {
+          "layout": "timeline",
+          "title": "Next programme cycle"
+        },
+        {
+          "layout": "team",
+          "title": "Delivery team and partners"
+        },
+        {
+          "layout": "text",
+          "title": "Decisions and support needed",
+          "body": [
+            "Specify the next-period programme priorities and the evidence behind them.",
+            "Describe the resources, partnerships or decisions needed without promising unverified outcomes.",
+            "Assign an owner and review date to each agreed action."
+          ]
+        },
+        {
+          "layout": "closing",
+          "title": "Continue the conversation"
+        }
+      ]
+    },
+    {
+      "id": "strategy-workshop",
+      "slideLabels": {
+        "cover": "Title",
+        "agenda": "Agenda",
+        "problem": "Executive summary",
+        "arch": "Priorities",
+        "results": "Performance",
+        "timeline": "Roadmap",
+        "team": "Leadership",
+        "thanks": "Thank you"
+      },
+      "fieldLabels": {
+        "team": "Presented by",
+        "guide": "Prepared for",
+        "dept": "Function"
+      },
+      "slideFooterLabels": {
+        "team": "Presented by",
+        "guide": "Prepared for",
+        "dept": "Function",
+        "date": "Date"
+      },
+      "slideTitles": {
+        "agenda": "Agenda",
+        "problem": "Executive Summary",
+        "arch": "Strategic Priorities",
+        "results": "Performance",
+        "timeline": "Roadmap",
+        "team": "Leadership"
+      },
+      "slideNumbers": {
+        "agenda": "02",
+        "problem": "03",
+        "arch": "06",
+        "results": "09",
+        "timeline": "12",
+        "team": "14"
+      },
+      "agenda": [
+        {
+          "n": "01",
+          "title": "The decision we need to make",
+          "detail": "Establish context and scope"
+        },
+        {
+          "n": "02",
+          "title": "Evidence and assumptions",
+          "detail": "Define the evidence needed"
+        },
+        {
+          "n": "03",
+          "title": "Strategic options",
+          "detail": "Explain the approach"
+        },
+        {
+          "n": "04",
+          "title": "Chosen experiments",
+          "detail": "Examine the sample findings"
+        },
+        {
+          "n": "05",
+          "title": "Action register",
+          "detail": "Identify decisions and next steps"
+        },
+        {
+          "n": "06",
+          "title": "Decision owners and sponsor",
+          "detail": "Close with ownership and sources"
+        }
+      ],
+      "architectureGroups": [
+        "Context",
+        "Delivery",
+        "Learning"
+      ],
+      "chart": {
+        "title": "Illustrative option score against agreed criteria",
+        "unit": " / 5",
+        "highlight": "max",
+        "bars": [
+          {
+            "label": "Onboarding",
+            "value": 4
+          },
+          {
+            "label": "Expansion",
+            "value": 3
+          },
+          {
+            "label": "Automation",
+            "value": 5
+          },
+          {
+            "label": "New offer",
+            "value": 2
+          }
+        ]
+      },
+      "kpis": [
+        {
+          "value": "90 days",
+          "label": "Illustrative planning horizon"
+        },
+        {
+          "value": "2 bets",
+          "label": "Illustrative focus limit"
+        }
+      ],
+      "timeline": {
+        "current": 1,
+        "milestones": [
+          {
+            "when": "Week 1",
+            "title": "Frame",
+            "detail": "Confirm question and measures"
+          },
+          {
+            "when": "Week 2",
+            "title": "Select",
+            "detail": "Agree experiments and owners"
+          },
+          {
+            "when": "Week 4",
+            "title": "Launch",
+            "detail": "Run the first test"
+          },
+          {
+            "when": "Week 8",
+            "title": "Learn",
+            "detail": "Review evidence and adapt"
+          },
+          {
+            "when": "Week 12",
+            "title": "Decide",
+            "detail": "Scale, change or stop"
+          }
+        ]
+      },
+      "teamRoles": [
+        "Lead presenter",
+        "Analysis & evidence",
+        "Delivery & review",
+        "Documentation"
+      ],
+      "guideLabel": "Sponsor / advisory group",
+      "questionLabel": "Decision question",
+      "closing": {
+        "title": "Commitments and next review",
+        "subtitle": "Questions, evidence and the next step"
+      },
+      "detailPage": {
+        "description": "A working strategy session with a decision question, explicit assumptions, option comparison, prioritisation and a 90-day experiment plan with accountable owners.",
+        "insideList": [
+          "Title slide",
+          "Working session agenda",
+          "The decision we need to make",
+          "Workshop agreements",
+          "Evidence and assumptions",
+          "Decision process",
+          "Strategic options",
+          "Prioritisation discussion",
+          "Chosen experiments",
+          "90-day execution roadmap",
+          "Action register",
+          "Review cadence and guardrails",
+          "Decision owners and sponsor",
+          "Commitments and next review"
+        ],
+        "perfectFor": [
+          "Strategy",
+          "Compass presentation",
+          "Editable evidence-led report"
+        ]
+      },
+      "authoredSlides": [
+        {
+          "layout": "cover",
+          "title": "Title slide"
+        },
+        {
+          "layout": "agenda",
+          "title": "Working session agenda"
+        },
+        {
+          "layout": "problem",
+          "title": "The decision we need to make"
+        },
+        {
+          "layout": "text",
+          "title": "Workshop agreements",
+          "body": [
+            "Separate observations from interpretations and make assumptions explicit.",
+            "Invite differing views, then record the decision and its rationale clearly.",
+            "Keep the discussion within the agreed time horizon and resource constraints."
+          ]
+        },
+        {
+          "layout": "table",
+          "title": "Evidence and assumptions",
+          "subtitle": "Capture uncertainty rather than presenting assumptions as facts",
+          "body": [],
+          "table": [
+            [
+              "Statement",
+              "Evidence available",
+              "What remains uncertain"
+            ],
+            [
+              "[Customer or market observation]",
+              "[Source and date]",
+              "[Validation needed]"
+            ],
+            [
+              "[Operational constraint]",
+              "[Measured signal]",
+              "[Alternative explanation]"
+            ],
+            [
+              "[Capacity assumption]",
+              "[Team input]",
+              "[Dependency or limit]"
+            ]
+          ]
+        },
+        {
+          "layout": "architecture",
+          "title": "Decision process"
+        },
+        {
+          "layout": "table",
+          "title": "Strategic options",
+          "subtitle": "Compare a small set of distinct choices, including doing less",
+          "body": [],
+          "table": [
+            [
+              "Option",
+              "Expected benefit",
+              "Cost or trade-off"
+            ],
+            [
+              "Improve onboarding",
+              "[Hypothesis to test]",
+              "[Capacity or dependency]"
+            ],
+            [
+              "Automate a bottleneck",
+              "[Hypothesis to test]",
+              "[Implementation and adoption]"
+            ],
+            [
+              "Test a new offer",
+              "[Hypothesis to test]",
+              "[Market and delivery uncertainty]"
+            ]
+          ]
+        },
+        {
+          "layout": "chart",
+          "title": "Prioritisation discussion"
+        },
+        {
+          "layout": "columns",
+          "title": "Chosen experiments",
+          "subtitle": "Each experiment should produce evidence for a decision",
+          "body": [
+            "Hypothesis\nState the behaviour or outcome expected to change.",
+            "Measure\nChoose an observable signal and an evaluation window.",
+            "Boundary\nLimit the users, workflow or investment involved.",
+            "Decision rule\nDefine when to continue, change or stop."
+          ]
+        },
+        {
+          "layout": "timeline",
+          "title": "90-day execution roadmap"
+        },
+        {
+          "layout": "table",
+          "title": "Action register",
+          "subtitle": "Confirm ownership in the session before closing",
+          "body": [],
+          "table": [
+            [
+              "Action",
+              "Owner",
+              "Due / evidence"
+            ],
+            [
+              "[First agreed action]",
+              "[Named accountable owner]",
+              "[Date and completion evidence]"
+            ],
+            [
+              "[Second agreed action]",
+              "[Named accountable owner]",
+              "[Date and completion evidence]"
+            ],
+            [
+              "[Dependency to resolve]",
+              "[Named accountable owner]",
+              "[Decision required]"
+            ]
+          ]
+        },
+        {
+          "layout": "text",
+          "title": "Review cadence and guardrails",
+          "body": [
+            "Schedule short evidence reviews and a final decision review before the planning window closes.",
+            "Record the limits on time, budget and customer disruption that must not be exceeded.",
+            "Escalate new information that changes the decision's assumptions or expected value."
+          ]
+        },
+        {
+          "layout": "team",
+          "title": "Decision owners and sponsor"
+        },
+        {
+          "layout": "closing",
+          "title": "Commitments and next review"
+        }
+      ]
     }
   ]
 }

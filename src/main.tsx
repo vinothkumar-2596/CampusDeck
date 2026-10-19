@@ -1,6 +1,6 @@
 import React, { lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "@fontsource-variable/inter";
 import "./styles.css";
 import "./design-system.css";
@@ -13,6 +13,7 @@ const Explore = lazy(() => import("./pages/Explore")),
   Details = lazy(() => import("./pages/Details")),
   Customise = lazy(() => import("./pages/Customise")),
   Editor = lazy(() => import("./pages/Editor")),
+  Create = lazy(() => import("./pages/Create")),
   Workspace = lazy(() => import("./pages/Workspace")),
   Auth = lazy(() => import("./pages/Auth")),
   Admin = lazy(() => import("./pages/Admin")),
@@ -53,6 +54,7 @@ createRoot(document.getElementById("root")!).render(
               <Route index element={<Home />} />
               <Route path="explore" element={<Explore />} />
               <Route path="templates" element={<Explore />} />
+              <Route path="create" element={<Create />} />
               {[
                 "college",
                 "corporate",
@@ -74,7 +76,7 @@ createRoot(document.getElementById("root")!).render(
               <Route path="*" element={<Info />} />
             </Route>
             <Route path="editor/:id" element={<Editor />} />
-            <Route path="editor" element={<Editor />} />
+            <Route path="editor" element={<Navigate to="/create" replace />} />
           </Routes>
         </Suspense>
       </AppProvider>

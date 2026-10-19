@@ -32,6 +32,7 @@ import { useApp } from "../lib/context";
 import { makeDeck, type Profile, type Template } from "../lib/model";
 import { SlideView } from "../components/SlideView";
 import { TemplateCard, Spinner } from "../components/Common";
+import { HeroPlayground } from "../components/HeroPlayground";
 import home from "../data/homepage.json" with { type: "json" };
 import taxonomy from "../data/taxonomy.json" with { type: "json" };
 import navigation from "../data/navigation.json" with { type: "json" };
@@ -246,7 +247,7 @@ export function FinalCta({ compact = false }: { compact?: boolean }) {
             </Link>
             <Link
               className="cd-btn cd-btn-on-dark"
-              to={compact ? "/templates" : "/editor"}
+              to={compact ? "/templates" : "/create"}
             >
               {compact ? "Explore all" : "Create a Presentation"}
             </Link>
@@ -359,7 +360,7 @@ export default function Home() {
                 Explore Templates
                 <ArrowRight size={18} />
               </Link>
-              <Link className="cd-btn cd-btn-white" to="/editor">
+              <Link className="cd-btn cd-btn-white" to="/create">
                 <PenLine size={18} />
                 Create a Presentation
               </Link>
@@ -373,40 +374,7 @@ export default function Home() {
               ))}
             </div>
           </div>
-          <div className="cd-hero-composition">
-            <div className="cd-hero-slide cd-hero-kepler">
-              <MiniSlide template={get("kepler")} />
-            </div>
-            <div className="cd-hero-slide cd-hero-halcyon">
-              <MiniSlide template={get("halcyon")} />
-            </div>
-            <div className="cd-hero-slide cd-hero-meridian">
-              <MiniSlide
-                template={get("meridian")}
-                title="Smart Irrigation System"
-              />
-            </div>
-            <div className="cd-hero-slide cd-hero-results">
-              <MiniSlide template={get("meridian")} kind="results" />
-            </div>
-            <div className="cd-personalise-card" aria-hidden="true">
-              <div>
-                <strong>Personalise</strong>
-                <span>● Live preview</span>
-              </div>
-              <small>Project title</small>
-              <div className="cd-demo-title">
-                Smart Irrigation System
-                <i />
-              </div>
-              <small>Colour theme</small>
-              <div className="cd-demo-swatches">
-                <span />
-                <span />
-                <span />
-              </div>
-            </div>
-          </div>
+          <HeroPlayground />
         </div>
       </section>
       <section className="cd-section cd-container">

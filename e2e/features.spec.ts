@@ -33,14 +33,18 @@ test("every published design downloads a real editable PowerPoint with its adver
   const templates = await response.json();
   expect(
     templates.filter(
-      (t: { id: string; handoffId?: string }) => t.handoffId === t.id,
+      (t: { id: string; handoffId?: string; starter?: boolean }) =>
+        t.handoffId === t.id && !t.starter,
     ),
-  ).toHaveLength(33);
+  ).toHaveLength(41);
+  expect(
+    templates.filter((t: { starter?: boolean }) => t.starter),
+  ).toHaveLength(1);
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   for (const template of templates.filter(
-    (t: { premium: boolean; id: string }) =>
-      !t.premium && !t.id.startsWith("custom-"),
+    (t: { premium: boolean; id: string; starter?: boolean }) =>
+      !t.premium && !t.starter && !t.id.startsWith("custom-"),
   )) {
     await test.step(template.name, async () => {
       await page.goto(`/templates/${template.id}`);
@@ -295,6 +299,92 @@ test("profile, bookmarks, cloud save, repeat login, rename, duplicate, history a
     await expect(
       another.getByText("All changes saved", { exact: true }),
     ).toBeVisible();
+
+    // A blank presentation follows the same real account persistence path.
+    await another.goto("/editor/blank");
+    await expect(another.getByLabel("Heading", { exact: true })).toHaveValue(
+      "",
+    );
+    await expect(another.locator(".slides-list > button")).toHaveCount(1);
+    await another
+      .getByLabel("Presentation name", { exact: true })
+      .fill("Blank Cloud Verification");
+    await another
+      .getByLabel("Heading", { exact: true })
+      .fill("Blank cloud content");
+    await another
+      .getByLabel("Content", { exact: true })
+      .fill("Saved from an empty slide.\nStill editable after sign-in.");
+    await expect(
+      another.getByText("All changes saved", { exact: true }),
+    ).toBeVisible();
+    const blankUrl = another.url();
+    const blankId = blankUrl.split("/").pop()!;
+    const blankExport = await exportPptx(another, "artifacts/blank-cloud.pptx");
+    const blankXml = await blankExport
+      .file("ppt/slides/slide1.xml")!
+      .async("string");
+    expect(blankXml).toContain("Blank cloud content");
+    expect(blankXml).toContain("Still editable after sign-in.");
+    expect(
+      Object.keys(blankExport.files).filter((path) =>
+        /^ppt\/slides\/slide\d+\.xml$/.test(path),
+      ),
+    ).toHaveLength(1);
+    await another.reload();
+    await expect(another.getByLabel("Heading", { exact: true })).toHaveValue(
+      "Blank cloud content",
+    );
+    const cleanBrowser = await browser.newContext({
+      baseURL: new URL(blankUrl).origin,
+    });
+    try {
+      const restored = await cleanBrowser.newPage();
+      await restored.goto(
+        "/sign-in?returnTo=" + encodeURIComponent("/editor/" + blankId),
+      );
+      await restored.getByLabel("Email address", { exact: true }).fill(email);
+      await restored.getByLabel("Password", { exact: true }).fill(password);
+      await restored
+        .getByRole("button", { name: "Sign in", exact: true })
+        .click();
+      await expect(restored.getByLabel("Heading", { exact: true })).toHaveValue(
+        "Blank cloud content",
+      );
+      await expect(restored.getByLabel("Content", { exact: true })).toHaveValue(
+        "Saved from an empty slide.\nStill editable after sign-in.",
+      );
+      await expect(restored.locator(".slides-list > button")).toHaveCount(1);
+      await expect(
+        restored.getByText("All changes saved", { exact: true }),
+      ).toBeVisible();
+      await restored
+        .getByRole("link", { name: "Back to workspace", exact: true })
+        .click();
+      await restored
+        .getByRole("button", {
+          name: "Actions for Blank Cloud Verification",
+          exact: true,
+        })
+        .click();
+      await restored
+        .getByRole("button", { name: "Delete", exact: true })
+        .click();
+      await restored
+        .getByRole("button", { name: "Delete presentation", exact: true })
+        .click();
+      await expect(
+        restored.getByRole("heading", {
+          name: "Blank Cloud Verification",
+          exact: true,
+        }),
+      ).toHaveCount(0);
+      expect(
+        (await restored.request.get("/api/projects/" + blankId)).status(),
+      ).toBe(404);
+    } finally {
+      await cleanBrowser.close();
+    }
   } finally {
     await fresh.close();
   }

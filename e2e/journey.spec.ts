@@ -255,7 +255,7 @@ test("mobile browsing, filtering, preview and responsive editor have no horizont
   await expect(page.getByRole("checkbox", { name: /^Minimal/ })).toBeChecked();
   await expect(
     page.locator(".cd-market-results .cd-template-card"),
-  ).toHaveCount(7);
+  ).toHaveCount(9);
   await page.getByRole("button", { name: /^Filters/ }).click();
   await page.screenshot({
     path: "artifacts/explore-mobile.png",

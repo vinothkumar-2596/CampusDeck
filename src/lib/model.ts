@@ -2,6 +2,7 @@ import { z } from "zod";
 import { getHandoffTemplate, makeHandoffSlides } from "./slides/content.js";
 
 export const layouts = [
+  "blank",
   "cover",
   "agenda",
   "section",
@@ -83,6 +84,7 @@ export const templateSchema = z.object({
   familyKey: z.string().max(40).optional(),
   defaultTheme: z.number().int().min(0).max(2).optional(),
   legacy: z.boolean().optional(),
+  starter: z.boolean().optional(),
 });
 export const deckSchema = z.object({
   id: z.string().max(80),
@@ -124,6 +126,7 @@ export type Template = {
   familyKey?: string;
   defaultTheme?: number;
   legacy?: boolean;
+  starter?: boolean;
 };
 export type User = {
   id: string;
@@ -138,6 +141,17 @@ export function newSlide(
   layout: Layout = "text",
   title = "Untitled slide",
 ): Slide {
+  if (layout === "blank")
+    return {
+      id: uid(),
+      layout,
+      title: "",
+      subtitle: "",
+      body: [],
+      table: [],
+      chart: [],
+      notes: "",
+    };
   return {
     id: uid(),
     layout,
@@ -167,6 +181,18 @@ export function makeDeck(
   profile: Profile = blankProfile,
   title?: string,
 ): Deck {
+  if (t.starter)
+    return {
+      id: uid(),
+      templateId: t.id,
+      templateSnapshot: structuredClone(t),
+      title: title?.trim() || "Untitled presentation",
+      accent: t.accent,
+      font: "default",
+      slides: [newSlide("blank")],
+      profile: { ...blankProfile, year: "" },
+      updatedAt: new Date().toISOString(),
+    };
   if (t.handoffId) {
     const slides = withSampleKeys(makeHandoffSlides(t.handoffId, newSlide));
     const sample = getHandoffTemplate(t.handoffId).sample;
