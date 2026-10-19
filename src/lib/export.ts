@@ -12,7 +12,8 @@ export async function createPptx(
   pptx.subject = "Editable presentation created with CampusDeck";
   pptx.title = deck.title;
   pptx.company = "CampusDeck";
-  pptx.theme = { headFontFace: deck.font, bodyFontFace: deck.font };
+  const themeFont = buildScene(deck.slides[0], template, deck).font;
+  pptx.theme = { headFontFace: themeFont, bodyFontFace: themeFont };
   for (const [i, slide] of deck.slides.entries()) {
     const s = pptx.addSlide(),
       scene = buildScene(slide, template, deck, i, deck.slides.length);
@@ -33,6 +34,8 @@ export async function createPptx(
           paraSpaceAfter: 0,
           lineSpacingMultiple: 1.0,
           fit: "shrink",
+          rotate: e.rotate || 0,
+          vert: e.vertical ? "vert270" : undefined,
         });
       else if (e.kind === "image")
         s.addImage({
@@ -87,12 +90,18 @@ export async function createPptx(
               showLegend: false,
               showTitle: false,
               showValue: true,
-              chartColors: [rgb(e.accent)],
+              chartColors: e.colors?.map(rgb) || [rgb(e.accent)],
+              dataLabelFormatCode: e.unit ? `0\"${e.unit}\"` : "0",
               valAxisMinVal: 0,
               catAxisLabelColor: rgb(e.ink),
               valAxisLabelColor: rgb(e.ink),
               dataLabelColor: rgb(e.ink),
               barDir: "col",
+              chartArea: {
+                fill: { color: rgb(scene.background) },
+                roundedCorners: false,
+              },
+              plotArea: { fill: { color: rgb(scene.background) } },
               catAxisLineColor: rgb(e.light),
               valAxisLineColor: rgb(e.light),
             },
@@ -108,9 +117,17 @@ export async function createPptx(
         });
       else
         s.addShape(
-          e.kind === "ellipse" ? pptx.ShapeType.ellipse : pptx.ShapeType.rect,
+          e.kind === "ellipse"
+            ? pptx.ShapeType.ellipse
+            : e.radius
+              ? pptx.ShapeType.roundRect
+              : pptx.ShapeType.rect,
           {
             ...box,
+            rotate: e.rotate || 0,
+            rectRadius: e.radius
+              ? Math.min(1, e.radius / Math.min(e.w, e.h))
+              : 0,
             fill:
               e.fill === "none"
                 ? { color: "FFFFFF", transparency: 100 }
@@ -147,6 +164,10 @@ export function fileName(title: string, format = "pptx") {
   );
 }
 export async function createPdf(deck: Deck, template: Template): Promise<Blob> {
+  // Standard PDF fonts cannot encode these common financial glyphs. Keep their
+  // meaning readable in PDF while PPTX retains the original Unicode text.
+  const pdfText = (text: string) =>
+    text.replace(/₹/g, "Rs.").replace(/−/g, "-");
   const content = [
     deck.title,
     ...Object.values(deck.profile).filter((v) => v && !v.startsWith("data:")),
@@ -157,7 +178,9 @@ export async function createPdf(deck: Deck, template: Template): Promise<Blob> {
       ...s.table.flat(),
       ...s.chart.map((d) => d.label),
     ]),
-  ].join(" ");
+  ]
+    .map(pdfText)
+    .join(" ");
   if (/[^\u0000-\u024f\u2000-\u206f]/u.test(content))
     throw new Error(
       "PDF currently supports Latin text. Download the editable PowerPoint for Tamil and other scripts, then use PowerPoint’s PDF export.",
@@ -177,14 +200,22 @@ export async function createPdf(deck: Deck, template: Template): Promise<Blob> {
     for (const e of scene.elements) {
       if (e.kind === "text") {
         pdf.setFont(
-          scene.font === "Georgia" ? "times" : "helvetica",
+          /Georgia|Instrument Serif|Newsreader/.test(e.font || scene.font)
+            ? "times"
+            : "helvetica",
           e.bold ? "bold" : "normal",
         );
         pdf.setFontSize(e.size * k);
         pdf.setTextColor(e.color);
+        if (e.vertical) {
+          pdf.text(pdfText(e.text), (e.x + e.size) * k, (e.y + e.h) * k, {
+            angle: 90,
+          });
+          continue;
+        }
         (e.lines || [e.text]).forEach((line, j) =>
           pdf.text(
-            line,
+            pdfText(line),
             (e.x +
               (e.align === "center"
                 ? e.w / 2
@@ -216,16 +247,50 @@ export async function createPdf(deck: Deck, template: Template): Promise<Blob> {
         if (e.stroke) pdf.setDrawColor(e.stroke);
         pdf.setLineWidth((e.sw || 1) * k);
         const mode = e.stroke ? (e.fill === "none" ? "S" : "FD") : "F";
-        if (e.kind === "rect")
-          pdf.rect(e.x * k, e.y * k, e.w * k, e.h * k, mode);
-        else
-          pdf.ellipse(
-            (e.x + e.w / 2) * k,
-            (e.y + e.h / 2) * k,
-            (e.w / 2) * k,
-            (e.h / 2) * k,
-            mode,
-          );
+        const draw = () => {
+          if (e.kind === "rect") {
+            if (e.radius)
+              pdf.roundedRect(
+                e.x * k,
+                e.y * k,
+                e.w * k,
+                e.h * k,
+                Math.min(e.radius, e.w / 2) * k,
+                Math.min(e.radius, e.h / 2) * k,
+                mode,
+              );
+            else pdf.rect(e.x * k, e.y * k, e.w * k, e.h * k, mode);
+          } else
+            pdf.ellipse(
+              (e.x + e.w / 2) * k,
+              (e.y + e.h / 2) * k,
+              (e.w / 2) * k,
+              (e.h / 2) * k,
+              mode,
+            );
+        };
+        if (e.rotate) {
+          pdf.advancedAPI(() => {
+            pdf.saveGraphicsState();
+            const angle = (e.rotate! * Math.PI) / 180,
+              cos = Math.cos(angle),
+              sin = Math.sin(angle),
+              cx = (e.x + e.w / 2) * k,
+              cy = (e.y + e.h / 2) * k;
+            pdf.setCurrentTransformationMatrix(
+              pdf.Matrix(
+                cos,
+                sin,
+                -sin,
+                cos,
+                cx - cos * cx + sin * cy,
+                cy - sin * cx - cos * cy,
+              ),
+            );
+            draw();
+            pdf.restoreGraphicsState();
+          });
+        } else draw();
       } else if (e.kind === "table") {
         const rows = e.rows.length ? e.rows : [[""]],
           cols = Math.max(...rows.map((r) => r.length)),
@@ -244,7 +309,7 @@ export async function createPdf(deck: Deck, template: Template): Promise<Blob> {
             pdf.setTextColor(ri ? e.ink : "#ffffff");
             pdf.setFontSize(15);
             pdf.text(
-              pdf.splitTextToSize(cell, (cw - 30) * k),
+              pdf.splitTextToSize(pdfText(cell), (cw - 30) * k),
               (e.x + ci * cw + 15) * k,
               (e.y + ri * rh + 38) * k,
             );
@@ -255,7 +320,7 @@ export async function createPdf(deck: Deck, template: Template): Promise<Blob> {
           cw = e.w / Math.max(e.data.length, 1);
         e.data.forEach((d, j) => {
           const h = (d.value / max) * (e.h - 65);
-          pdf.setFillColor(e.accent);
+          pdf.setFillColor(e.colors?.[j] || e.accent);
           pdf.rect(
             (e.x + j * cw + cw * 0.2) * k,
             (e.y + e.h - 40 - h) * k,
@@ -265,11 +330,16 @@ export async function createPdf(deck: Deck, template: Template): Promise<Blob> {
           );
           pdf.setTextColor(e.ink);
           pdf.setFontSize(13);
-          pdf.text(d.label, (e.x + (j + 0.5) * cw) * k, (e.y + e.h - 12) * k, {
-            align: "center",
-          });
           pdf.text(
-            String(d.value),
+            pdfText(d.label),
+            (e.x + (j + 0.5) * cw) * k,
+            (e.y + e.h - 12) * k,
+            {
+              align: "center",
+            },
+          );
+          pdf.text(
+            pdfText(String(d.value) + (e.unit || "")),
             (e.x + (j + 0.5) * cw) * k,
             (e.y + e.h - 48 - h) * k,
             { align: "center" },

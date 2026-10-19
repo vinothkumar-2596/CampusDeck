@@ -1,7 +1,11 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
   build: { outDir: "dist/client", chunkSizeWarningLimit: 950 },
-  server: { host: "127.0.0.1" },
+  server: {
+    host: "127.0.0.1",
+    watch: { ignored: ["**/artifacts/**", "**/.data/**"] },
+  },
 });

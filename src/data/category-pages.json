@@ -1,0 +1,340 @@
+{
+  "explore": {
+    "title": "Explore templates",
+    "intro": "Professionally designed, fully editable decks for college projects, research, business and beyond. Filter by requirement, style, colour or length.",
+    "checks": [
+      "16:9 widescreen",
+      "Three colour themes each",
+      "Editable charts and diagrams"
+    ],
+    "heroSlides": [
+      "ledger",
+      "gala",
+      "meridian"
+    ]
+  },
+  "college": {
+    "eyebrow": "For students",
+    "title": "College presentation templates",
+    "intro": "Final year projects, project reviews, seminars and internship decks, structured the way departments review them.",
+    "checks": [
+      "Slide structures for Review 1, 2 and 3",
+      "Title slides with team, guide and department fields",
+      "Architecture, results and timeline layouts ready to fill"
+    ],
+    "heroSlides": [
+      "atlas",
+      "kepler",
+      "tropic"
+    ],
+    "reviewKit": {
+      "eyebrow": "Project review kit",
+      "title": "What to show at Review 1, 2 and 3",
+      "intro": "Most final year projects are reviewed in three stages, and each stage expects different slides. Here is a typical structure, and the layouts that cover it.",
+      "cta": {
+        "label": "Open the Atlas review kit",
+        "template": "atlas"
+      },
+      "stages": [
+        {
+          "label": "Review 1",
+          "title": "Problem and proposal",
+          "slide": {
+            "id": "atlas",
+            "kind": "problem"
+          },
+          "checklist": [
+            "Title, team and guide",
+            "Abstract and problem statement",
+            "Literature survey",
+            "Objectives and proposed system"
+          ]
+        },
+        {
+          "label": "Review 2",
+          "title": "Design and progress",
+          "slide": {
+            "id": "atlas",
+            "kind": "arch"
+          },
+          "checklist": [
+            "System architecture",
+            "Module description",
+            "Algorithm or process flow",
+            "Partial implementation and work plan"
+          ]
+        },
+        {
+          "label": "Review 3",
+          "title": "Results and conclusion",
+          "slide": {
+            "id": "atlas",
+            "kind": "results"
+          },
+          "checklist": [
+            "Implementation and testing",
+            "Results and comparison",
+            "Conclusion and future scope",
+            "References"
+          ]
+        }
+      ]
+    },
+    "marketplace": {
+      "title": "All college templates",
+      "intro": "Filter by requirement, department, style or length."
+    },
+    "otherCategories": [
+      "corporate",
+      "business",
+      "healthcare",
+      "research",
+      "events"
+    ]
+  },
+  "corporate": {
+    "eyebrow": "For teams and leadership",
+    "title": "Corporate presentation templates",
+    "intro": "Quarterly reviews, strategy decks, board updates and annual reports with clear data layouts and a boardroom-ready finish.",
+    "checks": [
+      "Executive summary and priority layouts",
+      "Native charts and KPI highlights",
+      "Roadmaps and decision slides"
+    ],
+    "heroSlides": [
+      "boardroom",
+      "northline",
+      "ledger"
+    ],
+    "feature": {
+      "template": "ledger",
+      "eyebrow": "Inside the Ledger template",
+      "title": "Layouts built for leadership updates",
+      "cta": "View Ledger",
+      "items": [
+        {
+          "kind": "problem",
+          "title": "Executive summary",
+          "text": "The quarter in one slide, with the takeaway set apart."
+        },
+        {
+          "kind": "results",
+          "title": "Performance",
+          "text": "Bar charts and headline figures that read across a meeting room."
+        },
+        {
+          "kind": "timeline",
+          "title": "Roadmap",
+          "text": "Milestones on one line, with progress marked to date."
+        }
+      ]
+    },
+    "marketplace": {
+      "title": "All corporate templates",
+      "intro": "Filter by use, style, colour or length."
+    },
+    "otherCategories": [
+      "college",
+      "business",
+      "healthcare",
+      "research",
+      "events"
+    ]
+  },
+  "business": {
+    "eyebrow": "For founders and sales teams",
+    "title": "Business presentation templates",
+    "intro": "Pitch decks, sales proposals, business plans and marketing plans that move from problem to ask in the order investors and clients expect.",
+    "checks": [
+      "Problem-to-ask pitch structure",
+      "Traction and market charts",
+      "Roadmap and team slides"
+    ],
+    "heroSlides": [
+      "closer",
+      "margin",
+      "launchpad"
+    ],
+    "feature": {
+      "template": "launchpad",
+      "eyebrow": "Inside the Launchpad template",
+      "title": "Layouts built for the pitch",
+      "cta": "View Launchpad",
+      "items": [
+        {
+          "kind": "problem",
+          "title": "The problem",
+          "text": "One sharp message, the pain points, and the insight behind it."
+        },
+        {
+          "kind": "results",
+          "title": "Traction",
+          "text": "Growth charts and headline numbers that read at a glance."
+        },
+        {
+          "kind": "team",
+          "title": "The team",
+          "text": "Founders, roles and advisors, set up for quick edits."
+        }
+      ]
+    },
+    "marketplace": {
+      "title": "All business templates",
+      "intro": "Filter by use, style, colour or length."
+    },
+    "otherCategories": [
+      "college",
+      "corporate",
+      "healthcare",
+      "research",
+      "events"
+    ]
+  },
+  "healthcare": {
+    "eyebrow": "For clinicians and hospitals",
+    "title": "Healthcare presentation templates",
+    "intro": "Case presentations, grand rounds and quality reports with calm, clinical layouts that keep dense information readable.",
+    "checks": [
+      "Case summary and care pathway layouts",
+      "Outcome and compliance charts",
+      "High-contrast type for ward and lecture screens"
+    ],
+    "heroSlides": [
+      "vital",
+      "rounds",
+      "pulse"
+    ],
+    "feature": {
+      "template": "pulse",
+      "eyebrow": "Inside the Pulse template",
+      "title": "Layouts built for clinical teaching",
+      "cta": "View Pulse",
+      "items": [
+        {
+          "kind": "problem",
+          "title": "Case summary",
+          "text": "The presentation, key findings and the clinical question."
+        },
+        {
+          "kind": "arch",
+          "title": "Care pathway",
+          "text": "Assessment to discharge in five clear steps."
+        },
+        {
+          "kind": "timeline",
+          "title": "Timeline of care",
+          "text": "Day-by-day progress with the current stage marked."
+        }
+      ]
+    },
+    "marketplace": {
+      "title": "All healthcare templates",
+      "intro": "Filter by use, style, colour or length."
+    },
+    "otherCategories": [
+      "college",
+      "corporate",
+      "business",
+      "research",
+      "events"
+    ]
+  },
+  "research": {
+    "eyebrow": "For researchers and scholars",
+    "title": "Research presentation templates",
+    "intro": "Thesis defences, conference papers and research proposals built for methods, findings and references that hold up to scrutiny.",
+    "checks": [
+      "Research question and methodology layouts",
+      "Findings with charts and headline figures",
+      "Research plan timelines and references"
+    ],
+    "heroSlides": [
+      "abstract",
+      "fieldnotes",
+      "thesis"
+    ],
+    "feature": {
+      "template": "thesis",
+      "eyebrow": "Inside the Thesis template",
+      "title": "Layouts built for a defence",
+      "cta": "View Thesis",
+      "items": [
+        {
+          "kind": "problem",
+          "title": "Research question",
+          "text": "The problem, the gap, and the question it raises."
+        },
+        {
+          "kind": "arch",
+          "title": "Methodology",
+          "text": "The method in five clear stages, grouped by phase."
+        },
+        {
+          "kind": "results",
+          "title": "Key findings",
+          "text": "Results with sample size and significance called out."
+        }
+      ]
+    },
+    "marketplace": {
+      "title": "All research templates",
+      "intro": "Filter by use, style, colour or length."
+    },
+    "otherCategories": [
+      "college",
+      "corporate",
+      "business",
+      "healthcare",
+      "events"
+    ]
+  },
+  "events": {
+    "eyebrow": "For organisers",
+    "title": "Event presentation templates",
+    "intro": "Symposiums, convocations and cultural fests, with programme, schedule, track and organiser slides designed for auditorium screens.",
+    "checks": [
+      "Programme and schedule layouts",
+      "Track, venue and committee slides",
+      "Large type that reads from the back row"
+    ],
+    "heroSlides": [
+      "convocation",
+      "fest",
+      "gala"
+    ],
+    "feature": {
+      "template": "gala",
+      "eyebrow": "Inside the Gala template",
+      "title": "Layouts built for the big screen",
+      "cta": "View Gala",
+      "items": [
+        {
+          "kind": "agenda",
+          "title": "Programme",
+          "text": "The whole day at a glance, from welcome to valedictory."
+        },
+        {
+          "kind": "timeline",
+          "title": "Schedule",
+          "text": "Times and venues on one line, ready for the lobby screen."
+        },
+        {
+          "kind": "team",
+          "title": "Organising committee",
+          "text": "Convenors, leads and the faculty coordinator."
+        }
+      ]
+    },
+    "marketplace": {
+      "title": "All event templates",
+      "intro": "Filter by use, style, colour or length."
+    },
+    "otherCategories": [
+      "college",
+      "corporate",
+      "business",
+      "healthcare",
+      "research"
+    ]
+  }
+}

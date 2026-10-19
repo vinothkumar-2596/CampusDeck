@@ -4,7 +4,7 @@ A standalone React and TypeScript presentation marketplace with original templat
 
 ## Run locally
 
-Install **Node.js 24 or newer** (the server uses Node's built-in SQLite).
+Install **Node.js 24** (the server uses Node's built-in SQLite).
 
 ```powershell
 cd D:\project\campusdeck
@@ -26,48 +26,57 @@ Then refresh the application and open `/admin`. Alternatively, configure `ADMIN_
 
 ## What works
 
-- Original, responsive marketplace with **18 real template families**, including **12 academic families**. Each has **16 slides**; no inflated catalogue counts.
-- Text search across design name, sample project, description, category, department, and tags. Collection, academic need, department, style, light/dark, access filters, sorting, and pagination.
-- Actual slide previews, thumbnail navigation, keyboard-controlled full-window presentation mode, and one-click original PPTX downloads.
+- A responsive blue-and-navy marketplace with **33 working templates across 12 design families**, including **16 college templates**. New templates contain **12–17 complete slides**, depending on their content set; the interface reports the actual generated count.
+- Search by template, topic, requirement or department. Category, academic requirement, department, style, colour, slide-length and access filters, sorting, grid density, and pagination. Header search opens with `/` or Ctrl/Command+K.
+- Actual slide previews, thumbnail navigation, three coordinated colour themes per new design family, keyboard-controlled full-window presentation mode, and original PPTX downloads.
 - Guided college/project/team customisation, reusable academic profiles, and logo/image uploads.
-- Structured editor: headings, subtitles, body points, tables, chart data, images, colours, fonts, layout changes, speaker notes, add/duplicate/reorder/delete, zoom, undo/redo, and debounced autosave with retry feedback.
+- Structured editor: headings, subtitles, body points, tables, chart data, images, colour themes, headline fonts, layout changes, speaker notes, add/duplicate/reorder/delete, zoom, undo/redo, and debounced autosave with retry feedback.
 - Native editable PowerPoint text, vector shapes, tables, charts with embedded Excel data, and embedded image assets. This is not a screenshot export. UTF-8 text, including Tamil, is preserved in PPTX; PowerPoint needs a font supporting the script.
 - Real vector PDF export for Latin-script presentations. No LibreOffice or remote conversion service is required.
 - Registration/login, HTTP-only sessions, private presentations, bookmark collections, export snapshots, rename/duplicate/delete, and download history.
-- Template snapshots preserve the original design of a saved deck when catalogue metadata or colours change.
+- Template snapshots preserve the original design of a saved deck when catalogue metadata or colours change. Existing presentations and original template links remain supported alongside the new collection.
 - Protected admin interface: create/duplicate/edit/publish/unpublish designs, colours and metadata, dynamic categories and renaming, member roles, real download totals, support messages, and audit logs.
-- Dark mode, reduced-motion support, keyboard focus states, labelled form fields, dialog focus containment, responsive editor, lazy-loaded pages and export engines, locally bundled fonts, sitemap and public-page metadata.
+- A consistent light interface, reduced-motion support, keyboard focus states, labelled form fields, dialog focus containment, responsive editor, lazy-loaded pages and export engines, locally bundled fonts, sitemap and public-page metadata. Dark slide designs remain available independently of the interface theme.
 - A functioning contact form stores messages in the administrator's support inbox. It does not send email or promise a response time.
 
-## Template library
+## Template library and routes
 
-| Academic (12)         | Professional (6) |
-| --------------------- | ---------------- |
-| The Final Year        | Executive Navy   |
-| Neural                | Pitch Perfect    |
-| Engineering Blueprint | The Annual       |
-| Research Notes        | Care & Clarity   |
-| Thesis & Theory       | Perspective      |
-| Clean Slate           | Gather           |
-| Current               |                  |
-| Vital                 |                  |
-| Signal                |                  |
-| Fieldwork             |                  |
-| Launchpad             |                  |
-| Foundation            |                  |
+| Collection | Templates |
+| ---------- | --------- |
+| College    | 16        |
+| Corporate  | 4         |
+| Business   | 4         |
+| Healthcare | 3         |
+| Research   | 3         |
+| Events     | 3         |
 
-All samples are labelled. Missing student details, results, and references remain placeholders. Chart data is explicitly illustrative.
+The 33 templates use 12 visual families: Meridian, Atlas, Kepler, Halcyon, Vertex, Ledger, Pulse, Gala, Swiss, Strata, Canopy and Mono. They share six complete content sets with template-specific sample projects. Each family has three colour themes. These are working native slide designs, not thumbnail-only entries. Original designs remain available for existing projects and links; they do not inflate the new marketplace's 33-template count.
+
+Browse `/templates` or the collection routes `/college`, `/corporate`, `/business`, `/healthcare`, `/research` and `/events`. Template detail pages use `/templates/:id`; `/editor` opens Meridian, while `/editor/:id` opens a selected design or saved deck. `/customise/:id` provides the guided academic form. `/how-it-works` explains the complete workflow. Real account access is available at `/sign-in` and `/sign-up`, with private work under `/workspace` and administration under `/admin`. Existing `/explore` and `/auth` links remain compatible.
+
+The interface uses locally bundled Geist and Geist Mono. Slide designs use Sora, Space Grotesk, Instrument Serif, Newsreader and Archivo as well as Geist; the editor allows headline-font changes. Fonts are not fetched from a third-party service at runtime. The receiving PowerPoint application needs the chosen fonts installed for identical appearance.
+
+Sample project text, charts, references and results are illustrative. Replace them with your own verified work before presenting. Counts are derived from the generated slides; prototype-only slide totals, sales claims and popularity statistics are not presented as measured product facts.
+
+## Design handoff decision
+
+The supplied visual handoff described a UI-only demo with mocked sign-in and unavailable downloads. The user explicitly chose to apply its design to the existing CampusDeck while retaining every working feature. The implementation therefore adopts its visual system, navigation, curated collection and page layouts while preserving real authentication, MongoDB persistence, academic profiles, saved presentations and editable PPTX/PDF exports. It does not replace those features with demo notices or fake success states. Payments and unsupported account features remain subject to the release boundaries below.
 
 ## Architecture
 
 ```text
 src/lib/model.ts        Validated deck, profile, slide, template schemas
 src/lib/templates.ts    Original seed catalogue and search
+src/data/              Supplied design metadata, content sets and curation
+src/lib/slides/        New family resolution, content and native scene construction
+src/lib/marketplace.ts Category, requirement and filter helpers
 src/lib/scene.ts        Shared, deterministic layout and text fitting
 src/components/SlideView.tsx   SVG preview of that same scene
 src/lib/export.ts       Native PPTX and vector PDF renderers
 src/pages/             Marketplace, editor, account, workspace, admin
 server/api.ts          Validated API, identity, ownership and admin gates
+server/store.ts        Shared logical storage operations
+server/mongo.ts        MongoDB persistence and indexes
 server/sqlite.ts       Local SQLite adapter to the portable D1 interface
 server/local.ts        Standalone Node HTTP server and Vite middleware
 drizzle/               Schema migration and migration journal
@@ -78,7 +87,7 @@ e2e/                   Real browser journeys and download assertions
 
 The browser preview and export use the same logical 1200 × 675 coordinate system. PowerPoint output is 13⅓ × 7½ inches (16:9), with one native PowerPoint object per scene element. Tables and charts use their native Office representations. Text is wrapped and fitted before either renderer runs. PowerPoint can apply slightly different font metrics; installed fonts affect appearance.
 
-Local storage is SQLite; the hosted deployment uses Cloudflare D1 through the same parameterised query interface. Media is decoded, resized, and stored inside private deck/profile records. The bounded record format avoids a separate storage-service dependency in this release. Images are limited to PNG/JPEG, 10 MB before client resizing, about 500 KB after resizing; API request bodies are limited to 1.6 MB. Exported presentation sizes vary.
+Local development defaults to SQLite; the public Vercel deployment uses MongoDB Atlas. Both use the shared storage interface, with an optional D1 adapter retained for the earlier Sites deployment. Media is decoded, resized, and stored inside private deck/profile records. The bounded record format avoids a separate storage-service dependency in this release. Images are limited to PNG/JPEG, 10 MB before client resizing, about 500 KB after resizing; API request bodies are limited to 1.6 MB. Exported presentation sizes vary.
 
 ## Verification
 
@@ -88,11 +97,12 @@ npm test
 npx playwright install chromium
 npm run test:e2e
 npm run build
+npm run preview
 ```
 
-The engine/API tests validate all 18 PPTX packages, slide counts, XML package entries, editable text, shapes, native tables, charts and embedded workbooks; custom text, colours, notes and Unicode; image embedding; PDF structure; text fitting; registration/login; save/reload; cross-account access denial; uploads; bookmarks; private download snapshots; admin publication; categories; disabled billing; and support messages.
+The engine/API tests validate catalogue consistency, generated slide counts, PPTX package entries, editable text, shapes, native tables, charts and embedded workbooks; themes, custom text, colours, notes and Unicode; retained original-design snapshots; image embedding; PDF structure; text fitting; registration/login; save/reload; cross-account access denial; uploads; bookmarks; private download snapshots; admin publication; categories; disabled billing; and support messages.
 
-Playwright starts an isolated in-memory test database on port 5174. Six browser journeys cover every launch design's actual editable PPTX download; browse, preview, personalisation, slide operations, PPTX/PDF export, and guest reload; profile/logo reuse, bookmarks, rename/duplicate/delete, download history, sign-out and fresh-browser sign-in; table/chart/image/notes editing and Tamil PPTX text; public deep links and static assets; admin publication; and mobile browsing/filtering/editor overflow. Downloaded files are unpacked to verify native content. Screenshots, sample exports, and the HTML report are written under `artifacts/`, which is not published or committed. If needed, `PLAYWRIGHT_CHROMIUM_EXECUTABLE` can point to an already installed compatible Chromium binary.
+Playwright starts an isolated in-memory test database on port 5174. Browser journeys cover catalogue downloads; browse, preview, personalisation, slide operations, PPTX/PDF export, and guest reload; profile/logo reuse, bookmarks, rename/duplicate/delete, download history, sign-out and fresh-browser sign-in; table/chart/image/notes editing and Tamil PPTX text; public deep links and static assets; admin publication; and mobile browsing/filtering/editor overflow. The redesigned homepage, search and menus, collection routes, themes, authentication and editor are checked through real interactions. Downloaded files are unpacked to verify native content. Screenshots, sample exports, and the HTML report are written under `artifacts/`, which is not published or committed. If needed, `PLAYWRIGHT_CHROMIUM_EXECUTABLE` can point to an already installed compatible Chromium binary.
 
 PPTX contents are validated programmatically; desktop Microsoft PowerPoint is not installed in the build environment, so opening the generated files in that application remains a release check for the operator.
 
@@ -111,7 +121,7 @@ npx vercel deploy --prod --scope vinothkumars-projects-d5644634
 
 MongoDB stores slides and snapshots as embedded documents. Unique indexes protect identities and bookmarks; compound indexes support private workspace/history lookups; TTL indexes expire sessions and rate-limit counters. Category updates use a transaction. The same API also supports SQLite locally and D1 on Sites through `server/store.ts`. Database failures return an error rather than falling back to temporary storage. Each deployment provider has separate account data.
 
-MongoDB integration tests use a randomly named test database and remove their documents afterward. The 12 API tests include category rename propagation, unpublished-template history, role changes, concurrent writes, transaction rollback, and login rate limiting. Production browser checks can use `E2E_BASE_URL`, `E2E_EMAIL`, `E2E_FEATURE_EMAIL`, and `E2E_PASSWORD`; use unique temporary emails and remove those test accounts and their records afterward. These checks use regular accounts and do not change the public catalogue.
+MongoDB integration tests use a randomly named test database and remove their documents afterward. API tests include category rename propagation, unpublished-template history, role changes, concurrent writes, transaction rollback, and login rate limiting. Production browser checks can use `E2E_BASE_URL`, `E2E_EMAIL`, `E2E_FEATURE_EMAIL`, and `E2E_PASSWORD`; use unique temporary emails and remove those test accounts and their records afterward. These checks use regular accounts and do not change the public catalogue.
 
 To grant administrator access, register your real account first, then run this command with the correct server-side MongoDB environment:
 
@@ -139,7 +149,7 @@ docker compose up --build -d
 
 The compose file mounts a persistent database volume and serves port 5173. Configure HTTPS and environment variables for your actual deployment. Docker execution is not part of the automated browser test suite.
 
-The `.openai/hosting.json` configuration targets a private Sites deployment with a `DB` D1 binding. `npm run build` emits the React client and an ESM Worker at `dist/server/index.js`. Hosted requests use the platform's authenticated identity headers, while the standalone server uses its own email/password sessions and ignores platform identity headers. Hosted administrator access is controlled by the server-only `ADMIN_EMAILS` environment value. Source deployments include the schema migration under `drizzle/`; the hosting service applies it before activating the Worker. Local and hosted databases are separate.
+The optional legacy `.openai/hosting.json` configuration targets a private Sites deployment with a `DB` D1 binding. A non-Vercel build emits the React client and an ESM Worker at `dist/server/index.js`. Sites requests use the platform's authenticated identity headers, while the standalone and Vercel servers use their own email/password sessions and ignore platform identity headers. Sites administrator access is controlled by the server-only `ADMIN_EMAILS` environment value. Source deployments include the schema migration under `drizzle/`; the hosting service applies it before activating the Worker. SQLite, Vercel/MongoDB and optional Sites/D1 databases are separate.
 
 ## Commercial and release boundaries
 
@@ -148,8 +158,8 @@ The `.openai/hosting.json` configuration targets a private Sites deployment with
 - Standalone account email verification, forgotten-password email delivery, and MFA are not included. Hosted identity inherits the hosting platform's sign-in protections.
 - Browser PDF output supports Latin text. For Tamil or other scripts, download PPTX and use PowerPoint's PDF export; unsupported scripts produce a clear error rather than a corrupted PDF.
 - This is a controlled layout editor, not a free-position canvas. It supports 1–40 slides per deck. Heavy media decks need a separate file store and larger export pipeline before scaling.
-- New categories and variants can be managed in the database/admin UI. New structural design families are implemented in the shared layout engine. Sorting is curated, name, or catalogue order; there are no fabricated popularity metrics.
-- Public pages are a React SPA with server-provided metadata for seed designs. Full server rendering, social-image rasterisation, dynamic SEO for administrator-created variants, and expanded university formatting rules are future enhancements.
+- New categories and variants can be managed in the database/admin UI. New structural design families are implemented in the shared layout engine. Featured sorting follows editorial curation; name, slide count and newest-design ordering are also available. There are no fabricated user ratings or download statistics.
+- Public pages are a React SPA. The local Node and optional D1 servers provide metadata for seed designs; Vercel currently serves the shared SPA document. Full server rendering, social-image rasterisation, dynamic SEO for administrator-created variants, and expanded university formatting rules are future enhancements.
 - The included privacy and terms pages explain this implementation. The deployment operator must supply their legal entity/contact details and retention practices before a public commercial launch.
 
 No external configuration is required for the local core workflow.

@@ -1,0 +1,1094 @@
+{
+  "_note": "Shared slide content per presentation type. A template = family (look) + content set (structure and sample copy) + its own sample text in templates.json.",
+  "contentSets": [
+    {
+      "id": "acad",
+      "slideLabels": {
+        "cover": "Title",
+        "agenda": "Contents",
+        "problem": "Problem statement",
+        "arch": "Architecture",
+        "results": "Results",
+        "timeline": "Timeline",
+        "team": "Team",
+        "thanks": "Thank you"
+      },
+      "fieldLabels": {
+        "team": "Team members",
+        "guide": "Guided by",
+        "dept": "Department"
+      },
+      "slideFooterLabels": {
+        "team": "Presented by",
+        "guide": "Guided by",
+        "dept": "Department",
+        "date": "Review date"
+      },
+      "slideTitles": {
+        "agenda": "Contents",
+        "problem": "Problem Statement",
+        "arch": "System Architecture",
+        "results": "Results & Discussion",
+        "timeline": "Project Timeline",
+        "team": "Project Team"
+      },
+      "slideNumbers": {
+        "agenda": "02",
+        "problem": "03",
+        "arch": "07",
+        "results": "12",
+        "timeline": "15",
+        "team": "17"
+      },
+      "agenda": [
+        {
+          "n": "01",
+          "title": "Introduction",
+          "detail": "Context and motivation"
+        },
+        {
+          "n": "02",
+          "title": "Problem Statement",
+          "detail": "What we set out to solve"
+        },
+        {
+          "n": "03",
+          "title": "Literature Survey",
+          "detail": "What prior work misses"
+        },
+        {
+          "n": "04",
+          "title": "Proposed System",
+          "detail": "Architecture and modules"
+        },
+        {
+          "n": "05",
+          "title": "Results",
+          "detail": "Evaluation and comparison"
+        },
+        {
+          "n": "06",
+          "title": "Conclusion",
+          "detail": "Summary and future scope"
+        }
+      ],
+      "architectureGroups": [
+        "Input",
+        "Processing",
+        "Output"
+      ],
+      "chart": {
+        "title": "Accuracy by method (%)",
+        "unit": "%",
+        "highlight": "last",
+        "bars": [
+          {
+            "label": "Baseline",
+            "value": 71
+          },
+          {
+            "label": "SVM",
+            "value": 78
+          },
+          {
+            "label": "Random Forest",
+            "value": 84
+          },
+          {
+            "label": "CNN",
+            "value": 89
+          },
+          {
+            "label": "Proposed",
+            "value": 94
+          }
+        ]
+      },
+      "kpis": [
+        {
+          "value": "94.2%",
+          "label": "Accuracy on the test set"
+        },
+        {
+          "value": "1.8 s",
+          "label": "Average response time"
+        }
+      ],
+      "timeline": {
+        "current": 2,
+        "milestones": [
+          {
+            "when": "Aug",
+            "title": "Review 1",
+            "detail": "Problem and literature"
+          },
+          {
+            "when": "Oct",
+            "title": "Design",
+            "detail": "Architecture and modules"
+          },
+          {
+            "when": "Jan",
+            "title": "Review 2",
+            "detail": "Partial implementation"
+          },
+          {
+            "when": "Mar",
+            "title": "Review 3",
+            "detail": "Testing and results"
+          },
+          {
+            "when": "Apr",
+            "title": "Final viva",
+            "detail": "Report and demo"
+          }
+        ]
+      },
+      "teamRoles": [
+        "Team lead",
+        "Design & development",
+        "Data & testing",
+        "Documentation"
+      ],
+      "guideLabel": "Project guide",
+      "questionLabel": "Key question",
+      "closing": {
+        "title": "Thank you",
+        "subtitle": "Questions and discussion"
+      },
+      "detailPage": {
+        "description": "It follows the structure most departments expect, from problem statement and literature survey to architecture, results and future scope.",
+        "insideList": [
+          "Title slide",
+          "Contents",
+          "Introduction",
+          "Problem statement",
+          "Literature survey",
+          "Objectives",
+          "System architecture",
+          "Module description",
+          "Methodology",
+          "Implementation",
+          "Results and discussion",
+          "Comparison with existing work",
+          "Project timeline",
+          "Project team",
+          "Conclusion and future scope",
+          "References",
+          "Thank you"
+        ],
+        "perfectFor": [
+          "Final Year Project",
+          "Project Review 1 to 3",
+          "Mini Project",
+          "Viva voce"
+        ]
+      }
+    },
+    {
+      "id": "pitch",
+      "slideLabels": {
+        "cover": "Title",
+        "agenda": "Agenda",
+        "problem": "The problem",
+        "arch": "How it works",
+        "results": "Traction",
+        "timeline": "Roadmap",
+        "team": "Team",
+        "thanks": "Closing"
+      },
+      "fieldLabels": {
+        "team": "Team members",
+        "guide": "Mentor",
+        "dept": "Department or track"
+      },
+      "slideFooterLabels": {
+        "team": "Team",
+        "guide": "Mentor",
+        "dept": "Track",
+        "date": "Event"
+      },
+      "slideTitles": {
+        "agenda": "Agenda",
+        "problem": "The Problem",
+        "arch": "How It Works",
+        "results": "Traction",
+        "timeline": "Roadmap",
+        "team": "The Team"
+      },
+      "slideNumbers": {
+        "agenda": "02",
+        "problem": "03",
+        "arch": "05",
+        "results": "07",
+        "timeline": "09",
+        "team": "11"
+      },
+      "agenda": [
+        {
+          "n": "01",
+          "title": "Problem",
+          "detail": "Who it hurts, and why"
+        },
+        {
+          "n": "02",
+          "title": "Solution",
+          "detail": "Our approach"
+        },
+        {
+          "n": "03",
+          "title": "How it works",
+          "detail": "Under the hood"
+        },
+        {
+          "n": "04",
+          "title": "Traction",
+          "detail": "Early signals"
+        },
+        {
+          "n": "05",
+          "title": "Business model",
+          "detail": "How it sustains"
+        },
+        {
+          "n": "06",
+          "title": "The ask",
+          "detail": "What we need next"
+        }
+      ],
+      "architectureGroups": [
+        "Capture",
+        "Intelligence",
+        "Action"
+      ],
+      "chart": {
+        "title": "Weekly active users (hundreds)",
+        "unit": "",
+        "highlight": "last",
+        "bars": [
+          {
+            "label": "Jan",
+            "value": 12
+          },
+          {
+            "label": "Feb",
+            "value": 19
+          },
+          {
+            "label": "Mar",
+            "value": 28
+          },
+          {
+            "label": "Apr",
+            "value": 41
+          },
+          {
+            "label": "May",
+            "value": 57
+          },
+          {
+            "label": "Jun",
+            "value": 78
+          }
+        ]
+      },
+      "kpis": [
+        {
+          "value": "7,800",
+          "label": "Weekly active users"
+        },
+        {
+          "value": "38%",
+          "label": "Month-on-month growth"
+        }
+      ],
+      "timeline": {
+        "current": 0,
+        "milestones": [
+          {
+            "when": "Q4 '26",
+            "title": "Pilot",
+            "detail": "First 100 users"
+          },
+          {
+            "when": "Q1 '27",
+            "title": "Launch",
+            "detail": "Public release"
+          },
+          {
+            "when": "Q2 '27",
+            "title": "Partners",
+            "detail": "Distribution deals"
+          },
+          {
+            "when": "Q3 '27",
+            "title": "Scale",
+            "detail": "New cities"
+          },
+          {
+            "when": "Q4 '27",
+            "title": "Raise",
+            "detail": "Next funding round"
+          }
+        ]
+      },
+      "teamRoles": [
+        "Product & pitch",
+        "Engineering",
+        "Design",
+        "Research & growth"
+      ],
+      "guideLabel": "Mentor",
+      "questionLabel": "The insight",
+      "closing": {
+        "title": "Let's build this",
+        "subtitle": "Thank you · Questions welcome"
+      },
+      "detailPage": {
+        "description": "It moves from problem to solution, demo, traction and the ask — the order judges and investors expect.",
+        "insideList": [
+          "Title slide",
+          "Agenda",
+          "The problem",
+          "Our solution",
+          "How it works",
+          "Demo walkthrough",
+          "Market",
+          "Traction",
+          "Business model",
+          "Competition",
+          "Roadmap",
+          "Team",
+          "The ask",
+          "Closing"
+        ],
+        "perfectFor": [
+          "Hackathon pitch",
+          "Startup demo day",
+          "Innovation challenge",
+          "Investor meeting"
+        ]
+      }
+    },
+    {
+      "id": "research",
+      "slideLabels": {
+        "cover": "Title",
+        "agenda": "Outline",
+        "problem": "Research question",
+        "arch": "Methodology",
+        "results": "Findings",
+        "timeline": "Research plan",
+        "team": "Team",
+        "thanks": "Thank you"
+      },
+      "fieldLabels": {
+        "team": "Presenter",
+        "guide": "Supervisor",
+        "dept": "Department"
+      },
+      "slideFooterLabels": {
+        "team": "Presenter",
+        "guide": "Supervisor",
+        "dept": "Department",
+        "date": "Session"
+      },
+      "slideTitles": {
+        "agenda": "Outline",
+        "problem": "Research Question",
+        "arch": "Methodology",
+        "results": "Key Findings",
+        "timeline": "Research Plan",
+        "team": "Research Team"
+      },
+      "slideNumbers": {
+        "agenda": "02",
+        "problem": "04",
+        "arch": "08",
+        "results": "13",
+        "timeline": "18",
+        "team": "21"
+      },
+      "agenda": [
+        {
+          "n": "01",
+          "title": "Background",
+          "detail": "Why this matters"
+        },
+        {
+          "n": "02",
+          "title": "Research question",
+          "detail": "What we ask"
+        },
+        {
+          "n": "03",
+          "title": "Literature review",
+          "detail": "Where the gap is"
+        },
+        {
+          "n": "04",
+          "title": "Methodology",
+          "detail": "How we studied it"
+        },
+        {
+          "n": "05",
+          "title": "Findings",
+          "detail": "What we found"
+        },
+        {
+          "n": "06",
+          "title": "Conclusions",
+          "detail": "What it means"
+        }
+      ],
+      "architectureGroups": [
+        "Data",
+        "Analysis",
+        "Outcome"
+      ],
+      "chart": {
+        "title": "Measured response by site (normalised)",
+        "unit": "",
+        "highlight": "max",
+        "bars": [
+          {
+            "label": "Site A",
+            "value": 62
+          },
+          {
+            "label": "Site B",
+            "value": 48
+          },
+          {
+            "label": "Site C",
+            "value": 81
+          },
+          {
+            "label": "Site D",
+            "value": 55
+          },
+          {
+            "label": "Site E",
+            "value": 70
+          }
+        ]
+      },
+      "kpis": [
+        {
+          "value": "n = 240",
+          "label": "Samples analysed"
+        },
+        {
+          "value": "p < 0.01",
+          "label": "Significance level"
+        }
+      ],
+      "timeline": {
+        "current": 2,
+        "milestones": [
+          {
+            "when": "Year 1",
+            "title": "Literature",
+            "detail": "Review and scoping"
+          },
+          {
+            "when": "Year 1",
+            "title": "Fieldwork",
+            "detail": "Data collection"
+          },
+          {
+            "when": "Year 2",
+            "title": "Analysis",
+            "detail": "Lab work and modelling"
+          },
+          {
+            "when": "Year 3",
+            "title": "Writing",
+            "detail": "Thesis and papers"
+          },
+          {
+            "when": "Year 3",
+            "title": "Defence",
+            "detail": "Viva voce"
+          }
+        ]
+      },
+      "teamRoles": [
+        "Principal investigator",
+        "Co-investigator",
+        "Research assistant",
+        "Lab support"
+      ],
+      "guideLabel": "Supervisor",
+      "questionLabel": "Research question",
+      "closing": {
+        "title": "Thank you",
+        "subtitle": "Questions and discussion"
+      },
+      "detailPage": {
+        "description": "It is built for dense academic content, so research questions, methods, findings and references stay readable from the back of the room.",
+        "insideList": [
+          "Title slide",
+          "Outline",
+          "Background",
+          "Research question",
+          "Literature review",
+          "Methodology",
+          "Data and sampling",
+          "Analysis",
+          "Key findings",
+          "Discussion",
+          "Limitations",
+          "Research plan",
+          "Conclusions",
+          "References",
+          "Acknowledgements",
+          "Thank you"
+        ],
+        "perfectFor": [
+          "Seminar",
+          "Paper presentation",
+          "Thesis defence",
+          "Research colloquium"
+        ]
+      }
+    },
+    {
+      "id": "corp",
+      "slideLabels": {
+        "cover": "Title",
+        "agenda": "Agenda",
+        "problem": "Executive summary",
+        "arch": "Priorities",
+        "results": "Performance",
+        "timeline": "Roadmap",
+        "team": "Leadership",
+        "thanks": "Thank you"
+      },
+      "fieldLabels": {
+        "team": "Presented by",
+        "guide": "Prepared for",
+        "dept": "Function"
+      },
+      "slideFooterLabels": {
+        "team": "Presented by",
+        "guide": "Prepared for",
+        "dept": "Function",
+        "date": "Date"
+      },
+      "slideTitles": {
+        "agenda": "Agenda",
+        "problem": "Executive Summary",
+        "arch": "Strategic Priorities",
+        "results": "Performance",
+        "timeline": "Roadmap",
+        "team": "Leadership"
+      },
+      "slideNumbers": {
+        "agenda": "02",
+        "problem": "03",
+        "arch": "06",
+        "results": "09",
+        "timeline": "12",
+        "team": "14"
+      },
+      "agenda": [
+        {
+          "n": "01",
+          "title": "Highlights",
+          "detail": "The quarter in brief"
+        },
+        {
+          "n": "02",
+          "title": "Performance",
+          "detail": "Numbers that matter"
+        },
+        {
+          "n": "03",
+          "title": "Market",
+          "detail": "What is changing"
+        },
+        {
+          "n": "04",
+          "title": "Priorities",
+          "detail": "Where we focus"
+        },
+        {
+          "n": "05",
+          "title": "Roadmap",
+          "detail": "What happens when"
+        },
+        {
+          "n": "06",
+          "title": "Decisions",
+          "detail": "What we need from you"
+        }
+      ],
+      "architectureGroups": [
+        "Grow",
+        "Strengthen",
+        "Invest"
+      ],
+      "chart": {
+        "title": "Revenue by quarter (₹ crore)",
+        "unit": "",
+        "highlight": "last",
+        "bars": [
+          {
+            "label": "Q4 '25",
+            "value": 58
+          },
+          {
+            "label": "Q1 '26",
+            "value": 64
+          },
+          {
+            "label": "Q2 '26",
+            "value": 71
+          },
+          {
+            "label": "Q3 '26",
+            "value": 83
+          }
+        ]
+      },
+      "kpis": [
+        {
+          "value": "+18%",
+          "label": "Revenue, year on year"
+        },
+        {
+          "value": "92%",
+          "label": "Customer retention"
+        }
+      ],
+      "timeline": {
+        "current": 0,
+        "milestones": [
+          {
+            "when": "Oct",
+            "title": "Plan",
+            "detail": "Targets agreed"
+          },
+          {
+            "when": "Nov",
+            "title": "Launch",
+            "detail": "New pricing live"
+          },
+          {
+            "when": "Dec",
+            "title": "Expand",
+            "detail": "Two new regions"
+          },
+          {
+            "when": "Jan",
+            "title": "Review",
+            "detail": "Mid-year check-in"
+          },
+          {
+            "when": "Mar",
+            "title": "Close",
+            "detail": "Year-end results"
+          }
+        ]
+      },
+      "teamRoles": [
+        "Chief Executive Officer",
+        "Chief Financial Officer",
+        "Chief Operating Officer",
+        "Chief Technology Officer"
+      ],
+      "guideLabel": "Prepared for",
+      "questionLabel": "Key takeaway",
+      "closing": {
+        "title": "Thank you",
+        "subtitle": "Questions and next steps"
+      },
+      "detailPage": {
+        "description": "It gives leadership a clear story: summary first, then performance, priorities and the decisions required.",
+        "insideList": [
+          "Title slide",
+          "Agenda",
+          "Executive summary",
+          "Highlights",
+          "Performance",
+          "Market update",
+          "Strategic priorities",
+          "Key initiatives",
+          "Risks and mitigations",
+          "Roadmap",
+          "Leadership",
+          "Decisions required",
+          "Appendix",
+          "Thank you"
+        ],
+        "perfectFor": [
+          "Quarterly review",
+          "Board meeting",
+          "Leadership offsite",
+          "Client proposal"
+        ]
+      }
+    },
+    {
+      "id": "health",
+      "slideLabels": {
+        "cover": "Title",
+        "agenda": "Outline",
+        "problem": "Case summary",
+        "arch": "Care pathway",
+        "results": "Outcomes",
+        "timeline": "Timeline of care",
+        "team": "Care team",
+        "thanks": "Thank you"
+      },
+      "fieldLabels": {
+        "team": "Presenter",
+        "guide": "Unit",
+        "dept": "Department"
+      },
+      "slideFooterLabels": {
+        "team": "Presenter",
+        "guide": "Unit",
+        "dept": "Department",
+        "date": "Meeting"
+      },
+      "slideTitles": {
+        "agenda": "Outline",
+        "problem": "Case Summary",
+        "arch": "Care Pathway",
+        "results": "Outcomes",
+        "timeline": "Timeline of Care",
+        "team": "Care Team"
+      },
+      "slideNumbers": {
+        "agenda": "02",
+        "problem": "03",
+        "arch": "06",
+        "results": "09",
+        "timeline": "11",
+        "team": "14"
+      },
+      "agenda": [
+        {
+          "n": "01",
+          "title": "History",
+          "detail": "Presenting complaints"
+        },
+        {
+          "n": "02",
+          "title": "Examination",
+          "detail": "Key findings"
+        },
+        {
+          "n": "03",
+          "title": "Investigations",
+          "detail": "Labs and imaging"
+        },
+        {
+          "n": "04",
+          "title": "Management",
+          "detail": "What we did"
+        },
+        {
+          "n": "05",
+          "title": "Outcome",
+          "detail": "How it went"
+        },
+        {
+          "n": "06",
+          "title": "Learning points",
+          "detail": "What to remember"
+        }
+      ],
+      "architectureGroups": [
+        "Assess",
+        "Treat",
+        "Follow up"
+      ],
+      "chart": {
+        "title": "Protocol compliance by month (%)",
+        "unit": "%",
+        "highlight": "last",
+        "bars": [
+          {
+            "label": "Jan",
+            "value": 72
+          },
+          {
+            "label": "Feb",
+            "value": 78
+          },
+          {
+            "label": "Mar",
+            "value": 81
+          },
+          {
+            "label": "Apr",
+            "value": 86
+          },
+          {
+            "label": "May",
+            "value": 91
+          }
+        ]
+      },
+      "kpis": [
+        {
+          "value": "91%",
+          "label": "Care bundle compliance"
+        },
+        {
+          "value": "−32%",
+          "label": "Change in infection rate"
+        }
+      ],
+      "timeline": {
+        "current": 1,
+        "milestones": [
+          {
+            "when": "Day 0",
+            "title": "Admission",
+            "detail": "Emergency department"
+          },
+          {
+            "when": "Day 1",
+            "title": "Intensive care",
+            "detail": "Fluids and insulin"
+          },
+          {
+            "when": "Day 2",
+            "title": "Stabilised",
+            "detail": "Ward transfer"
+          },
+          {
+            "when": "Day 4",
+            "title": "Education",
+            "detail": "Self-care training"
+          },
+          {
+            "when": "Day 5",
+            "title": "Discharge",
+            "detail": "Follow-up plan"
+          }
+        ]
+      },
+      "teamRoles": [
+        "Presenting clinician",
+        "Consultant",
+        "Nursing lead",
+        "Clinical pharmacist"
+      ],
+      "guideLabel": "Unit",
+      "questionLabel": "Clinical question",
+      "closing": {
+        "title": "Thank you",
+        "subtitle": "Questions and discussion"
+      },
+      "detailPage": {
+        "description": "It structures clinical content clearly, from history and investigations to management, outcomes and learning points.",
+        "insideList": [
+          "Title slide",
+          "Outline",
+          "Case history",
+          "Examination",
+          "Investigations",
+          "Differential diagnosis",
+          "Care pathway",
+          "Management",
+          "Outcomes",
+          "Timeline of care",
+          "Learning points",
+          "Care team",
+          "References",
+          "Thank you"
+        ],
+        "perfectFor": [
+          "Case presentation",
+          "Grand rounds",
+          "Journal club",
+          "Quality review"
+        ]
+      }
+    },
+    {
+      "id": "event",
+      "slideLabels": {
+        "cover": "Title",
+        "agenda": "Programme",
+        "problem": "About",
+        "arch": "Tracks",
+        "results": "At a glance",
+        "timeline": "Schedule",
+        "team": "Committee",
+        "thanks": "Closing"
+      },
+      "fieldLabels": {
+        "team": "Organisers",
+        "guide": "Coordinator",
+        "dept": "Venue"
+      },
+      "slideFooterLabels": {
+        "team": "Organisers",
+        "guide": "Coordinator",
+        "dept": "Venue",
+        "date": "Dates"
+      },
+      "slideTitles": {
+        "agenda": "Programme",
+        "problem": "About the Event",
+        "arch": "Event Tracks",
+        "results": "At a Glance",
+        "timeline": "Schedule",
+        "team": "Organising Committee"
+      },
+      "slideNumbers": {
+        "agenda": "02",
+        "problem": "03",
+        "arch": "04",
+        "results": "06",
+        "timeline": "08",
+        "team": "10"
+      },
+      "agenda": [
+        {
+          "n": "01",
+          "title": "Welcome",
+          "detail": "Opening ceremony"
+        },
+        {
+          "n": "02",
+          "title": "Keynote",
+          "detail": "Guest address"
+        },
+        {
+          "n": "03",
+          "title": "Main events",
+          "detail": "Across all venues"
+        },
+        {
+          "n": "04",
+          "title": "Showcase",
+          "detail": "Exhibits and demos"
+        },
+        {
+          "n": "05",
+          "title": "Workshops",
+          "detail": "Hands-on sessions"
+        },
+        {
+          "n": "06",
+          "title": "Valedictory",
+          "detail": "Prizes and closing"
+        }
+      ],
+      "architectureGroups": [
+        "Present",
+        "Build",
+        "Celebrate"
+      ],
+      "chart": {
+        "title": "Registrations by department",
+        "unit": "",
+        "highlight": "max",
+        "bars": [
+          {
+            "label": "CSE",
+            "value": 86
+          },
+          {
+            "label": "ECE",
+            "value": 64
+          },
+          {
+            "label": "EEE",
+            "value": 42
+          },
+          {
+            "label": "MECH",
+            "value": 51
+          },
+          {
+            "label": "CIVIL",
+            "value": 33
+          }
+        ]
+      },
+      "kpis": [
+        {
+          "value": "1,200+",
+          "label": "Expected participants"
+        },
+        {
+          "value": "48",
+          "label": "Shortlisted entries"
+        }
+      ],
+      "timeline": {
+        "current": 0,
+        "milestones": [
+          {
+            "when": "09:30",
+            "title": "Inauguration",
+            "detail": "Main auditorium"
+          },
+          {
+            "when": "10:30",
+            "title": "Keynote",
+            "detail": "Guest speaker"
+          },
+          {
+            "when": "11:30",
+            "title": "Main events",
+            "detail": "All venues"
+          },
+          {
+            "when": "14:00",
+            "title": "Showcase",
+            "detail": "Exhibition hall"
+          },
+          {
+            "when": "16:30",
+            "title": "Valedictory",
+            "detail": "Prizes and closing"
+          }
+        ]
+      },
+      "teamRoles": [
+        "Student convenor",
+        "Joint convenor",
+        "Technical lead",
+        "Hospitality lead"
+      ],
+      "guideLabel": "Faculty coordinator",
+      "questionLabel": "Theme",
+      "closing": {
+        "title": "See you there",
+        "subtitle": "Register at the department office"
+      },
+      "detailPage": {
+        "description": "It covers everything an audience needs on the day: programme, tracks, schedule, venue and organisers.",
+        "insideList": [
+          "Title slide",
+          "Programme",
+          "About the event",
+          "Event tracks",
+          "Schedule",
+          "Speakers",
+          "Venue and directions",
+          "At a glance",
+          "Organising committee",
+          "Partners",
+          "Registration",
+          "Closing"
+        ],
+        "perfectFor": [
+          "Technical symposium",
+          "Annual day",
+          "Convocation",
+          "Cultural fest"
+        ]
+      }
+    }
+  ]
+}

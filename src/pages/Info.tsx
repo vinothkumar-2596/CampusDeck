@@ -55,11 +55,12 @@ export default function Info() {
           </p>
           <h2>A small, thoughtful collection.</h2>
           <p>
-            Our launch library includes 18 original design families, with 12
-            focused on college presentations. Every family includes 16 working
-            slide layouts with editable text, shapes, charts, and tables.
+            Explore 33 designs across 12 visual families, including 16 college
+            templates. Each design includes 12–17 working slides and three
+            colour themes, with editable text, shapes, charts, and tables.
+            Previously saved presentations retain their original designs.
           </p>
-          <Link to="/explore" className="btn btn-primary">
+          <Link to="/templates" className="btn btn-primary">
             Meet the collection <ArrowUpRight size={16} />
           </Link>
         </>

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { getHandoffTemplate, makeHandoffSlides } from "./slides/content.js";
 
 export const layouts = [
   "cover",
@@ -12,6 +13,9 @@ export const layouts = [
   "chart",
   "image",
   "closing",
+  "problem",
+  "architecture",
+  "team",
 ] as const;
 export type Layout = (typeof layouts)[number];
 export const slideSchema = z.object({
@@ -31,6 +35,9 @@ export const slideSchema = z.object({
     .max(6),
   image: z.string().max(2800000).optional(),
   notes: z.string().max(2000).optional(),
+  eyebrow: z.string().max(160).optional(),
+  question: z.string().max(500).optional(),
+  sampleKey: z.string().max(80).optional(),
 });
 export const profileSchema = z.object({
   college: z.string().max(150),
@@ -72,6 +79,10 @@ export const templateSchema = z.object({
   published: z.boolean(),
   premium: z.boolean(),
   slides: z.number().int().min(1).max(40),
+  handoffId: z.string().max(80).optional(),
+  familyKey: z.string().max(40).optional(),
+  defaultTheme: z.number().int().min(0).max(2).optional(),
+  legacy: z.boolean().optional(),
 });
 export const deckSchema = z.object({
   id: z.string().max(80),
@@ -79,10 +90,15 @@ export const deckSchema = z.object({
   templateSnapshot: templateSchema.optional(),
   title: z.string().min(1).max(160),
   accent: z.string().regex(/^#[0-9a-fA-F]{6}$/),
-  font: z.enum(["Arial", "Georgia", "Trebuchet MS"]),
+  font: z.enum(["default", "Arial", "Georgia", "Trebuchet MS"]),
   slides: z.array(slideSchema).min(1).max(40),
   profile: profileSchema,
   updatedAt: z.string(),
+  theme: z.number().int().min(0).max(2).optional(),
+  headlineFont: z
+    .enum(["default", "serif", "geo", "grotesk", "neutral", "condensed"])
+    .optional(),
+  customAccent: z.boolean().optional(),
 });
 export type Slide = z.infer<typeof slideSchema>;
 export type Deck = z.infer<typeof deckSchema>;
@@ -104,6 +120,10 @@ export type Template = {
   published: boolean;
   premium: boolean;
   slides: number;
+  handoffId?: string;
+  familyKey?: string;
+  defaultTheme?: number;
+  legacy?: boolean;
 };
 export type User = {
   id: string;
@@ -147,6 +167,37 @@ export function makeDeck(
   profile: Profile = blankProfile,
   title?: string,
 ): Deck {
+  if (t.handoffId) {
+    const slides = withSampleKeys(makeHandoffSlides(t.handoffId, newSlide));
+    const sample = getHandoffTemplate(t.handoffId).sample;
+    const sampleProfile = {
+      ...blankProfile,
+      students: sample.team.join(" · "),
+      guide: sample.guide,
+      department: sample.department,
+      year: sample.date,
+    };
+    if (profile !== blankProfile)
+      Object.entries(profile).forEach(([key, value]) => {
+        if (value?.trim())
+          (sampleProfile as Record<string, string>)[key] = value;
+      });
+    slides[0].title = title?.trim() || t.cover;
+    slides[0].subtitle = t.subtitle;
+    return {
+      id: uid(),
+      templateId: t.id,
+      templateSnapshot: structuredClone(t),
+      title: title?.trim() || t.cover.replace(/\n/g, " "),
+      accent: t.accent,
+      font: "default",
+      theme: t.defaultTheme || 0,
+      headlineFont: "default",
+      slides,
+      profile: sampleProfile,
+      updatedAt: new Date().toISOString(),
+    };
+  }
   const academic = t.family < 12;
   const specs: [Layout, string, string, string[]][] = [
     ["cover", title || t.cover, t.subtitle, []],
@@ -274,14 +325,25 @@ export function makeDeck(
     title: title || t.cover.replace(/\n/g, " "),
     accent: t.accent,
     font: t.family === 3 || t.family === 4 ? "Georgia" : "Arial",
-    slides: specs.map(([layout, heading, subtitle, body]) => ({
-      ...newSlide(layout, heading),
-      subtitle,
-      body,
-    })),
+    slides: withSampleKeys(
+      specs.map(([layout, heading, subtitle, body]) => ({
+        ...newSlide(layout, heading),
+        subtitle,
+        body,
+      })),
+    ),
     profile: { ...profile },
     updatedAt: new Date().toISOString(),
   };
+}
+
+function withSampleKeys(slides: Slide[]): Slide[] {
+  const occurrences = new Map<Layout, number>();
+  return slides.map((slide) => {
+    const occurrence = occurrences.get(slide.layout) || 0;
+    occurrences.set(slide.layout, occurrence + 1);
+    return { ...slide, sampleKey: `${slide.layout}:${occurrence}` };
+  });
 }
 
 export function personalise(
@@ -307,15 +369,29 @@ export function personalise(
     next.slides[0].title = values.title.trim();
   }
   Object.entries(mapping).forEach(([key, index]) => {
-    if (values[key]?.trim() && next.slides[index]) {
-      next.slides[index].body = values[key]
+    const semanticTitles: Record<string, RegExp> = {
+      abstract: /introduction|background|summary|about the event|case history/i,
+      problem: /problem|research question|case history/i,
+      objectives: /objectives|priorities|solution|learning/i,
+      methodology: /methodology|how it works|care pathway|event tracks/i,
+      technologies: /architecture|module|initiatives/i,
+      implementation: /implementation|demo|management/i,
+      results: /results|findings|performance|traction|outcomes|at a glance/i,
+      conclusion: /conclusion|learning|decisions|the ask|registration/i,
+      future: /future|roadmap|timeline|plan/i,
+    };
+    const targetIndex = next.templateSnapshot?.handoffId
+      ? next.slides.findIndex((s) => semanticTitles[key].test(s.title))
+      : index;
+    if (values[key]?.trim() && next.slides[targetIndex]) {
+      next.slides[targetIndex].body = values[key]
         .split("\n")
         .filter(Boolean)
         .flatMap((line) => line.match(/[\s\S]{1,500}/g) || [])
         .slice(0, 8);
       if (key === "results") {
-        next.slides[index].layout = "text";
-        next.slides[index].subtitle = "Your project findings";
+        next.slides[targetIndex].layout = "text";
+        next.slides[targetIndex].subtitle = "Your project findings";
       }
     }
   });

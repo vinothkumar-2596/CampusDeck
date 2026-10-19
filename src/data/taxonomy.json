@@ -1,0 +1,419 @@
+{
+  "categories": [
+    {
+      "id": "college",
+      "label": "College",
+      "requirements": [
+        {
+          "id": "fyp",
+          "label": "Final Year Project"
+        },
+        {
+          "id": "review",
+          "label": "Project Review"
+        },
+        {
+          "id": "mini",
+          "label": "Mini Project"
+        },
+        {
+          "id": "seminar",
+          "label": "Seminar"
+        },
+        {
+          "id": "intern",
+          "label": "Internship"
+        },
+        {
+          "id": "research",
+          "label": "Research"
+        },
+        {
+          "id": "assign",
+          "label": "Assignment"
+        },
+        {
+          "id": "symposium",
+          "label": "Symposium"
+        },
+        {
+          "id": "hackathon",
+          "label": "Hackathon"
+        }
+      ]
+    },
+    {
+      "id": "corporate",
+      "label": "Corporate",
+      "requirements": [
+        {
+          "id": "qbr",
+          "label": "Quarterly Review"
+        },
+        {
+          "id": "strategy",
+          "label": "Strategy"
+        },
+        {
+          "id": "board",
+          "label": "Board Update"
+        },
+        {
+          "id": "annual",
+          "label": "Annual Report"
+        }
+      ]
+    },
+    {
+      "id": "business",
+      "label": "Business",
+      "requirements": [
+        {
+          "id": "pitch",
+          "label": "Pitch Deck"
+        },
+        {
+          "id": "sales",
+          "label": "Sales Proposal"
+        },
+        {
+          "id": "plan",
+          "label": "Business Plan"
+        },
+        {
+          "id": "marketing",
+          "label": "Marketing Plan"
+        }
+      ]
+    },
+    {
+      "id": "healthcare",
+      "label": "Healthcare",
+      "requirements": [
+        {
+          "id": "case",
+          "label": "Case Presentation"
+        },
+        {
+          "id": "quality",
+          "label": "Quality Report"
+        },
+        {
+          "id": "rounds",
+          "label": "Grand Rounds"
+        }
+      ]
+    },
+    {
+      "id": "research",
+      "label": "Research",
+      "requirements": [
+        {
+          "id": "thesis",
+          "label": "Thesis Defence"
+        },
+        {
+          "id": "conference",
+          "label": "Conference Paper"
+        },
+        {
+          "id": "proposal",
+          "label": "Research Proposal"
+        }
+      ]
+    },
+    {
+      "id": "events",
+      "label": "Events",
+      "requirements": [
+        {
+          "id": "symposium",
+          "label": "Symposium"
+        },
+        {
+          "id": "graduation",
+          "label": "Graduation"
+        },
+        {
+          "id": "fest",
+          "label": "Cultural Fest"
+        }
+      ]
+    }
+  ],
+  "styles": [
+    {
+      "id": "Minimal",
+      "label": "Minimal"
+    },
+    {
+      "id": "Academic",
+      "label": "Academic"
+    },
+    {
+      "id": "Editorial",
+      "label": "Editorial serif"
+    },
+    {
+      "id": "Swiss",
+      "label": "Swiss grid"
+    },
+    {
+      "id": "Tech",
+      "label": "Dark and technical"
+    },
+    {
+      "id": "Bold",
+      "label": "Bold colour"
+    },
+    {
+      "id": "Corporate",
+      "label": "Corporate"
+    },
+    {
+      "id": "Organic",
+      "label": "Organic"
+    },
+    {
+      "id": "Elegant",
+      "label": "Elegant"
+    }
+  ],
+  "colours": [
+    {
+      "id": "Blue",
+      "hex": "#315CFD"
+    },
+    {
+      "id": "Navy",
+      "hex": "#14263F"
+    },
+    {
+      "id": "Teal",
+      "hex": "#0D8278"
+    },
+    {
+      "id": "Green",
+      "hex": "#2F6B4F"
+    },
+    {
+      "id": "Orange",
+      "hex": "#D9622B"
+    },
+    {
+      "id": "Red",
+      "hex": "#E5372B"
+    },
+    {
+      "id": "Black",
+      "hex": "#111111"
+    },
+    {
+      "id": "Plum",
+      "hex": "#5B2A55"
+    },
+    {
+      "id": "Gold",
+      "hex": "#C9A227"
+    }
+  ],
+  "departments": [
+    {
+      "id": "cse",
+      "label": "Computer Science"
+    },
+    {
+      "id": "it",
+      "label": "Information Technology"
+    },
+    {
+      "id": "aids",
+      "label": "AI & Data Science"
+    },
+    {
+      "id": "ece",
+      "label": "Electronics & Communication"
+    },
+    {
+      "id": "eee",
+      "label": "Electrical & Electronics"
+    },
+    {
+      "id": "mech",
+      "label": "Mechanical"
+    },
+    {
+      "id": "civil",
+      "label": "Civil"
+    },
+    {
+      "id": "bio",
+      "label": "Biotechnology"
+    },
+    {
+      "id": "mba",
+      "label": "Management"
+    },
+    {
+      "id": "nursing",
+      "label": "Nursing"
+    }
+  ],
+  "slideLengths": [
+    {
+      "id": "",
+      "label": "Any length"
+    },
+    {
+      "id": "short",
+      "label": "Up to 12 slides",
+      "max": 12
+    },
+    {
+      "id": "mid",
+      "label": "13 to 19 slides",
+      "min": 13,
+      "max": 19
+    },
+    {
+      "id": "long",
+      "label": "20 or more",
+      "min": 20
+    }
+  ],
+  "sorts": [
+    {
+      "id": "popular",
+      "label": "Most popular"
+    },
+    {
+      "id": "new",
+      "label": "Newest"
+    },
+    {
+      "id": "slides",
+      "label": "Most slides"
+    },
+    {
+      "id": "az",
+      "label": "A to Z"
+    }
+  ],
+  "slideKinds": [
+    "cover",
+    "agenda",
+    "problem",
+    "arch",
+    "results",
+    "timeline",
+    "team",
+    "thanks"
+  ],
+  "headlineFonts": [
+    {
+      "id": "default",
+      "label": "Template default",
+      "detail": "Matches the original design",
+      "fontFamily": "'Geist', sans-serif",
+      "weight": 600,
+      "stretch": "100%"
+    },
+    {
+      "id": "serif",
+      "label": "Editorial serif",
+      "detail": "Instrument Serif",
+      "fontFamily": "'Instrument Serif', Georgia, serif",
+      "weight": 400,
+      "stretch": "100%"
+    },
+    {
+      "id": "geo",
+      "label": "Geometric",
+      "detail": "Sora",
+      "fontFamily": "'Sora', sans-serif",
+      "weight": 600,
+      "stretch": "100%"
+    },
+    {
+      "id": "grotesk",
+      "label": "Grotesk",
+      "detail": "Space Grotesk",
+      "fontFamily": "'Space Grotesk', sans-serif",
+      "weight": 600,
+      "stretch": "100%"
+    },
+    {
+      "id": "neutral",
+      "label": "Neutral sans",
+      "detail": "Geist",
+      "fontFamily": "'Geist', sans-serif",
+      "weight": 600,
+      "stretch": "100%"
+    },
+    {
+      "id": "condensed",
+      "label": "Condensed bold",
+      "detail": "Archivo Condensed",
+      "fontFamily": "'Archivo', sans-serif",
+      "weight": 800,
+      "stretch": "75%"
+    }
+  ],
+  "rendererFontOverrides": {
+    "serif": {
+      "d": "'Instrument Serif', Georgia, 'Times New Roman', serif",
+      "dw": 400,
+      "dls": "-0.01em",
+      "ds": "100%",
+      "tt": "none"
+    },
+    "geo": {
+      "d": "'Sora', 'Geist', system-ui, sans-serif",
+      "dw": 600,
+      "dls": "-0.025em",
+      "ds": "100%",
+      "tt": "none"
+    },
+    "grotesk": {
+      "d": "'Space Grotesk', 'Geist', system-ui, sans-serif",
+      "dw": 600,
+      "dls": "-0.03em",
+      "ds": "100%",
+      "tt": "none"
+    },
+    "neutral": {
+      "d": "'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif",
+      "dw": 600,
+      "dls": "-0.035em",
+      "ds": "100%",
+      "tt": "none"
+    },
+    "condensed": {
+      "d": "'Archivo', 'Geist', system-ui, sans-serif",
+      "dw": 800,
+      "dls": "-0.01em",
+      "ds": "75%",
+      "tt": "uppercase"
+    }
+  },
+  "exportFormats": [
+    {
+      "id": "pptx",
+      "label": "PowerPoint",
+      "ext": "PPTX",
+      "description": "Edit in PowerPoint, Keynote or Google Slides"
+    },
+    {
+      "id": "pdf",
+      "label": "PDF document",
+      "ext": "PDF",
+      "description": "A fixed copy for sharing or printing"
+    },
+    {
+      "id": "gslides",
+      "label": "Google Slides",
+      "ext": "GS",
+      "description": "Open a copy in your Google Drive"
+    }
+  ]
+}

@@ -3,6 +3,17 @@ import { buildScene, fitText, type Element } from "../lib/scene";
 import type { Deck, Slide, Template } from "../lib/model";
 
 function Draw({ el, font }: { el: Element; font: string }) {
+  if (el.kind === "text" && el.vertical)
+    return (
+      <text
+        fill={el.color}
+        fontFamily={el.font || font}
+        fontSize={el.size}
+        transform={`translate(${el.x + el.size}, ${el.y + el.h}) rotate(-90)`}
+      >
+        {el.text}
+      </text>
+    );
   if (el.kind === "text")
     return (
       <text
@@ -10,6 +21,11 @@ function Draw({ el, font }: { el: Element; font: string }) {
         fontFamily={el.font || font}
         fontWeight={el.bold ? 700 : 400}
         fontSize={el.size}
+        transform={
+          el.rotate
+            ? `rotate(${el.rotate} ${el.x + el.w / 2} ${el.y + el.h / 2})`
+            : undefined
+        }
         textAnchor={
           el.align === "center"
             ? "middle"
@@ -58,6 +74,11 @@ function Draw({ el, font }: { el: Element; font: string }) {
         stroke={el.stroke}
         strokeWidth={el.sw}
         rx={el.radius}
+        transform={
+          el.rotate
+            ? `rotate(${el.rotate} ${el.x + el.w / 2} ${el.y + el.h / 2})`
+            : undefined
+        }
       />
     );
   if (el.kind === "ellipse")
@@ -70,6 +91,11 @@ function Draw({ el, font }: { el: Element; font: string }) {
         fill={el.fill}
         stroke={el.stroke}
         strokeWidth={el.sw}
+        transform={
+          el.rotate
+            ? `rotate(${el.rotate} ${el.x + el.w / 2} ${el.y + el.h / 2})`
+            : undefined
+        }
       />
     );
   if (el.kind === "line")
@@ -161,7 +187,7 @@ function Draw({ el, font }: { el: Element; font: string }) {
               y={el.y + el.h - 40 - h}
               width={cw * 0.6}
               height={h}
-              fill={el.accent}
+              fill={el.colors?.[i] || el.accent}
             />
             <text
               x={el.x + (i + 0.5) * cw}
@@ -171,6 +197,7 @@ function Draw({ el, font }: { el: Element; font: string }) {
               fontSize={17}
             >
               {d.value}
+              {el.unit || ""}
             </text>
             <text
               x={el.x + (i + 0.5) * cw}

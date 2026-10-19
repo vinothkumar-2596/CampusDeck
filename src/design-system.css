@@ -1,0 +1,312 @@
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+@import "./design-tokens/tailwind-theme.css";
+@import "./design-tokens/tokens.css";
+
+@font-face {
+  font-family: Geist;
+  src: url("@fontsource-variable/geist/files/geist-latin-wght-normal.woff2")
+    format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Geist Mono";
+  src: url("@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2")
+    format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: Sora;
+  src: url("@fontsource-variable/sora/files/sora-latin-wght-normal.woff2")
+    format("woff2");
+  font-weight: 100 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Space Grotesk";
+  src: url("@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2")
+    format("woff2");
+  font-weight: 300 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2")
+    format("woff2");
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: Newsreader;
+  src: url("@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2")
+    format("woff2");
+  font-weight: 200 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: Archivo;
+  src: url("@fontsource-variable/archivo/files/archivo-latin-wght-normal.woff2")
+    format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+:root,
+html[data-theme="dark"] {
+  font-family: var(--cd-font-sans);
+  color: var(--cd-ink);
+  background: var(--cd-bg);
+  color-scheme: light;
+  --ink: var(--cd-ink);
+  --muted: var(--cd-text-2);
+  --green: var(--cd-accent);
+  --green-hover: var(--cd-accent-hover);
+  --canvas: var(--cd-bg);
+  --card: var(--cd-surface);
+  --line: var(--cd-border);
+  --soft: var(--cd-accent-tint);
+  --hero: var(--cd-bg);
+}
+body {
+  font-family: var(--cd-font-sans);
+  background: var(--cd-bg);
+  font-size: 15px;
+}
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+button:focus-visible,
+a:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--cd-accent);
+  outline-offset: 3px;
+}
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+  border-color: var(--cd-accent);
+  box-shadow: var(--cd-focus-ring);
+}
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 600;
+  text-wrap: balance;
+}
+::selection {
+  background: var(--cd-selection);
+  color: var(--cd-ink);
+}
+.container {
+  width: min(100% - 48px, 1280px);
+}
+.btn {
+  min-height: 44px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0 20px;
+}
+.btn-primary {
+  background: var(--cd-accent);
+  color: white;
+}
+.btn-primary:hover {
+  background: var(--cd-accent-hover);
+  box-shadow: var(--cd-shadow-primary-hover);
+}
+.btn-outline {
+  background: white;
+  border-color: var(--cd-border);
+  color: var(--cd-ink);
+}
+.btn-outline:hover {
+  background: var(--cd-bg);
+  border-color: var(--cd-border-strong);
+}
+.icon-btn {
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: 10px;
+}
+.field > span {
+  font-size: 13px;
+  color: var(--cd-text-strong);
+  font-weight: 500;
+}
+.field input,
+.field select,
+.field textarea {
+  border-radius: 11px;
+  font-size: 14px;
+  border-color: var(--cd-border);
+}
+.field input,
+.field select {
+  min-height: 46px;
+}
+.field small {
+  color: var(--cd-text-2);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.section-kicker,
+.eyebrow {
+  font-family: var(--cd-font-mono);
+  color: var(--cd-accent);
+  letter-spacing: 0.08em;
+}
+.modal {
+  border-radius: 20px;
+  box-shadow: var(--cd-shadow-dialog);
+}
+.modal-backdrop {
+  z-index: 150;
+  background: rgb(20 38 63 / 0.55);
+}
+.modal-heading h2 {
+  font-size: 24px;
+}
+.toast {
+  background: var(--cd-navy);
+  border: 1px solid rgb(255 255 255 / 0.14);
+  border-radius: 14px;
+  color: white;
+  font-size: 14px;
+  z-index: 200;
+}
+.toast-dot {
+  background: var(--cd-accent);
+}
+.logo-mark {
+  background: var(--cd-ink);
+  border-radius: 8px;
+}
+.logo-mark span:first-child {
+  background: #3b4a63;
+}
+.logo-mark span:nth-child(2) {
+  background: var(--cd-accent);
+}
+.logo-mark span:last-child {
+  background: white;
+}
+.workspace-layout {
+  padding-top: 48px;
+  padding-bottom: 72px;
+}
+.workspace-sidebar {
+  border-color: var(--cd-border);
+}
+.workspace-sidebar nav > button,
+.workspace-sidebar nav > a {
+  font-size: 14px;
+  min-height: 44px;
+  border-radius: 10px;
+}
+.workspace-sidebar nav .active {
+  color: var(--cd-accent);
+  background: var(--cd-accent-tint);
+}
+.workspace-heading h1 {
+  font-size: clamp(32px, 4vw, 46px);
+}
+.workspace-heading p {
+  font-size: 15px;
+}
+.workspace-stats > div,
+.settings-card,
+.profile-form,
+.project-card,
+.workspace-profile-callout {
+  border-radius: 16px;
+  background: white;
+  border-color: var(--cd-border);
+}
+.workspace-stats strong {
+  color: var(--cd-navy);
+}
+.workspace-profile-callout {
+  background: var(--cd-accent-tint);
+}
+.workspace-profile-callout h3 {
+  color: var(--cd-ink);
+}
+.project-card h3 {
+  font-size: 16px;
+}
+.project-card-info p,
+.download-list p {
+  font-size: 12px;
+}
+.workspace-user small,
+.workspace-sidebar-note p {
+  font-size: 12px;
+}
+.avatar {
+  background: var(--cd-accent-tint);
+  color: var(--cd-accent);
+}
+.workspace-section-heading h2 {
+  font-size: 26px;
+}
+.info-page {
+  padding-top: 64px;
+  padding-bottom: 88px;
+}
+.info-page h1 {
+  font-size: clamp(38px, 4.6vw, 60px);
+}
+.info-page p {
+  font-size: 15px;
+}
+.admin-page {
+  padding-top: 40px;
+}
+.customise-page {
+  padding-top: 32px;
+}
+.customise-heading h1 {
+  font-size: clamp(36px, 4.6vw, 54px);
+}
+.form-steps button {
+  min-height: 44px;
+}
+.customise-form {
+  background: white;
+  border: 1px solid var(--cd-border);
+  border-radius: 20px;
+}
+@media (max-width: 760px) {
+  .container {
+    width: calc(100% - 32px);
+  }
+  .workspace-layout {
+    padding-top: 24px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

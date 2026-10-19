@@ -1,0 +1,89 @@
+/* Tailwind CSS v4 theme for CampusDeck.
+   Usage (Vite + @tailwindcss/vite): in src/index.css →  @import "tailwindcss";  @import "./tailwind-theme.css";
+   Generates utilities like bg-ink, text-text-2, border-border, rounded-lg, shadow-lift, font-mono.
+   Breakpoints are min-width, set 1px above the prototype's max-width breakpoints, so
+   `max-lg:hidden` == prototype "hide at ≤1120px", `max-md:flex-col` == "stack at ≤760px". */
+
+@theme {
+  --color-ink: #111827;
+  --color-navy: #14263F;
+  --color-accent: #315CFD;
+  --color-accent-hover: #2449E8;
+  --color-link-hover: #1E40D8;
+  --color-accent-tint: #EEF3FF;
+  --color-accent-selected: #F5F8FF;
+  --color-teal: #0D8278;
+  --color-bg: #F8FAFC;
+  --color-surface: #FFFFFF;
+  --color-subtle: #F1F5F9;
+  --color-border: #E2E8F0;
+  --color-border-strong: #CBD5E1;
+  --color-hover: #EEF2F7;
+  --color-hover-soft: #F5F7FA;
+  --color-text-2: #64748B;
+  --color-text-strong: #334155;
+  --color-text-nav: #475569;
+  --color-text-muted: #94A3B8;
+  --color-placeholder: #7C8BA1;
+  --color-notice-bg: #FFF7E6;
+  --color-notice-text: #6B4700;
+  --color-notice-tag-text: #7A4F00;
+  --color-notice-border: #F6DFA9;
+  --color-error: #B42318;
+  --color-error-border: #D92D20;
+
+  --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sora: 'Sora', 'Geist', system-ui, sans-serif;
+  --font-grotesk: 'Space Grotesk', 'Geist', system-ui, sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --font-news: 'Newsreader', Georgia, serif;
+  --font-archivo: 'Archivo', 'Geist', system-ui, sans-serif;
+
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-3xl: 24px;
+
+  --shadow-xs: 0 1px 2px rgba(17, 24, 39, 0.05);
+  --shadow-seg: 0 1px 2px rgba(17, 24, 39, 0.08), 0 0 0 1px rgba(17, 24, 39, 0.05);
+  --shadow-slide: 0 0 0 1px rgba(20, 38, 63, 0.08), 0 10px 20px -14px rgba(20, 38, 63, 0.4);
+  --shadow-lift: 0 24px 48px -24px rgba(20, 38, 63, 0.38), 0 2px 6px rgba(20, 38, 63, 0.06);
+  --shadow-tile-hover: 0 16px 36px -22px rgba(20, 38, 63, 0.32);
+  --shadow-pop: 0 28px 56px -20px rgba(20, 38, 63, 0.24), 0 2px 6px rgba(20, 38, 63, 0.06);
+  --shadow-dialog: 0 40px 80px -24px rgba(15, 23, 42, 0.5);
+  --shadow-primary-hover: 0 10px 24px -12px rgba(49, 92, 253, 0.7);
+
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-pop: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  --breakpoint-sm: 521px;
+  --breakpoint-md: 761px;
+  --breakpoint-lg: 1121px;
+  --breakpoint-xl: 1280px;
+
+  --animate-pop: cd-pop 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  --animate-fade: cd-fade 0.2s ease;
+  --animate-blink: cd-blink 1.1s steps(1, end) infinite;
+  --animate-float: cd-float 10s ease-in-out infinite;
+
+  @keyframes cd-pop { from { opacity: 0; transform: translateY(12px) scale(0.985); } to { opacity: 1; transform: none; } }
+  @keyframes cd-fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes cd-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  @keyframes cd-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  body { background: var(--color-bg); color: var(--color-ink); font-family: var(--font-sans); font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  ::selection { background: #DCE4FF; color: #111827; }
+  :focus-visible { outline: 2px solid #315CFD; outline-offset: 2px; }
+  input[type="checkbox"], input[type="radio"] { accent-color: #315CFD; }
+  button:disabled, button[aria-disabled="true"] { cursor: not-allowed; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  }
+}

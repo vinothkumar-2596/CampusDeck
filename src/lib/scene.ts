@@ -1,4 +1,5 @@
 import type { Deck, Slide, Template } from "./model";
+import { buildHandoffScene } from "./slides/render";
 export type Shape = {
   kind: "rect" | "ellipse" | "line";
   x: number;
@@ -9,6 +10,7 @@ export type Shape = {
   stroke?: string;
   sw?: number;
   radius?: number;
+  rotate?: number;
 };
 export type TextElement = {
   kind: "text";
@@ -23,6 +25,8 @@ export type TextElement = {
   align?: "left" | "center" | "right";
   font?: string;
   lines?: string[];
+  rotate?: number;
+  vertical?: boolean;
 };
 export type TableElement = {
   kind: "table";
@@ -45,6 +49,8 @@ export type ChartElement = {
   accent: string;
   ink: string;
   light: string;
+  colors?: string[];
+  unit?: string;
 };
 export type ImageElement = {
   kind: "image";
@@ -101,7 +107,7 @@ export function fitText(
 ) {
   let s = size,
     lines = wrapText(text, s, width);
-  while (lines.length * s * 1.2 > height && s > 9) {
+  while (lines.length * s * 1.2 > height && s > 4) {
     s -= 0.5;
     lines = wrapText(text, s, width);
   }
@@ -111,16 +117,21 @@ export function fitText(
 export function buildScene(
   slide: Slide,
   t: Template,
-  deck?: Pick<Deck, "accent" | "font" | "profile">,
+  deck?: Pick<Deck, "accent" | "font" | "profile"> &
+    Partial<
+      Pick<Deck, "theme" | "headlineFont" | "title" | "slides" | "customAccent">
+    >,
   index = 0,
   total = 16,
 ): Scene {
+  if (t.handoffId) return buildHandoffScene(slide, t, deck, index, total);
   const accent = deck?.accent || t.accent,
     bg = t.bg,
     ink = t.ink,
     light = t.light,
     font =
-      deck?.font || (t.family === 3 || t.family === 4 ? "Georgia" : "Arial");
+      (deck?.font && deck.font !== "default" ? deck.font : undefined) ||
+      (t.family === 3 || t.family === 4 ? "Georgia" : "Arial");
   const e: Element[] = [];
   const rect = (
     x: number,

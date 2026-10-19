@@ -1,0 +1,123 @@
+/* CampusDeck design tokens
+   Source of truth for the UI chrome (not the slide designs — those live in data/families.json).
+   Values are taken from the approved prototype in reference/prototype/. */
+
+:root {
+  /* ---------- Brand colours (from the brief) ---------- */
+  --cd-ink: #111827;            /* Primary ink: body text, dark buttons, selected chips */
+  --cd-navy: #14263F;           /* Midnight navy: dark bands (corporate row, CTA, auth showcase) */
+  --cd-accent: #315CFD;         /* Main accent: primary buttons, links, focus, selection */
+  --cd-teal: #0D8278;           /* Secondary accent: "Popular" badge, confirmations, checks */
+  --cd-bg: #F8FAFC;             /* Page background */
+  --cd-surface: #FFFFFF;        /* Cards, panels, dialogs */
+  --cd-subtle: #F1F5F9;         /* Wells, tracks, disabled fills */
+  --cd-border: #E2E8F0;         /* Hairlines, card and field borders */
+  --cd-text-2: #64748B;         /* Secondary text (4.8:1 on white) */
+
+  /* ---------- Supporting neutrals (used throughout the prototype) ---------- */
+  --cd-text-strong: #334155;    /* Field labels, chip text */
+  --cd-text-nav: #475569;       /* Header nav, unselected tabs */
+  --cd-text-muted: #94A3B8;     /* Icons at rest, tertiary meta */
+  --cd-placeholder: #7C8BA1;
+  --cd-border-strong: #CBD5E1;  /* Hover borders, disabled button fill */
+  --cd-hover: #EEF2F7;          /* Ghost/nav/icon-button hover, segmented track */
+  --cd-hover-soft: #F5F7FA;     /* Menu item hover */
+  --cd-selection: #DCE4FF;      /* ::selection */
+
+  /* ---------- Accent states ---------- */
+  --cd-accent-hover: #2449E8;   /* Primary button hover */
+  --cd-link-hover: #1E40D8;     /* Accent link hover */
+  --cd-accent-tint: #EEF3FF;    /* Accent-tinted backgrounds */
+  --cd-accent-selected: #F5F8FF;/* Selected option card background */
+  --cd-focus-ring: 0 0 0 4px rgba(49, 92, 253, 0.14);
+
+  /* ---------- Feedback ---------- */
+  --cd-notice-bg: #FFF7E6;      /* "Demo prototype" notices, "Export coming soon" tag */
+  --cd-notice-text: #6B4700;    /* notice box text (box also has 1px #F6DFA9 border) */
+  --cd-notice-tag-text: #7A4F00;/* small "Export coming soon" tag text */
+  --cd-notice-border: #F6DFA9;
+  --cd-error: #B42318;          /* Error text */
+  --cd-error-border: #D92D20;
+
+  /* ---------- Typography ---------- */
+  --cd-font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --cd-font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* Slide-only faces (loaded for the slide renderer) */
+  --cd-font-sora: 'Sora', 'Geist', system-ui, sans-serif;
+  --cd-font-grotesk: 'Space Grotesk', 'Geist', system-ui, sans-serif;
+  --cd-font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --cd-font-news: 'Newsreader', Georgia, serif;
+  --cd-font-archivo: 'Archivo', 'Geist', system-ui, sans-serif;  /* uses font-stretch: 75% for condensed */
+
+  /* Type scale — fluid sizes are clamp(min, vw, max) */
+  --cd-text-display: clamp(46px, 6.6vw, 92px);   /* lh 0.97 · 600 · -0.052em · homepage H1 */
+  --cd-text-page-title: clamp(38px, 4.6vw, 60px);/* lh 1.02 · 600 · -0.045em · category/explore H1 */
+  --cd-text-h1-detail: clamp(32px, 3.4vw, 46px); /* lh 1.02 · 600 · -0.045em · template detail H1 */
+  --cd-text-h2: clamp(30px, 3.4vw, 46px);        /* lh 1.06 · 600 · -0.035em · section titles */
+  --cd-text-h2-cta: clamp(34px, 4.2vw, 58px);    /* lh 1.02 · 600 · -0.045em · dark CTA band */
+  --cd-text-h3: 22px;                            /* 19–24 · 600 · -0.025em */
+  --cd-text-lead: 17px;                          /* lh 1.6 · 400 · secondary text colour */
+  --cd-text-body: 15px;                          /* lh 1.5 */
+  --cd-text-ui: 14px;                            /* nav, buttons (15 for large buttons), 500 */
+  --cd-text-small: 13px;
+  --cd-text-label: 12px;                         /* Geist Mono · 500 · uppercase · +0.08em (11 in dense UI) */
+
+  /* ---------- Spacing (8px system, 4 for fine adjustments) ---------- */
+  --cd-space-1: 4px;
+  --cd-space-2: 8px;
+  --cd-space-3: 12px;
+  --cd-space-4: 16px;
+  --cd-space-5: 20px;
+  --cd-space-6: 24px;
+  --cd-space-8: 32px;
+  --cd-space-10: 40px;
+  --cd-space-12: 48px;
+  --cd-space-14: 56px;
+  --cd-space-18: 72px;
+  --cd-space-24: 96px;
+  --cd-space-28: 112px;
+  --cd-container: 1280px;       /* max content width; 12 columns, 24px gutters */
+  --cd-gutter: clamp(16px, 4vw, 24px);  /* page side padding (16px on phones) */
+  --cd-section-y: clamp(72px, 9vw, 112px);
+
+  /* ---------- Radius ---------- */
+  --cd-radius-xs: 6px;          /* tags, Pro badge */
+  --cd-radius-sm: 8px;          /* slide thumbnails, small fields */
+  --cd-radius-md: 10px;         /* compact buttons, editor fields */
+  --cd-radius-lg: 12px;         /* buttons, inputs, icon tiles */
+  --cd-radius-xl: 16px;         /* panels, cards */
+  --cd-radius-2xl: 20px;        /* dialogs, feature blocks */
+  --cd-radius-3xl: 24px;        /* large feature bands */
+  --cd-radius-pill: 999px;      /* chips */
+
+  /* ---------- Elevation (navy-tinted, never heavy) ---------- */
+  --cd-shadow-xs: 0 1px 2px rgba(17, 24, 39, 0.05);
+  --cd-shadow-seg: 0 1px 2px rgba(17, 24, 39, 0.08), 0 0 0 1px rgba(17, 24, 39, 0.05);  /* selected segment/tab */
+  --cd-shadow-slide: 0 0 0 1px rgba(20, 38, 63, 0.08), 0 10px 20px -14px rgba(20, 38, 63, 0.4); /* slide thumbs */
+  --cd-shadow-lift: 0 24px 48px -24px rgba(20, 38, 63, 0.38), 0 2px 6px rgba(20, 38, 63, 0.06); /* card hover */
+  --cd-shadow-tile-hover: 0 16px 36px -22px rgba(20, 38, 63, 0.32);
+  --cd-shadow-pop: 0 28px 56px -20px rgba(20, 38, 63, 0.24), 0 2px 6px rgba(20, 38, 63, 0.06); /* menus, popovers */
+  --cd-shadow-dialog: 0 40px 80px -24px rgba(15, 23, 42, 0.5);
+  --cd-shadow-primary-hover: 0 10px 24px -12px rgba(49, 92, 253, 0.7);
+
+  /* ---------- Motion ---------- */
+  --cd-ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --cd-ease-pop: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --cd-dur-fast: 150ms;         /* colour changes */
+  --cd-dur-base: 200ms;
+  --cd-dur-slow: 300ms;         /* card lift */
+  /* Keyframes: pop (dialogs, 280ms, translateY 12px + scale .985 → none), fade (200ms),
+     float (hero slides, 9–11s ease-in-out, -8px, only when prefers-reduced-motion: no-preference),
+     blink (caret, 1.1s steps). Respect prefers-reduced-motion: reduce. */
+
+  /* ---------- Layers ---------- */
+  --cd-z-header: 40;
+  --cd-z-menu: 50;
+  --cd-z-overlay: 60;           /* search overlay, dialogs */
+}
+
+/* Breakpoints (max-width, desktop-first in the prototype):
+   ≤1120px  "lg"  header collapses to menu button, marketplace filters become a toggle panel
+   ≤760px   "md"  multi-column rows stack, full-width buttons
+   ≤520px   "sm"  phone refinements
+   Base layout targets 1440px artboards with a 1280px container. */

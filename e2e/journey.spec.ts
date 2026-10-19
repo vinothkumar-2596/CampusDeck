@@ -9,51 +9,57 @@ test("browse → preview → personalise → edit → PPTX and PDF downloads →
   await page.goto("/");
   await expect(
     page.getByRole("heading", {
-      name: "Professional presentations. Made effortless.",
+      name: "Present Your Best Work.",
     }),
   ).toBeVisible();
   await page.screenshot({ path: "artifacts/home-desktop.png", fullPage: true });
   await page
-    .getByRole("link", { name: "Find your template", exact: true })
+    .getByRole("link", { name: "Explore Templates", exact: true })
+    .first()
     .click();
   await expect(
-    page.getByRole("heading", { name: "Great presentations start here." }),
+    page.getByRole("heading", { name: "Explore templates", exact: true }),
   ).toBeVisible();
   await page
     .getByRole("textbox", { name: "Search templates", exact: true })
-    .fill("neural");
-  await expect(page.locator(".template-card")).toHaveCount(1);
+    .fill("meridian");
+  await expect(
+    page.locator(".cd-market-results .cd-template-card"),
+  ).toHaveCount(1);
   await page
     .getByRole("textbox", { name: "Search templates", exact: true })
     .fill("not-a-real-design");
   await expect(
-    page.getByRole("heading", { name: "No templates match just yet." }),
+    page.getByRole("heading", { name: "No templates match these filters" }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Clear all filters" }).click();
-  await expect(page.locator(".template-card")).toHaveCount(12);
-  await page
-    .getByRole("link", { name: "Preview The Final Year", exact: true })
-    .click();
   await expect(
-    page.getByRole("heading", { name: "The Final Year", exact: true }),
+    page.locator(".cd-market-results .cd-template-card"),
+  ).toHaveCount(12);
+  await page.getByRole("link", { name: /^Meridian\b/ }).click();
+  await expect(
+    page.getByRole("heading", { name: "Meridian", exact: true }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Next slide", exact: true }).click();
-  await expect(page.locator(".detail-stage .slide-view")).toHaveAttribute(
+  await expect(page.locator(".cd-detail-stage .slide-view")).toHaveAttribute(
     "aria-label",
-    "A clear path forward",
+    "Contents",
   );
   await page.getByRole("button", { name: "Open fullscreen preview" }).click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await page.keyboard.press("ArrowRight");
   await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: "Download", exact: true }).click();
   const ready = page.waitForEvent("download");
   await page
-    .getByRole("button", { name: "Download original template" })
+    .getByRole("button", { name: "Download PowerPoint", exact: true })
     .click();
   const original = await ready;
   expect(original.suggestedFilename()).toMatch(/\.pptx$/);
   await original.saveAs("artifacts/browser-original.pptx");
-  await page.getByRole("link", { name: "Customise this template" }).click();
+  await page
+    .getByRole("link", { name: "Add presentation details first" })
+    .click();
   await page
     .getByLabel("Presentation title", { exact: true })
     .fill("My Verified Campus Project");
@@ -79,18 +85,18 @@ test("browse → preview → personalise → edit → PPTX and PDF downloads →
   await page
     .getByRole("button", { name: "Duplicate slide", exact: true })
     .click();
-  await expect(page.locator(".slides-heading")).toContainText("17");
+  await expect(page.locator(".slides-heading")).toContainText("18");
   await page
     .getByRole("button", { name: "Move slide down", exact: true })
     .click();
   await page.getByRole("button", { name: "Delete slide", exact: true }).click();
   await page.getByRole("button", { name: "Remove slide", exact: true }).click();
-  await expect(page.locator(".slides-heading")).toContainText("16");
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
   await expect(page.locator(".slides-heading")).toContainText("17");
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect(page.locator(".slides-heading")).toContainText("18");
   await page.getByRole("button", { name: "Redo", exact: true }).click();
-  await expect(page.locator(".slides-heading")).toContainText("16");
-  await page.getByRole("button", { name: "Design", exact: true }).click();
+  await expect(page.locator(".slides-heading")).toContainText("17");
+  await page.getByRole("tab", { name: "Design", exact: true }).click();
   await page.getByLabel("Presentation font").selectOption("Georgia");
   await page
     .getByRole("button", { name: "Use accent #3567a5", exact: true })
@@ -137,9 +143,7 @@ test("browse → preview → personalise → edit → PPTX and PDF downloads →
   await page
     .getByRole("button", { name: "Save to account", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: "Create an account", exact: true })
-    .click();
+  await page.getByRole("link", { name: "Create account", exact: true }).click();
   await page.getByLabel("Your name", { exact: true }).fill("Campus QA");
   await page
     .getByLabel("Email address", { exact: true })
@@ -186,7 +190,10 @@ test("browse → preview → personalise → edit → PPTX and PDF downloads →
     expect(errors).toEqual([]);
     return;
   }
-  await page.getByRole("link", { name: "Administration", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "Workspace", exact: true })
+    .getByRole("link", { name: "Administration", exact: true })
+    .click();
   await expect(
     page.getByRole("heading", { name: "A considered collection." }),
   ).toBeVisible();
@@ -207,6 +214,20 @@ test("browse → preview → personalise → edit → PPTX and PDF downloads →
   await expect(
     page.getByRole("heading", { name: "QA Published Design", exact: true }),
   ).toBeVisible();
+  // Restore the catalogue after exercising publication so other journeys
+  // observe the same public library, regardless of test order.
+  await page.goto("/admin");
+  await page
+    .getByRole("button", { name: "Edit QA Published Design", exact: true })
+    .click();
+  await page.getByLabel("Publish to the marketplace").uncheck();
+  await page
+    .getByRole("button", { name: "Save template", exact: true })
+    .click();
+  await page.goto("/templates?q=QA%20Published");
+  await expect(
+    page.getByRole("heading", { name: "No templates match these filters" }),
+  ).toBeVisible();
   expect(errors).toEqual([]);
 });
 test("mobile browsing, filtering, preview and responsive editor have no horizontal overflow", async ({
@@ -216,7 +237,7 @@ test("mobile browsing, filtering, preview and responsive editor have no horizont
   await page.goto("/");
   await expect(
     page.getByRole("heading", {
-      name: "Professional presentations. Made effortless.",
+      name: "Present Your Best Work.",
     }),
   ).toBeVisible();
   await page.screenshot({ path: "artifacts/home-mobile.png", fullPage: true });
@@ -226,13 +247,16 @@ test("mobile browsing, filtering, preview and responsive editor have no horizont
     ),
   ).toBeTruthy();
   await page
-    .getByRole("link", { name: "Find your template", exact: true })
+    .getByRole("link", { name: "Explore Templates", exact: true })
+    .first()
     .click();
-  await page.getByRole("button", { name: "Filters", exact: true }).click();
-  await page.getByLabel("Minimal", { exact: true }).click();
-  await expect(page.getByLabel("Minimal", { exact: true })).toBeChecked();
-  await expect(page.locator(".template-card")).toHaveCount(3);
-  await page.getByRole("button", { name: "Filters", exact: true }).click();
+  await page.getByRole("button", { name: /^Filters/ }).click();
+  await page.getByRole("checkbox", { name: /^Minimal/ }).click();
+  await expect(page.getByRole("checkbox", { name: /^Minimal/ })).toBeChecked();
+  await expect(
+    page.locator(".cd-market-results .cd-template-card"),
+  ).toHaveCount(7);
+  await page.getByRole("button", { name: /^Filters/ }).click();
   await page.screenshot({
     path: "artifacts/explore-mobile.png",
     fullPage: true,

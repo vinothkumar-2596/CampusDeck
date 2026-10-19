@@ -2,12 +2,14 @@ import { storage, type Mutation } from "./store.js";
 import { z } from "zod";
 import {
   deckSchema,
+  templateSchema,
   profileSchema,
   type User,
   type Template,
 } from "../src/lib/model.js";
 import {
-  templates,
+  legacyTemplates,
+  allTemplates,
   initialCategories,
   findTemplates,
 } from "../src/lib/templates.js";
@@ -116,24 +118,62 @@ export function validateImage(image?: string) {
     fail(400, "The image file is damaged.");
   }
 }
+const seedJobs = new WeakMap<object, Promise<void>>();
 async function seed(env: Env) {
-  const exists = await storage(env).first({
-    table: "templates",
-    fields: ["id"],
-    limit: 1,
+  const key = env.STORE || env.DB!;
+  let job = seedJobs.get(key);
+  if (!job) {
+    job = seedCatalogue(env).catch((error) => {
+      seedJobs.delete(key);
+      throw error;
+    });
+    seedJobs.set(key, job);
+  }
+  await job;
+}
+async function seedCatalogue(env: Env) {
+  const existing = (
+    await storage(env).all<{ id: string; data: string; version: number }>({
+      table: "templates",
+      fields: ["id", "data", "version"],
+    })
+  ).results;
+  const byId = new Map(existing.map((row) => [row.id, row]));
+  if (allTemplates.every((template) => byId.has(template.id))) return;
+  // An old category rename did not increment the template version. Compare
+  // the seed content too, so an administrator's changes are never replaced.
+  const upgrades = allTemplates.filter((template) => {
+    const row = byId.get(template.id);
+    const original = legacyTemplates.find((item) => item.id === template.id);
+    if (!row || row.version !== 1 || !original) return false;
+    const previous = JSON.parse(row.data) as Record<string, unknown>;
+    return Object.entries(original).every(
+      ([key, value]) =>
+        key === "legacy" ||
+        JSON.stringify(previous[key]) === JSON.stringify(value),
+    );
   });
-  if (exists) return;
+  const knownCategories = new Set(
+    (
+      await storage(env).all<{ name: string }>({
+        table: "categories",
+        fields: ["name"],
+      })
+    ).results.map((category) => category.name),
+  );
   await storage(env).batch([
-    ...initialCategories.map(
-      (c) =>
-        ({
-          table: "categories",
-          action: "put",
-          values: { id: c.id, name: c.name, parent: c.parent },
-          ignore: true,
-        }) satisfies Mutation,
-    ),
-    ...templates.map(
+    ...initialCategories
+      .filter((category) => !knownCategories.has(category.name))
+      .map(
+        (c) =>
+          ({
+            table: "categories",
+            action: "put",
+            values: { id: c.id, name: c.name, parent: c.parent },
+            ignore: true,
+          }) satisfies Mutation,
+      ),
+    ...allTemplates.map(
       (t) =>
         ({
           table: "templates",
@@ -149,6 +189,19 @@ async function seed(env: Env) {
             version: 1,
           },
           ignore: true,
+        }) satisfies Mutation,
+    ),
+    ...upgrades.map(
+      (t) =>
+        ({
+          table: "templates",
+          action: "update",
+          values: {
+            name: t.name,
+            category: t.category,
+            data: JSON.stringify(t),
+          },
+          where: { id: t.id, version: 1 },
         }) satisfies Mutation,
     ),
   ]);
@@ -279,26 +332,6 @@ async function entitlement(t: Template, user: User | null, env: Env) {
       "Premium purchases are currently unavailable. Please choose a free template.",
     );
 }
-const templateSchema = z.object({
-  id: z.string().regex(/^[a-z0-9-]{3,60}$/),
-  name: z.string().min(2).max(80),
-  category: z.string().min(1).max(80),
-  department: z.string().min(1).max(80),
-  style: z.string().max(40),
-  description: z.string().min(20).max(500),
-  tags: z.array(z.string().max(50)).max(12),
-  accent: z.string().regex(/^#[a-fA-F0-9]{6}$/),
-  bg: z.string().regex(/^#[a-fA-F0-9]{6}$/),
-  ink: z.string().regex(/^#[a-fA-F0-9]{6}$/),
-  light: z.string().regex(/^#[a-fA-F0-9]{6}$/),
-  family: z.number().int().min(0).max(17),
-  cover: z.string().min(1).max(100),
-  subtitle: z.string().max(150),
-  published: z.boolean(),
-  premium: z.boolean(),
-  slides: z.literal(16),
-});
-
 export async function api(req: Request, env: Env): Promise<Response> {
   try {
     const url = new URL(req.url),
@@ -586,7 +619,7 @@ export async function api(req: Request, env: Env): Promise<Response> {
             updated_at: deck.updatedAt,
           },
           keys: ["id"],
-          update: ["title", "data", "updated_at"],
+          update: ["title", "data", "updated_at", "template_id"],
           guard: { user_id: user.id },
         });
         return json(deck);
@@ -803,6 +836,7 @@ export async function api(req: Request, env: Env): Promise<Response> {
                   }),
                 },
                 where: { id: r.id },
+                increment: { version: 1 },
               }) satisfies Mutation,
           ),
         ]);

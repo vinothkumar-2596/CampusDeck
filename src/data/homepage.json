@@ -1,0 +1,502 @@
+{
+  "hero": {
+    "chip": {
+      "label": "New",
+      "text": "Project Review kits for 2026–27",
+      "href": "/college?use=review"
+    },
+    "title": "Present Your Best Work.",
+    "supporting": "Discover professionally designed presentation templates for college projects, research, business and beyond.",
+    "primary": {
+      "label": "Explore Templates",
+      "href": "/templates"
+    },
+    "secondary": {
+      "label": "Create a Presentation",
+      "href": "/editor"
+    },
+    "popularLinks": [
+      {
+        "label": "Final Year Project",
+        "href": "/college?use=fyp"
+      },
+      {
+        "label": "Project Review 2",
+        "href": "/college?use=review"
+      },
+      {
+        "label": "Seminar",
+        "href": "/college?use=seminar"
+      },
+      {
+        "label": "Hackathon Pitch",
+        "href": "/college?use=hackathon"
+      },
+      {
+        "label": "Thesis Defence",
+        "href": "/research?use=thesis"
+      }
+    ],
+    "composition": [
+      {
+        "id": "kepler",
+        "kind": "cover"
+      },
+      {
+        "id": "halcyon",
+        "kind": "cover"
+      },
+      {
+        "id": "meridian",
+        "kind": "cover"
+      },
+      {
+        "id": "meridian",
+        "kind": "results"
+      }
+    ],
+    "personaliseCard": {
+      "title": "Personalise",
+      "badge": "Live preview",
+      "fieldLabel": "Project title",
+      "fieldValue": "Smart Irrigation System",
+      "themeLabel": "Colour theme"
+    }
+  },
+  "popularCollege": {
+    "eyebrow": "For students",
+    "title": "Popular college presentations",
+    "intro": "Structured the way colleges review projects — from Review 1 to the final viva.",
+    "tabs": [
+      {
+        "id": "all",
+        "label": "All",
+        "templates": [
+          "meridian",
+          "atlas",
+          "kepler",
+          "halcyon",
+          "tropic",
+          "sprint",
+          "sextant",
+          "monolith"
+        ]
+      },
+      {
+        "id": "fyp",
+        "label": "Final Year",
+        "templates": [
+          "meridian",
+          "tropic",
+          "circuit",
+          "atlas",
+          "sextant",
+          "vertex",
+          "canopy",
+          "kepler"
+        ]
+      },
+      {
+        "id": "review",
+        "label": "Reviews",
+        "templates": [
+          "atlas",
+          "sextant",
+          "meridian",
+          "tropic",
+          "circuit",
+          "vertex",
+          "canopy",
+          "plain"
+        ]
+      },
+      {
+        "id": "seminar",
+        "label": "Seminars",
+        "templates": [
+          "halcyon",
+          "folio",
+          "ward",
+          "raster",
+          "abstract",
+          "plain",
+          "thesis",
+          "canopy"
+        ]
+      },
+      {
+        "id": "intern",
+        "label": "Internship",
+        "templates": [
+          "monolith",
+          "brief",
+          "atlas",
+          "plain"
+        ]
+      },
+      {
+        "id": "hack",
+        "label": "Hackathon",
+        "templates": [
+          "kepler",
+          "sprint",
+          "vertex",
+          "launchpad"
+        ]
+      }
+    ],
+    "cta": {
+      "label": "View all college templates",
+      "href": "/college"
+    }
+  },
+  "requirements": {
+    "eyebrow": "Academic requirements",
+    "title": "Browse by academic requirement",
+    "intro": "Every requirement has its own structure. Pick yours and start with the right slides already in place.",
+    "cta": {
+      "label": "See all college templates",
+      "href": "/college"
+    },
+    "reviewKit": {
+      "title": "Project Review 1 · 2 · 3",
+      "text": "One template set that grows with your project across all three reviews.",
+      "cta": "Open review kits",
+      "href": "/college?use=review",
+      "stages": [
+        {
+          "label": "Review 1",
+          "title": "Problem & proposal",
+          "text": "Abstract, problem statement, literature survey and objectives"
+        },
+        {
+          "label": "Review 2",
+          "title": "Design & progress",
+          "text": "Architecture, modules, algorithms and partial implementation"
+        },
+        {
+          "label": "Review 3",
+          "title": "Results & conclusion",
+          "text": "Testing, results, comparison and future scope"
+        }
+      ]
+    },
+    "tiles": [
+      {
+        "use": "fyp",
+        "title": "Final Year Project",
+        "text": "Complete decks, cover to conclusion"
+      },
+      {
+        "use": "mini",
+        "title": "Mini Project",
+        "text": "Compact decks for semester projects"
+      },
+      {
+        "use": "seminar",
+        "title": "Seminar",
+        "text": "Topic talks with clear, readable slides"
+      },
+      {
+        "use": "intern",
+        "title": "Internship",
+        "text": "Company, role, work and learnings"
+      },
+      {
+        "use": "research",
+        "title": "Research Presentation",
+        "text": "Papers, methods and findings"
+      },
+      {
+        "use": "assign",
+        "title": "Academic Assignment",
+        "text": "Quick, clean decks for coursework"
+      },
+      {
+        "use": "symposium",
+        "title": "Technical Symposium",
+        "text": "Paper presentations that stand out"
+      },
+      {
+        "use": "hackathon",
+        "title": "Hackathon Pitch Deck",
+        "text": "Problem, solution, demo and the ask"
+      }
+    ]
+  },
+  "featured": {
+    "eyebrow": "Featured",
+    "title": "Featured premium templates",
+    "intro": "Our most complete designs, with every layout, chart and diagram you are likely to need.",
+    "cta": {
+      "label": "Explore all templates",
+      "href": "/templates"
+    },
+    "hero": {
+      "id": "meridian",
+      "meta": "Final Year Project · 24 slides · Sora and Geist",
+      "innerSlides": [
+        "agenda",
+        "problem",
+        "arch",
+        "timeline"
+      ]
+    },
+    "side": [
+      {
+        "id": "halcyon",
+        "meta": "Technical Seminar · 16 slides"
+      },
+      {
+        "id": "ledger",
+        "meta": "Quarterly Business Review · 20 slides"
+      }
+    ]
+  },
+  "departments": {
+    "eyebrow": "Departments",
+    "title": "Explore by department",
+    "intro": "Templates with the diagrams, charts and vocabulary your department expects.",
+    "cta": {
+      "label": "All departments",
+      "href": "/college"
+    },
+    "default": "cse",
+    "lineTemplate": "Recommended for {department}",
+    "picks": {
+      "cse": [
+        "meridian",
+        "kepler",
+        "monolith"
+      ],
+      "it": [
+        "atlas",
+        "sprint",
+        "plain"
+      ],
+      "aids": [
+        "tropic",
+        "folio",
+        "kepler"
+      ],
+      "ece": [
+        "vertex",
+        "sextant",
+        "circuit"
+      ],
+      "eee": [
+        "circuit",
+        "vertex",
+        "meridian"
+      ],
+      "mech": [
+        "raster",
+        "vertex",
+        "atlas"
+      ],
+      "civil": [
+        "halcyon",
+        "thesis",
+        "sextant"
+      ],
+      "bio": [
+        "canopy",
+        "folio",
+        "fieldnotes"
+      ],
+      "mba": [
+        "brief",
+        "margin",
+        "launchpad"
+      ],
+      "nursing": [
+        "ward",
+        "pulse",
+        "rounds"
+      ]
+    }
+  },
+  "corporate": {
+    "eyebrow": "Beyond campus",
+    "title": "Corporate & business collection",
+    "intro": "Board updates, quarterly reviews, pitch decks and proposals, built to the same standard as our academic range.",
+    "links": [
+      {
+        "label": "Corporate",
+        "href": "/corporate"
+      },
+      {
+        "label": "Business",
+        "href": "/business"
+      }
+    ],
+    "carousel": [
+      "ledger",
+      "launchpad",
+      "strata",
+      "northline",
+      "margin",
+      "closer",
+      "boardroom",
+      "harbor"
+    ],
+    "carouselRule": "Horizontal scroll row; prev/next buttons scroll by max(320px, 80% of row width), smooth."
+  },
+  "trendingStyles": {
+    "eyebrow": "Design styles",
+    "title": "Trending design styles",
+    "intro": "Find a look first, then the template. Each style keeps its type pairing and colour system across every slide.",
+    "items": [
+      {
+        "style": "Minimal",
+        "name": "Minimal",
+        "text": "Quiet type and generous space",
+        "template": "monolith",
+        "secondKind": "problem",
+        "tint": "#EEF1F5",
+        "specimenFont": "'Geist', sans-serif",
+        "specimenWeight": 500
+      },
+      {
+        "style": "Editorial",
+        "name": "Editorial serif",
+        "text": "Serif headlines with a bookish rhythm",
+        "template": "halcyon",
+        "secondKind": "agenda",
+        "tint": "#F1ECE2",
+        "specimenFont": "'Instrument Serif', Georgia, serif",
+        "specimenWeight": 400
+      },
+      {
+        "style": "Swiss",
+        "name": "Swiss grid",
+        "text": "Grid-led, bold and exact",
+        "template": "raster",
+        "secondKind": "arch",
+        "tint": "#E7E6E1",
+        "specimenFont": "'Geist', sans-serif",
+        "specimenWeight": 700
+      },
+      {
+        "style": "Tech",
+        "name": "Dark and technical",
+        "text": "Dark canvases for demos and pitches",
+        "template": "kepler",
+        "secondKind": "results",
+        "tint": "#111A30",
+        "specimenFont": "'Space Grotesk', sans-serif",
+        "specimenWeight": 600
+      },
+      {
+        "style": "Bold",
+        "name": "Bold colour",
+        "text": "Full-bleed colour that fills a hall",
+        "template": "vertex",
+        "secondKind": "timeline",
+        "tint": "#E4EAFF",
+        "specimenFont": "'Archivo', sans-serif",
+        "specimenWeight": 800
+      },
+      {
+        "style": "Organic",
+        "name": "Organic",
+        "text": "Soft shapes for science and sustainability",
+        "template": "canopy",
+        "secondKind": "team",
+        "tint": "#E6EEE3",
+        "specimenFont": "'Newsreader', Georgia, serif",
+        "specimenWeight": 600
+      }
+    ],
+    "linkRule": "Each card links to /templates?style={style}"
+  },
+  "recentlyAdded": {
+    "eyebrow": "Just added",
+    "title": "Recently added templates",
+    "cta": {
+      "label": "Browse newest first",
+      "href": "/templates?sort=new"
+    },
+    "items": [
+      {
+        "id": "abstract",
+        "meta": "Conference Paper · Research · 14 slides",
+        "date": "Added 16 Oct"
+      },
+      {
+        "id": "tropic",
+        "meta": "Final Year Project · College · 22 slides",
+        "date": "Added 14 Oct"
+      },
+      {
+        "id": "fest",
+        "meta": "Cultural Fest · Events · 12 slides",
+        "date": "Added 12 Oct"
+      },
+      {
+        "id": "vertex",
+        "meta": "Mini Project · College · 14 slides",
+        "date": "Added 11 Oct"
+      },
+      {
+        "id": "northline",
+        "meta": "Annual Report · Corporate · 22 slides",
+        "date": "Added 9 Oct"
+      },
+      {
+        "id": "monolith",
+        "meta": "Internship Presentation · College · 12 slides",
+        "date": "Added 6 Oct"
+      }
+    ]
+  },
+  "howItWorks": {
+    "eyebrow": "How it works",
+    "title": "From template to final slide in four steps",
+    "intro": "Choose. Customise. Present. No design skills needed, and nothing to rebuild between reviews.",
+    "steps": [
+      {
+        "n": "01",
+        "title": "Browse",
+        "text": "Search by requirement, department or style and narrow it down to the right structure."
+      },
+      {
+        "n": "02",
+        "title": "Preview",
+        "text": "Flip through every slide at full size before you commit to a design."
+      },
+      {
+        "n": "03",
+        "title": "Personalise",
+        "text": "Add your title, team, guide and department once, and every slide updates."
+      },
+      {
+        "n": "04",
+        "title": "Download",
+        "text": "Export an editable deck, ready for your review, viva or meeting."
+      }
+    ],
+    "cta": {
+      "label": "See how it works in detail",
+      "href": "/how-it-works"
+    }
+  },
+  "finalCta": {
+    "eyebrow": "Choose. Customise. Present.",
+    "title": "Your next presentation starts here.",
+    "text": "Pick a template, add your project details once, and walk into your review with slides you are proud of.",
+    "primary": {
+      "label": "Explore Templates",
+      "href": "/templates"
+    },
+    "secondary": {
+      "label": "Create a Presentation",
+      "href": "/editor"
+    },
+    "slides": [
+      "gala",
+      "atlas",
+      "launchpad"
+    ]
+  }
+}

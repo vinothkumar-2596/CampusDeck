@@ -1,0 +1,28 @@
+{
+  "faq": [
+    {
+      "q": "Which presentations is CampusDeck built for?",
+      "a": "College work comes first: final year projects, project reviews, mini projects, seminars, internships, research presentations and hackathon pitches. Corporate, business, healthcare, research and event decks are built to the same standard."
+    },
+    {
+      "q": "Can one template cover Review 1, 2 and 3?",
+      "a": "Yes. Review templates follow the three-stage structure most departments use, so you add slides as the project grows instead of starting a new deck for each review."
+    },
+    {
+      "q": "Will the slides open in PowerPoint?",
+      "a": "That is the plan. Templates are designed for editable PowerPoint export, with PDF for sharing. Export is not connected in this prototype, so the download dialog creates no file."
+    },
+    {
+      "q": "Can I add my college logo?",
+      "a": "Academic covers include a logo position. Uploading your own logo arrives with the full editor."
+    },
+    {
+      "q": "What slide size do the templates use?",
+      "a": "Every template is 16:9 widescreen, the default for most campus projectors and meeting-room screens."
+    },
+    {
+      "q": "Do I need design skills?",
+      "a": "No. Type your details once, choose a colour theme, and the layouts handle spacing, hierarchy and alignment for you."
+    }
+  ]
+}

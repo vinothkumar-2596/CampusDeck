@@ -23,15 +23,19 @@ async function exportPptx(page: Page, target: string) {
   return JSZip.loadAsync(await readFile(target));
 }
 
-test("every published design downloads a real editable 16-slide PowerPoint", async ({
+test("every published design downloads a real editable PowerPoint with its advertised slide count", async ({
   page,
   request,
 }) => {
-  test.setTimeout(240000);
+  test.setTimeout(300000);
   const response = await request.get("/api/templates");
   expect(response.ok()).toBeTruthy();
   const templates = await response.json();
-  expect(templates.length).toBeGreaterThanOrEqual(18);
+  expect(
+    templates.filter(
+      (t: { id: string; handoffId?: string }) => t.handoffId === t.id,
+    ),
+  ).toHaveLength(33);
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   for (const template of templates.filter(
@@ -43,9 +47,10 @@ test("every published design downloads a real editable 16-slide PowerPoint", asy
       await expect(
         page.getByRole("heading", { name: template.name, exact: true }),
       ).toBeVisible();
+      await page.getByRole("button", { name: "Download", exact: true }).click();
       const pending = page.waitForEvent("download");
       await page
-        .getByRole("button", { name: "Download original template" })
+        .getByRole("button", { name: "Download PowerPoint", exact: true })
         .click();
       const file = await pending;
       expect(file.suggestedFilename()).toMatch(/\.pptx$/);
@@ -56,7 +61,7 @@ test("every published design downloads a real editable 16-slide PowerPoint", asy
         Object.keys(zip.files).filter((p) =>
           /^ppt\/slides\/slide\d+\.xml$/.test(p),
         ),
-      ).toHaveLength(16);
+      ).toHaveLength(template.slides);
       expect(
         await zip.file("ppt/slides/slide1.xml")!.async("string"),
       ).toContain("<a:t>");
@@ -133,21 +138,24 @@ test("profile, bookmarks, cloud save, repeat login, rename, duplicate, history a
   await expect(
     page.getByLabel("Guide / supervisor", { exact: true }),
   ).toHaveValue("G".repeat(100));
-  await page.goto("/explore?q=Final%20Year");
+  await page.goto("/templates?q=Meridian");
   await page
-    .getByRole("button", { name: "Save The Final Year", exact: true })
+    .getByRole("button", { name: "Save Meridian", exact: true })
     .click();
   await expect(
-    page.getByRole("button", { name: "Unsave The Final Year", exact: true }),
+    page.getByRole("button", {
+      name: "Remove Meridian from saved",
+      exact: true,
+    }),
   ).toBeVisible();
   await page.goto("/workspace?tab=saved");
   await expect(
-    page.getByRole("heading", { name: "The Final Year", exact: true }),
+    page.getByRole("heading", { name: "Meridian", exact: true }),
   ).toBeVisible();
   await page
-    .getByRole("button", { name: "Unsave The Final Year", exact: true })
+    .getByRole("button", { name: "Remove Meridian from saved", exact: true })
     .click();
-  await expect(page.locator(".template-card")).toHaveCount(0);
+  await expect(page.locator(".cd-template-card")).toHaveCount(0);
   await page.goto("/customise/the-final-year");
   await expect(page.getByLabel("College / organisation name")).toHaveValue(
     "Verification College",

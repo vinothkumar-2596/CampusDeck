@@ -3,8 +3,9 @@ import assert from "node:assert/strict";
 import { api } from "../server/api";
 import { openDatabase } from "../server/sqlite";
 import { makeDeck } from "../src/lib/model";
-import { templates } from "../src/lib/templates";
-import { storage, primaryKeys } from "../server/store";
+import { switchDeckDesign } from "../src/lib/editor";
+import { templates, legacyTemplates, allTemplates } from "../src/lib/templates";
+import { storage, primaryKeys, type Mutation } from "../server/store";
 import { initializeMongo, mongoStore } from "../server/mongo";
 import { MongoClient } from "mongodb";
 import type { Env } from "../server/db";
@@ -13,6 +14,7 @@ const env: Env = { DB: database, ADMIN_EMAILS: "admin@campusdeck.test" };
 let mongoClient: MongoClient | undefined;
 const testDatabaseName =
   "campusdeck_test_" + crypto.randomUUID().replaceAll("-", "").slice(0, 20);
+const testDatabaseNames = new Set([testDatabaseName]);
 if (process.env.TEST_MONGODB === "1") {
   if (!process.env.MONGODB_URI)
     throw new Error("MONGODB_URI required for MongoDB integration tests");
@@ -28,11 +30,13 @@ after(async () => {
   database.close();
   if (mongoClient) {
     // Delete only this run's newly generated, isolated test database.
-    if (!/^campusdeck_test_[a-f0-9]{20}$/.test(testDatabaseName))
-      throw new Error("Invalid test database name");
     try {
-      for (const table of Object.keys(primaryKeys))
-        await mongoClient.db(testDatabaseName).collection(table).deleteMany({});
+      for (const name of testDatabaseNames) {
+        if (!/^campusdeck_test_[a-f0-9]{20}$/.test(name))
+          throw new Error("Invalid test database name");
+        for (const table of Object.keys(primaryKeys))
+          await mongoClient.db(name).collection(table).deleteMany({});
+      }
     } finally {
       await mongoClient.close();
     }
@@ -141,9 +145,23 @@ test("registration, password validation, login and secure sessions", async () =>
   );
 });
 test("catalogue filters, search, template details and missing templates", async () => {
-  assert.equal((await request("/templates")).body.length, 18);
-  assert.equal((await request("/templates?category=College")).body.length, 12);
-  assert.equal((await request("/templates?q=neural")).body[0].id, "neural");
+  const catalogue = (await request("/templates")).body;
+  assert.equal(catalogue.length, allTemplates.length);
+  assert.equal(
+    catalogue.filter((t: { handoffId?: string }) => t.handoffId).length,
+    33,
+  );
+  assert.equal(
+    (await request("/templates?category=College")).body.filter(
+      (t: { handoffId?: string }) => t.handoffId,
+    ).length,
+    16,
+  );
+  assert.ok(
+    (await request("/templates?q=neural")).body.some(
+      (t: { id: string }) => t.id === "neural",
+    ),
+  );
   assert.equal((await request("/templates/the-final-year")).body.slides, 16);
   assert.equal((await request("/templates/missing")).status, 404);
 });
@@ -566,4 +584,353 @@ test("repeated login attempts are limited per client without affecting other cli
     assert.equal((await attempt("login-limit-test")).status, 401);
   assert.equal((await attempt("login-limit-test")).status, 429);
   assert.equal((await attempt("other-login-client")).status, 401);
+});
+
+test("legacy catalogue migration preserves saved snapshots and owner-edited designs, without duplicate categories on cold starts", async () => {
+  const legacyDatabase = openDatabase(":memory:");
+  const migrationEnv: Env = { DB: legacyDatabase, HOSTED: "true" };
+  if (mongoClient) {
+    const name =
+      "campusdeck_test_" + crypto.randomUUID().replaceAll("-", "").slice(0, 20);
+    testDatabaseNames.add(name);
+    const isolated = mongoClient.db(name);
+    await initializeMongo(isolated);
+    migrationEnv.STORE = mongoStore(mongoClient, isolated);
+  }
+  try {
+    const store = storage(migrationEnv),
+      stamp = "2025-12-01T00:00:00.000Z";
+    const originalTemplates = legacyTemplates.map(
+      ({ legacy: _legacy, ...t }) => t,
+    );
+    const ownerEdited = {
+      ...originalTemplates.find((t) => t.id === "launchpad")!,
+      name: "Owner's Launchpad",
+      accent: "#753159",
+      description:
+        "A carefully authored catalogue entry that the migration must preserve.",
+    };
+    const independent = {
+      ...originalTemplates[0],
+      id: "independent-admin-design",
+      name: "Independent owner design",
+    };
+    const renamedCategoryTemplate = {
+      ...originalTemplates.find((t) => t.id === "neural")!,
+      category: "Renamed Academic Collection",
+    };
+    const customMeridian = {
+      ...originalTemplates[3],
+      id: "meridian",
+      name: "Owner's existing Meridian",
+    };
+    const categories = [
+      ...new Set(originalTemplates.map((t) => t.category)),
+    ].map((name, i) => ({
+      id: `category-${i}`,
+      name,
+      parent: i < 9 ? "College" : null,
+    }));
+    categories.push({
+      id: "owner-renamed-category",
+      name: renamedCategoryTemplate.category,
+      parent: "College",
+    });
+    const saved = makeDeck(originalTemplates.find((t) => t.id === "vital")!);
+    saved.title = "A real existing student project";
+    saved.slides[0].title = "Authored before the redesign";
+    saved.slides.forEach((slide) => {
+      delete slide.sampleKey;
+    });
+    saved.profile.college = "Existing Student College";
+    await store.batch([
+      ...categories.map(
+        (category) =>
+          ({
+            table: "categories",
+            action: "insert",
+            values: category,
+          }) satisfies Mutation,
+      ),
+      ...[
+        ...originalTemplates.map((t) =>
+          t.id === ownerEdited.id
+            ? ownerEdited
+            : t.id === renamedCategoryTemplate.id
+              ? renamedCategoryTemplate
+              : t,
+        ),
+        independent,
+        customMeridian,
+      ].map(
+        (t) =>
+          ({
+            table: "templates",
+            action: "insert",
+            values: {
+              id: t.id,
+              name: t.name,
+              category: t.category,
+              data: JSON.stringify(t),
+              published: 1,
+              premium: 0,
+              version:
+                t.id === ownerEdited.id
+                  ? 4
+                  : [independent.id, customMeridian.id].includes(t.id)
+                    ? 2
+                    : 1,
+              created_at: stamp,
+            },
+          }) satisfies Mutation,
+      ),
+      {
+        table: "users",
+        action: "insert",
+        values: {
+          id: "platform:migration-owner",
+          name: "Existing Owner",
+          email: "migration-owner@campusdeck.test",
+          role: "user",
+          created_at: stamp,
+        },
+      },
+      {
+        table: "projects",
+        action: "insert",
+        values: {
+          id: saved.id,
+          user_id: "platform:migration-owner",
+          template_id: saved.templateId,
+          title: saved.title,
+          data: JSON.stringify(saved),
+          updated_at: stamp,
+        },
+      },
+      {
+        table: "downloads",
+        action: "insert",
+        values: {
+          id: "migration-download",
+          user_id: "platform:migration-owner",
+          template_id: saved.templateId,
+          title: saved.title,
+          format: "pptx",
+          snapshot: JSON.stringify(saved),
+          created_at: stamp,
+        },
+      },
+    ]);
+    const beforeProject = await store.first({
+      table: "projects",
+      where: { id: saved.id },
+    });
+    const beforeOwner = await store.first({
+      table: "templates",
+      where: { id: ownerEdited.id },
+    });
+    const beforeRenamed = await store.first({
+      table: "templates",
+      where: { id: renamedCategoryTemplate.id },
+    });
+    const beforeMeridian = await store.first({
+      table: "templates",
+      where: { id: customMeridian.id },
+    });
+    const migrated = await api(
+      new Request("http://campus.test/api/templates"),
+      migrationEnv,
+    );
+    assert.equal(migrated.status, 200);
+    assert.equal(
+      (await store.count("templates")).count,
+      allTemplates.length + 1,
+    );
+    const vital = await store.first<{ data: string }>({
+      table: "templates",
+      where: { id: "vital" },
+    });
+    assert.equal(JSON.parse(vital!.data).handoffId, "vital");
+    assert.deepEqual(
+      await store.first({ table: "templates", where: { id: ownerEdited.id } }),
+      beforeOwner,
+    );
+    assert.deepEqual(
+      await store.first({
+        table: "templates",
+        where: { id: renamedCategoryTemplate.id },
+      }),
+      beforeRenamed,
+    );
+    assert.deepEqual(
+      await store.first({
+        table: "templates",
+        where: { id: customMeridian.id },
+      }),
+      beforeMeridian,
+    );
+    assert.equal(
+      (await store.first({ table: "templates", where: { id: independent.id } }))
+        ?.version,
+      2,
+    );
+    assert.deepEqual(
+      await store.first({ table: "projects", where: { id: saved.id } }),
+      beforeProject,
+    );
+    const headers = {
+      "oai-authenticated-user-id": "migration-owner",
+      "oai-authenticated-user-email": "migration-owner@campusdeck.test",
+    };
+    const restored = await api(
+      new Request(`http://campus.test/api/projects/${saved.id}`, { headers }),
+      migrationEnv,
+    );
+    assert.equal(restored.status, 200);
+    assert.deepEqual(await restored.json(), saved);
+    const downloaded = await api(
+      new Request("http://campus.test/api/downloads/migration-download", {
+        headers,
+      }),
+      migrationEnv,
+    );
+    assert.equal(downloaded.status, 200);
+    assert.deepEqual(await downloaded.json(), saved);
+    const categoriesAfter = (
+      await store.all<{ id: string; name: string; parent: string | null }>({
+        table: "categories",
+        sort: { name: 1 },
+      })
+    ).results;
+    assert.equal(
+      new Set(categoriesAfter.map((c) => c.id)).size,
+      categoriesAfter.length,
+    );
+    assert.equal(
+      new Set(categoriesAfter.map((c) => c.name)).size,
+      categoriesAfter.length,
+    );
+    for (const original of categories)
+      assert.deepEqual(
+        { ...categoriesAfter.find((c) => c.name === original.name) },
+        original,
+      );
+    const rowsAfter = (await store.all({ table: "templates", sort: { id: 1 } }))
+      .results;
+    // Fresh Store identities simulate separate serverless cold starts, rather
+    // than relying only on the process-local seeding promise cache.
+    for (let run = 0; run < 3; run++) {
+      const response = await api(
+        new Request("http://campus.test/api/templates"),
+        { ...migrationEnv, STORE: { ...store } },
+      );
+      assert.equal(response.status, 200);
+    }
+    assert.deepEqual(
+      (await store.all({ table: "templates", sort: { id: 1 } })).results,
+      rowsAfter,
+    );
+    assert.deepEqual(
+      (await store.all({ table: "categories", sort: { name: 1 } })).results,
+      categoriesAfter,
+    );
+  } finally {
+    legacyDatabase.close();
+  }
+});
+
+test("saving a switched design persists its template relation, authored slides and new theme fields", async () => {
+  const original = makeDeck(templates[0]);
+  original.slides[0].title = "An authored deck that changes design";
+  assert.equal(
+    (await request(`/projects/${original.id}`, "PUT", original, bob)).status,
+    200,
+  );
+  const target = templates.find((t) => t.id === "kepler")!;
+  const switched = switchDeckDesign(original, target);
+  switched.theme = 2;
+  switched.headlineFont = "grotesk";
+  switched.font = "Georgia";
+  switched.slides[0].eyebrow = "Updated global label";
+  const problem = switched.slides.find((s) => s.layout === "problem")!;
+  problem.question = "Does this question survive a database round trip?";
+  assert.equal(
+    (await request(`/projects/${switched.id}`, "PUT", switched, bob)).status,
+    200,
+  );
+  const row = await storage(env).first({
+    table: "projects",
+    where: { id: switched.id },
+    fields: ["template_id", "data"],
+  });
+  assert.equal(row?.template_id, target.id);
+  const reloaded = (
+    await request(`/projects/${switched.id}`, "GET", undefined, bob)
+  ).body;
+  assert.equal(reloaded.templateId, target.id);
+  assert.deepEqual(reloaded.templateSnapshot, target);
+  assert.equal(reloaded.theme, 2);
+  assert.equal(reloaded.headlineFont, "grotesk");
+  assert.equal(reloaded.font, "Georgia");
+  assert.deepEqual(reloaded.slides, switched.slides);
+  assert.equal(
+    (await request(`/projects/${switched.id}`, "GET", undefined, admin)).status,
+    404,
+  );
+});
+
+test("admin-authored handoff templates retain family metadata and cover edits through create and update", async () => {
+  const created = {
+    ...templates[0],
+    id: "authored-handoff-template",
+    name: "Authored Handoff",
+    cover: "An administrator's presentation",
+    subtitle: "An authored subtitle",
+    accent: "#753159",
+    defaultTheme: 2,
+  };
+  assert.equal(
+    (await request(`/admin/templates/${created.id}`, "PUT", created, admin))
+      .status,
+    200,
+  );
+  let loaded = (await request(`/templates/${created.id}`)).body;
+  assert.equal(loaded.handoffId, templates[0].handoffId);
+  assert.equal(loaded.familyKey, templates[0].familyKey);
+  assert.equal(loaded.defaultTheme, 2);
+  assert.equal(makeDeck(loaded).slides[0].title, created.cover);
+  assert.equal(makeDeck(loaded).slides[0].subtitle, created.subtitle);
+  const updated = {
+    ...created,
+    cover: "Revised administrator cover",
+    subtitle: "Revised supporting text",
+  };
+  assert.equal(
+    (await request(`/admin/templates/${created.id}`, "PUT", updated, admin))
+      .status,
+    200,
+  );
+  loaded = (await request(`/templates/${created.id}`)).body;
+  assert.equal(makeDeck(loaded).slides[0].title, updated.cover);
+  assert.equal(makeDeck(loaded).slides[0].subtitle, updated.subtitle);
+  assert.equal(
+    (
+      await storage(env).first({
+        table: "templates",
+        where: { id: created.id },
+      })
+    )?.version,
+    2,
+  );
+  assert.equal(
+    (
+      await request(
+        `/admin/templates/${created.id}`,
+        "PUT",
+        { ...updated, defaultTheme: 9 },
+        admin,
+      )
+    ).status,
+    400,
+  );
 });

@@ -1,266 +1,573 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import {
-  ArrowUpRight,
-  Bookmark,
+  ArrowRight,
   Check,
   ChevronLeft,
   ChevronRight,
   Download,
-  Expand,
-  Layers,
+  Eye,
+  Heart,
+  Lightbulb,
   LoaderCircle,
-  Monitor,
-  Palette,
+  Maximize2,
 } from "lucide-react";
 import { useApp } from "../lib/context";
-import { makeDeck } from "../lib/model";
+import { makeDeck, type Deck, type Template } from "../lib/model";
 import { SlideView } from "../components/SlideView";
+import { Empty, Modal, Spinner } from "../components/Common";
+import { TemplateCard } from "../components/TemplateCard";
 import {
-  Empty,
-  Features,
-  PresentationPreview,
-  Spinner,
-  TemplateCard,
-} from "../components/Common";
+  categoryFor,
+  categoryLabel,
+  handoffTemplate,
+  listedTemplates,
+  styleLabel,
+  templateContent,
+  templateFamily,
+  useCaseFor,
+  sortTemplates,
+} from "../lib/marketplace";
+import "../styles/marketplace.css";
+
+function PreviewDialog({
+  deck,
+  template,
+  index,
+  setIndex,
+  onClose,
+}: {
+  deck: Deck;
+  template: Template;
+  index: number;
+  setIndex: (index: number) => void;
+  onClose: () => void;
+}) {
+  const count = deck.slides.length;
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (["ArrowRight", "PageDown", " "].includes(event.key)) {
+        event.preventDefault();
+        setIndex((index + 1) % count);
+      }
+      if (["ArrowLeft", "PageUp"].includes(event.key)) {
+        event.preventDefault();
+        setIndex((index + count - 1) % count);
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [index, count, setIndex]);
+  return (
+    <Modal
+      title={template.name + " · " + deck.slides[index].title}
+      onClose={onClose}
+      wide
+      fullScreen
+    >
+      <div className="cd-preview-dialog">
+        <div className="cd-preview-main">
+          <button
+            className="cd-market-icon"
+            aria-label="Previous slide"
+            onClick={() => setIndex((index + count - 1) % count)}
+          >
+            <ChevronLeft size={24} />
+          </button>
+          <SlideView
+            deck={deck}
+            template={template}
+            slide={deck.slides[index]}
+            index={index}
+            total={count}
+          />
+          <button
+            className="cd-market-icon"
+            aria-label="Next slide"
+            onClick={() => setIndex((index + 1) % count)}
+          >
+            <ChevronRight size={24} />
+          </button>
+        </div>
+        <div className="cd-preview-counter">
+          {String(index + 1).padStart(2, "0")} /{" "}
+          {String(count).padStart(2, "0")}
+          <span>Use ← → to navigate · Esc to close</span>
+        </div>
+        <div className="cd-detail-filmstrip">
+          {deck.slides.map((slide, i) => (
+            <button
+              key={slide.id}
+              aria-current={index === i ? "true" : undefined}
+              onClick={() => setIndex(i)}
+            >
+              <div aria-hidden="true">
+                <SlideView
+                  template={template}
+                  deck={deck}
+                  slide={slide}
+                  index={i}
+                  total={count}
+                />
+              </div>
+              <span>{String(i + 1).padStart(2, "0")}</span>
+              <span className="cd-visually-hidden">{slide.title}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
 export default function Details() {
-  const { id } = useParams(),
-    { templates, loading, saved, toggleSaved, exportDeck, toast } = useApp(),
-    [index, setIndex] = useState(0),
-    [preview, setPreview] = useState(false),
+  const { id } = useParams();
+  const [params, setParams] = useSearchParams();
+  const { templates, loading, saved, toggleSaved, exportDeck, toast } =
+    useApp();
+  const [index, setIndex] = useState(0),
+    [modal, setModal] = useState<"preview" | "download" | null>(null),
+    [format, setFormat] = useState<"pptx" | "pdf">("pptx"),
     [busy, setBusy] = useState(false);
-  const t = templates.find((x) => x.id === id),
-    deck = useMemo(() => (t ? makeDeck(t) : null), [t]);
+  const t = templates.find((item) => item.id === id);
+  const metadata = t ? handoffTemplate(t) : undefined;
+  const family = t ? templateFamily(t) : undefined;
+  const requestedTheme = params.has("theme")
+    ? Number(params.get("theme"))
+    : NaN;
+  const theme =
+    Number.isInteger(requestedTheme) &&
+    requestedTheme >= 0 &&
+    requestedTheme <= 2
+      ? requestedTheme
+      : metadata?.defaultTheme || 0;
+  const deck = useMemo(() => {
+    if (!t) return null;
+    const next = makeDeck(t);
+    if (family) next.theme = theme as 0 | 1 | 2;
+    return next;
+  }, [t, theme, family]);
   useEffect(() => {
     setIndex(0);
-    if (t) document.title = t.name + " — Editable PowerPoint | CampusDeck";
-    return () => {
-      document.title = "CampusDeck — Choose. Customise. Present.";
-    };
+    setModal(null);
+    window.scrollTo(0, 0);
+  }, [id]);
+  useEffect(() => {
+    if (t)
+      document.title =
+        t.name + " · " + useCaseFor(t) + " template | CampusDeck";
   }, [t]);
   if (loading) return <Spinner />;
   if (!t || !deck)
     return (
-      <Empty
-        title="This template isn’t available."
-        description="It may have moved or is being updated."
-        action={
-          <Link to="/explore" className="btn btn-primary">
-            Explore templates
-          </Link>
-        }
-      />
+      <div className="cd-market-container">
+        <Empty
+          title="This template isn’t available."
+          description="It may have moved or is being updated."
+          action={
+            <Link
+              to="/templates"
+              className="cd-market-button cd-market-primary"
+            >
+              Explore templates
+            </Link>
+          }
+        />
+      </div>
     );
+  const currentIndex = Math.min(index, deck.slides.length - 1);
+  const content = templateContent(t);
+  const category = categoryFor(t),
+    isSaved = saved.includes(t.id);
+  const themeName = family?.themes[theme]?.name || "Original";
+  const editorUrl = "/editor/" + t.id + (family ? "?theme=" + theme : "");
+  const related = sortTemplates(listedTemplates(templates), "recommended")
+    .filter((item) => item.id !== t.id)
+    .sort(
+      (a, b) =>
+        Number(categoryFor(b) === category) -
+        Number(categoryFor(a) === category),
+    )
+    .slice(0, 4);
   const download = async () => {
     setBusy(true);
     try {
-      await exportDeck(deck, t);
-    } catch (e) {
-      toast((e as Error).message);
+      await exportDeck(deck, t, format);
+      setModal(null);
+    } catch (error) {
+      toast((error as Error).message);
     } finally {
       setBusy(false);
     }
   };
   return (
-    <div className="container detail-page">
-      <div className="breadcrumbs">
-        <Link to="/explore">Templates</Link>
-        <ChevronRight size={12} />
-        <Link to={"/explore?category=" + encodeURIComponent(t.category)}>
-          {t.category}
-        </Link>
-        <ChevronRight size={12} />
-        <span>{t.name}</span>
-      </div>
-      <div className="detail-layout">
-        <div>
-          <div className="detail-stage">
+    <div className="cd-detail-page cd-market-container">
+      <nav className="cd-market-breadcrumb" aria-label="Breadcrumb">
+        <Link to="/">Home</Link>
+        <ChevronRight size={13} />
+        <Link to="/templates">Templates</Link>
+        <ChevronRight size={13} />
+        <Link to={"/" + category}>{categoryLabel(category)}</Link>
+        <ChevronRight size={13} />
+        <span aria-current="page">{t.name}</span>
+      </nav>
+      <div className="cd-detail-layout">
+        <div className="cd-detail-viewer">
+          <div className="cd-detail-stage">
             <SlideView
               template={t}
               deck={deck}
-              slide={deck.slides[index]}
-              index={index}
+              slide={deck.slides[currentIndex]}
+              index={currentIndex}
+              total={deck.slides.length}
             />
-            <button
-              className="stage-expand"
-              aria-label="Open fullscreen preview"
-              onClick={() => setPreview(true)}
-            >
-              <Expand size={18} />
-            </button>
+            <div className="cd-viewer-controls">
+              <span>
+                {String(currentIndex + 1).padStart(2, "0")} /{" "}
+                {String(deck.slides.length).padStart(2, "0")}
+              </span>
+              <div>
+                <button
+                  className="cd-market-icon"
+                  aria-label="Previous slide"
+                  onClick={() =>
+                    setIndex(
+                      (currentIndex + deck.slides.length - 1) %
+                        deck.slides.length,
+                    )
+                  }
+                >
+                  <ChevronLeft size={18} />
+                </button>
+                <button
+                  className="cd-market-icon"
+                  aria-label="Next slide"
+                  onClick={() =>
+                    setIndex((currentIndex + 1) % deck.slides.length)
+                  }
+                >
+                  <ChevronRight size={18} />
+                </button>
+                <button
+                  className="cd-market-icon"
+                  aria-label="Open fullscreen preview"
+                  onClick={() => setModal("preview")}
+                >
+                  <Maximize2 size={17} />
+                </button>
+              </div>
+            </div>
           </div>
-          <div className="preview-controls">
-            <span className="preview-label">
-              A closer look at your next presentation
-            </span>
-            <button
-              className="icon-btn"
-              disabled={!index}
-              onClick={() => setIndex(index - 1)}
-              aria-label="Previous slide"
-            >
-              <ChevronLeft size={19} />
-            </button>
-            <span>
-              {index + 1} / {deck.slides.length}
-            </span>
-            <button
-              className="icon-btn"
-              disabled={index === deck.slides.length - 1}
-              onClick={() => setIndex(index + 1)}
-              aria-label="Next slide"
-            >
-              <ChevronRight size={19} />
-            </button>
-          </div>
-          <div className="slide-filmstrip">
-            {deck.slides.map((s, i) => (
+          <div className="cd-detail-filmstrip">
+            {deck.slides.map((slide, i) => (
               <button
-                key={s.id}
+                key={slide.id}
+                aria-current={currentIndex === i ? "true" : undefined}
                 onClick={() => setIndex(i)}
-                className={index === i ? "active" : ""}
-                aria-label={"Preview slide " + (i + 1) + ": " + s.title}
               >
-                <SlideView template={t} deck={deck} slide={s} index={i} />
+                <div aria-hidden="true">
+                  <SlideView
+                    template={t}
+                    deck={deck}
+                    slide={slide}
+                    index={i}
+                    total={deck.slides.length}
+                  />
+                </div>
                 <span>{String(i + 1).padStart(2, "0")}</span>
+                <span className="cd-visually-hidden">{slide.title}</span>
               </button>
             ))}
           </div>
+          <p className="cd-viewer-caption">
+            {deck.slides[currentIndex].title}
+            <span>Preview every slide. Make every detail yours.</span>
+          </p>
         </div>
-        <aside className="detail-info">
-          <div className="detail-badges">
-            <span className="pill">{t.category}</span>
-            <span className="free-label">
+        <aside className="cd-template-summary">
+          <div className="cd-summary-labels">
+            <Link to={"/" + category}>{categoryLabel(category)}</Link>
+            <span className="cd-free-chip">
               {t.premium ? "Premium" : "Free template"}
             </span>
+            {metadata?.badge === "New" && (
+              <span className="cd-new-label">New</span>
+            )}
           </div>
           <h1>{t.name}</h1>
-          <p className="detail-description">{t.description}</p>
-          <div className="detail-specs">
-            <div>
-              <Layers size={18} />
-              <span>
-                <strong>16 slides</strong>Purposeful layouts
-              </span>
-            </div>
-            <div>
-              <Monitor size={18} />
-              <span>
-                <strong>16:9 widescreen</strong>Ready for any room
-              </span>
-            </div>
-            <div>
-              <Palette size={18} />
-              <span>
-                <strong>{t.style} design</strong>Fully customisable
-              </span>
-            </div>
-            <div>
-              <span className="powerpoint-icon small">P</span>
-              <span>
-                <strong>PowerPoint .pptx</strong>Native editable elements
-              </span>
-            </div>
-          </div>
-          <Link
-            className="btn btn-primary full-width"
-            to={"/customise/" + t.id}
-          >
-            Customise this template <ArrowUpRight size={18} />
-          </Link>
-          <button
-            className="btn btn-outline full-width"
-            disabled={busy || t.premium}
-            onClick={() => void download()}
-          >
-            {busy ? (
-              <LoaderCircle className="spin" size={17} />
-            ) : (
-              <Download size={17} />
-            )}{" "}
-            {busy ? "Preparing your PowerPoint…" : "Download original template"}
-          </button>
-          {t.premium && (
-            <p className="notice">
-              Premium purchases are currently unavailable.
-            </p>
-          )}
-          <p className="download-note">
-            No account needed. Just download and make it yours.
+          <p className="cd-summary-use">
+            {useCaseFor(t)} <span>·</span> {deck.slides.length} slides
           </p>
-          <button
-            className="detail-save link-button"
-            onClick={() => void toggleSaved(t.id)}
+          <p className="cd-summary-description">
+            {metadata
+              ? `${t.name} is a ${deck.slides.length}-slide ${styleLabel(t.style).toLowerCase()} template for ${useCaseFor(t).toLowerCase()} presentations. ${content?.detailPage.description || ""}`
+              : t.description}
+          </p>
+          {family && (
+            <fieldset className="cd-theme-picker">
+              <legend>
+                Colour theme{" "}
+                <span>
+                  {themeName}
+                  {theme === metadata?.defaultTheme ? " · default" : ""}
+                </span>
+              </legend>
+              <div role="radiogroup" aria-label="Colour theme">
+                {family.themes.map((option, i) => (
+                  <button
+                    key={option.name}
+                    type="button"
+                    role="radio"
+                    aria-checked={theme === i}
+                    onClick={() => {
+                      const next = new URLSearchParams(params);
+                      next.set("theme", String(i));
+                      setParams(next, { replace: true });
+                    }}
+                  >
+                    <i
+                      style={{
+                        background: `linear-gradient(135deg, ${option.swatch[0]} 50%, ${option.swatch[1]} 50%)`,
+                      }}
+                    />
+                    <span>{option.name}</span>
+                    {theme === i && <Check size={13} />}
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+          )}
+          <Link
+            className="cd-market-button cd-market-primary cd-full-width"
+            to={editorUrl}
           >
-            <Bookmark
-              size={16}
-              fill={saved.includes(t.id) ? "currentColor" : "none"}
-            />
-            {saved.includes(t.id)
-              ? "Saved to your collection"
-              : "Save for later"}
-          </button>
-          <Features />
+            Customise this template
+            <ArrowRight size={17} />
+          </Link>
+          <div className="cd-summary-actions">
+            <button
+              className="cd-market-button"
+              onClick={() => setModal("download")}
+            >
+              <Download size={17} />
+              Download
+            </button>
+            <button
+              className="cd-market-icon"
+              aria-label="Preview presentation"
+              title="Preview presentation"
+              onClick={() => setModal("preview")}
+            >
+              <Eye size={18} />
+            </button>
+            <button
+              className={"cd-market-icon " + (isSaved ? "cd-is-saved" : "")}
+              aria-label={
+                isSaved ? "Remove " + t.name + " from saved" : "Save " + t.name
+              }
+              aria-pressed={isSaved}
+              title={isSaved ? "Saved to your workspace" : "Save for later"}
+              onClick={() => void toggleSaved(t.id)}
+            >
+              <Heart size={18} fill={isSaved ? "currentColor" : "none"} />
+            </button>
+          </div>
+          <p className="cd-download-note">
+            {t.premium
+              ? "Premium purchases are currently unavailable."
+              : "No account needed. Download and make it yours."}
+          </p>
+          <dl className="cd-template-specs">
+            <div>
+              <dt>Slides</dt>
+              <dd>{deck.slides.length} slides · all layouts shown</dd>
+            </div>
+            <div>
+              <dt>Format</dt>
+              <dd>16:9 widescreen</dd>
+            </div>
+            <div>
+              <dt>Typefaces</dt>
+              <dd>{family?.typefaces || deck.font}</dd>
+            </div>
+            <div>
+              <dt>Style</dt>
+              <dd>{styleLabel(t.style)}</dd>
+            </div>
+            <div>
+              <dt>File types</dt>
+              <dd>
+                .pptx · .pdf
+                <span className="cd-editable-tag">Editable PPTX</span>
+              </dd>
+            </div>
+          </dl>
+          <Link
+            className="cd-market-text-link cd-personalise-first"
+            to={"/customise/" + t.id + (family ? "?theme=" + theme : "")}
+          >
+            Add presentation details first
+            <ArrowRight size={15} />
+          </Link>
         </aside>
       </div>
-      <section className="included-section">
+      <section className="cd-detail-included">
         <div>
-          <span className="section-kicker">DESIGNED WITH PURPOSE</span>
-          <h2>Every part of your story, covered.</h2>
-          <p>
-            A complete set of flexible layouts. Keep what you need,
-            <br />
-            add your own content, and make your presentation flow.
+          <div className="cd-detail-section-title">
+            <h2>What is inside</h2>
+            <span>{deck.slides.length} slides</span>
+          </div>
+          <ol className="cd-inside-list">
+            {deck.slides.map((slide, i) => (
+              <li key={slide.id}>
+                <span>{String(i + 1).padStart(2, "0")}</span>
+                {slide.layout === "cover" ? "Title slide" : slide.title}
+              </li>
+            ))}
+          </ol>
+        </div>
+        <div>
+          <h2>Perfect for</h2>
+          <div className="cd-perfect-chips">
+            {(
+              content?.detailPage.perfectFor || [
+                t.category,
+                t.department,
+                "Presentations",
+              ]
+            ).map((text) => (
+              <span key={text}>{text}</span>
+            ))}
+          </div>
+          <div className="cd-personalise-callout">
+            <Lightbulb size={21} />
+            <div>
+              <strong>Add your details once</strong>
+              <p>
+                Your title, team, guide and department flow into the
+                presentation when you personalise this template.
+              </p>
+            </div>
+          </div>
+          <p className="cd-sample-note">
+            Names, examples and chart figures are sample content. Replace them
+            with your own details and verified findings.
           </p>
         </div>
-        <div className="included-layouts">
-          {[
-            "Cover & introduction",
-            "Problem & objectives",
-            "Methodology & process",
-            "System architecture",
-            "Timeline & comparisons",
-            "Editable data charts",
-            "Project screenshots",
-            "Findings & future scope",
-            "References & Q&A",
-          ].map((s) => (
-            <span key={s}>
-              <Check size={15} />
-              {s}
-            </span>
+      </section>
+      <section className="cd-detail-related">
+        <div className="cd-market-section-heading">
+          <h2>More {categoryLabel(category).toLowerCase()} templates</h2>
+          <Link className="cd-market-text-link" to={"/" + category}>
+            View all
+            <ArrowRight size={17} />
+          </Link>
+        </div>
+        <div className="cd-template-grid">
+          {related.map((item) => (
+            <TemplateCard key={item.id} template={item} />
           ))}
         </div>
       </section>
-      <div className="sample-notice">
-        A thoughtful starting point: sample content and chart data are
-        illustrative. Replace them with your own project details and verified
-        findings.
-      </div>
-      <section className="section">
-        <div className="section-heading">
-          <h2>A few more you might like.</h2>
-          <Link className="text-link" to="/explore">
-            The full collection <ArrowUpRight size={16} />
-          </Link>
-        </div>
-        <div className="template-grid three">
-          {templates
-            .filter((x) => x.id !== t.id && x.family < 12 === t.family < 12)
-            .slice(0, 3)
-            .map((x, i) => (
-              <TemplateCard key={x.id} template={x} index={i + 1} />
-            ))}
-        </div>
-      </section>
-      {preview && (
-        <PresentationPreview
-          deck={deck}
+      {modal === "preview" && (
+        <PreviewDialog
           template={t}
-          index={index}
+          deck={deck}
+          index={currentIndex}
           setIndex={setIndex}
-          onClose={() => setPreview(false)}
+          onClose={() => setModal(null)}
         />
+      )}
+      {modal === "download" && (
+        <Modal
+          title={"Download " + t.name}
+          onClose={() => {
+            if (!busy) setModal(null);
+          }}
+        >
+          <div className="cd-download-dialog">
+            <p>
+              {deck.slides.length} slides · {themeName} theme · 16:9 widescreen
+            </p>
+            <div className="cd-download-cover">
+              <SlideView
+                template={t}
+                deck={deck}
+                slide={deck.slides[0]}
+                total={deck.slides.length}
+              />
+            </div>
+            <fieldset className="cd-export-formats">
+              <legend>Choose a format</legend>
+              {[
+                {
+                  id: "pptx" as const,
+                  label: "PowerPoint",
+                  description:
+                    "Native, editable text, shapes, charts and tables",
+                },
+                {
+                  id: "pdf" as const,
+                  label: "PDF document",
+                  description: "A fixed copy for sharing or printing",
+                },
+              ].map((item) => (
+                <label
+                  key={item.id}
+                  className={format === item.id ? "cd-format-selected" : ""}
+                >
+                  <input
+                    type="radio"
+                    name="export-format"
+                    value={item.id}
+                    checked={format === item.id}
+                    onChange={() => setFormat(item.id)}
+                  />
+                  <span className="cd-format-ext">{item.id.toUpperCase()}</span>
+                  <span>
+                    <strong>{item.label}</strong>
+                    <small>{item.description}</small>
+                  </span>
+                  <span className="cd-format-check">
+                    {format === item.id && <Check size={16} />}
+                  </span>
+                </label>
+              ))}
+            </fieldset>
+            {format === "pdf" && (
+              <p className="cd-export-help">
+                PDF export supports Latin text. Choose PPTX for Tamil and other
+                scripts.
+              </p>
+            )}
+            <div className="cd-download-footer">
+              <Link className="cd-market-button" to={editorUrl}>
+                Customise first
+              </Link>
+              <button
+                className="cd-market-button cd-market-primary"
+                disabled={busy || t.premium}
+                onClick={() => void download()}
+              >
+                {busy ? (
+                  <LoaderCircle className="spin" size={16} />
+                ) : (
+                  <Download size={16} />
+                )}
+                {busy
+                  ? "Preparing download…"
+                  : format === "pptx"
+                    ? "Download PowerPoint"
+                    : "Download PDF"}
+              </button>
+            </div>
+            {t.premium && (
+              <p className="cd-export-help">
+                Premium purchases are currently unavailable.
+              </p>
+            )}
+          </div>
+        </Modal>
       )}
     </div>
   );

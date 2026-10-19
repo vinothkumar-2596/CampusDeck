@@ -25,6 +25,18 @@ type Context = {
   ) => Promise<void>;
 };
 const AppContext = createContext<Context>(null!);
+function guestSaved(): string[] {
+  try {
+    const parsed: unknown = JSON.parse(
+      localStorage.getItem("campusdeck.saved") || "[]",
+    );
+    return Array.isArray(parsed)
+      ? parsed.filter((value): value is string => typeof value === "string")
+      : [];
+  } catch {
+    return [];
+  }
+}
 export const useApp = () => useContext(AppContext);
 export function AppProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null),
@@ -47,7 +59,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setAuthMode(me.authMode);
       setTemplates(t);
       setCategories(c);
-      setSaved(me.user ? await api<string[]>("/saved") : []);
+      setSaved(me.user ? await api<string[]>("/saved") : guestSaved());
       setError("");
     } catch (e) {
       setError((e as Error).message);
@@ -66,7 +78,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [message]);
   const toggleSaved = async (id: string) => {
     if (!user) {
-      toast("Sign in to keep your favourite templates in your workspace.");
+      setSaved((previous) => {
+        const next = previous.includes(id)
+          ? previous.filter((item) => item !== id)
+          : [...previous, id];
+        try {
+          localStorage.setItem("campusdeck.saved", JSON.stringify(next));
+        } catch {
+          /* In-memory saves remain usable when browser storage is blocked. */
+        }
+        return next;
+      });
       return;
     }
     try {

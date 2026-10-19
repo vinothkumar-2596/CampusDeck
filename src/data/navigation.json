@@ -1,0 +1,547 @@
+{
+  "header": {
+    "primary": [
+      {
+        "id": "explore",
+        "label": "Explore Templates",
+        "href": "/templates"
+      },
+      {
+        "id": "college",
+        "label": "College PPTs",
+        "href": "/college",
+        "menu": "college"
+      },
+      {
+        "id": "corporate",
+        "label": "Corporate",
+        "href": "/corporate"
+      },
+      {
+        "id": "categories",
+        "label": "Categories",
+        "menu": "categories"
+      },
+      {
+        "id": "how",
+        "label": "How It Works",
+        "href": "/how-it-works"
+      }
+    ],
+    "actions": [
+      {
+        "label": "Search",
+        "action": "openSearch"
+      },
+      {
+        "label": "Sign In",
+        "href": "/sign-in"
+      },
+      {
+        "label": "Get Started",
+        "href": "/sign-up",
+        "primary": true
+      }
+    ],
+    "collegeMenu": {
+      "byRequirement": [
+        {
+          "label": "Final Year Project",
+          "text": "Complete decks, cover to conclusion",
+          "href": "/college?use=fyp"
+        },
+        {
+          "label": "Project Review 1 · 2 · 3",
+          "text": "One set that grows with each review",
+          "href": "/college?use=review"
+        },
+        {
+          "label": "Mini Project",
+          "text": "Compact semester decks",
+          "href": "/college?use=mini"
+        },
+        {
+          "label": "Seminar",
+          "text": "Topic talks with readable slides",
+          "href": "/college?use=seminar"
+        },
+        {
+          "label": "Internship",
+          "text": "Company, role and learnings",
+          "href": "/college?use=intern"
+        },
+        {
+          "label": "Hackathon Pitch",
+          "text": "Problem, demo and the ask",
+          "href": "/college?use=hackathon"
+        }
+      ],
+      "byDepartment": [
+        {
+          "label": "CSE",
+          "href": "/college?dept=cse"
+        },
+        {
+          "label": "IT",
+          "href": "/college?dept=it"
+        },
+        {
+          "label": "AI & DS",
+          "href": "/college?dept=aids"
+        },
+        {
+          "label": "ECE",
+          "href": "/college?dept=ece"
+        },
+        {
+          "label": "EEE",
+          "href": "/college?dept=eee"
+        },
+        {
+          "label": "Mechanical",
+          "href": "/college?dept=mech"
+        },
+        {
+          "label": "Civil",
+          "href": "/college?dept=civil"
+        },
+        {
+          "label": "Biotech",
+          "href": "/college?dept=bio"
+        },
+        {
+          "label": "MBA",
+          "href": "/college?dept=mba"
+        },
+        {
+          "label": "Nursing",
+          "href": "/college?dept=nursing"
+        }
+      ],
+      "featured": {
+        "template": "meridian",
+        "label": "Meridian",
+        "text": "Featured · Final Year Project"
+      }
+    },
+    "categoriesMenu": [
+      {
+        "label": "College",
+        "text": "Projects, reviews and seminars",
+        "href": "/college"
+      },
+      {
+        "label": "Corporate",
+        "text": "Board updates, reviews and reports",
+        "href": "/corporate"
+      },
+      {
+        "label": "Business",
+        "text": "Pitch decks, proposals and plans",
+        "href": "/business"
+      },
+      {
+        "label": "Healthcare",
+        "text": "Case presentations and rounds",
+        "href": "/healthcare"
+      },
+      {
+        "label": "Research",
+        "text": "Thesis defences and papers",
+        "href": "/research"
+      },
+      {
+        "label": "Events",
+        "text": "Symposiums, convocations and fests",
+        "href": "/events"
+      },
+      {
+        "label": "Explore all templates",
+        "href": "/templates",
+        "footer": true
+      }
+    ],
+    "search": {
+      "title": "Search templates",
+      "maxResults": 6,
+      "popular": [
+        "Final year project",
+        "Review 2",
+        "Seminar",
+        "Pitch deck",
+        "Thesis defence",
+        "Annual report"
+      ],
+      "noResults": "No template names match yet. Search the full catalogue to include topics and departments.",
+      "searchAllLabel": "Search all templates for “{q}”",
+      "searchAllHref": "/templates?q={q}",
+      "index": [
+        {
+          "id": "meridian",
+          "name": "Meridian",
+          "useCase": "Final Year Project",
+          "category": "College",
+          "keywords": "iot irrigation agriculture sensors machine learning cse fyp"
+        },
+        {
+          "id": "atlas",
+          "name": "Atlas",
+          "useCase": "Project Review 2",
+          "category": "College",
+          "keywords": "review 2 sign language deep learning it"
+        },
+        {
+          "id": "kepler",
+          "name": "Kepler",
+          "useCase": "Hackathon Pitch",
+          "category": "College",
+          "keywords": "hackathon pitch agritech edge ai dark"
+        },
+        {
+          "id": "halcyon",
+          "name": "Halcyon",
+          "useCase": "Technical Seminar",
+          "category": "College",
+          "keywords": "seminar microplastics water civil editorial"
+        },
+        {
+          "id": "vertex",
+          "name": "Vertex",
+          "useCase": "Mini Project",
+          "category": "College",
+          "keywords": "mini project robotic arm gesture ece bold"
+        },
+        {
+          "id": "canopy",
+          "name": "Canopy",
+          "useCase": "Mini Project",
+          "category": "College",
+          "keywords": "mini project biotechnology packaging"
+        },
+        {
+          "id": "monolith",
+          "name": "Monolith",
+          "useCase": "Internship Presentation",
+          "category": "College",
+          "keywords": "internship payments api software minimal"
+        },
+        {
+          "id": "raster",
+          "name": "Raster",
+          "useCase": "Technical Symposium",
+          "category": "College",
+          "keywords": "symposium paper presentation drone mechanical swiss"
+        },
+        {
+          "id": "sextant",
+          "name": "Sextant",
+          "useCase": "Project Review 3",
+          "category": "College",
+          "keywords": "review 3 ecg wearable ece"
+        },
+        {
+          "id": "tropic",
+          "name": "Tropic",
+          "useCase": "Final Year Project",
+          "category": "College",
+          "keywords": "final year traffic graph neural network ai data science"
+        },
+        {
+          "id": "circuit",
+          "name": "Circuit",
+          "useCase": "Final Year Project",
+          "category": "College",
+          "keywords": "final year solar mppt battery eee"
+        },
+        {
+          "id": "folio",
+          "name": "Folio",
+          "useCase": "Research Presentation",
+          "category": "College",
+          "keywords": "research federated learning healthcare privacy"
+        },
+        {
+          "id": "plain",
+          "name": "Plain",
+          "useCase": "Academic Assignment",
+          "category": "College",
+          "keywords": "assignment operating systems scheduling"
+        },
+        {
+          "id": "sprint",
+          "name": "Sprint",
+          "useCase": "Hackathon Pitch",
+          "category": "College",
+          "keywords": "hackathon pitch canteen app"
+        },
+        {
+          "id": "ward",
+          "name": "Ward",
+          "useCase": "Nursing Seminar",
+          "category": "College",
+          "keywords": "nursing seminar infection control"
+        },
+        {
+          "id": "brief",
+          "name": "Brief",
+          "useCase": "Internship Presentation",
+          "category": "College",
+          "keywords": "mba internship retail forecasting"
+        },
+        {
+          "id": "ledger",
+          "name": "Ledger",
+          "useCase": "Quarterly Business Review",
+          "category": "Corporate",
+          "keywords": "qbr quarterly business review finance"
+        },
+        {
+          "id": "strata",
+          "name": "Strata",
+          "useCase": "Strategy Deck",
+          "category": "Corporate",
+          "keywords": "strategy offsite leadership"
+        },
+        {
+          "id": "boardroom",
+          "name": "Boardroom",
+          "useCase": "Board Update",
+          "category": "Corporate",
+          "keywords": "board update directors"
+        },
+        {
+          "id": "northline",
+          "name": "Northline",
+          "useCase": "Annual Report",
+          "category": "Corporate",
+          "keywords": "annual report"
+        },
+        {
+          "id": "launchpad",
+          "name": "Launchpad",
+          "useCase": "Startup Pitch Deck",
+          "category": "Business",
+          "keywords": "startup pitch deck investor seed"
+        },
+        {
+          "id": "closer",
+          "name": "Closer",
+          "useCase": "Sales Proposal",
+          "category": "Business",
+          "keywords": "sales proposal cloud"
+        },
+        {
+          "id": "margin",
+          "name": "Margin",
+          "useCase": "Business Plan",
+          "category": "Business",
+          "keywords": "business plan kitchen"
+        },
+        {
+          "id": "harbor",
+          "name": "Harbor",
+          "useCase": "Marketing Plan",
+          "category": "Business",
+          "keywords": "marketing plan campaign"
+        },
+        {
+          "id": "pulse",
+          "name": "Pulse",
+          "useCase": "Clinical Case Presentation",
+          "category": "Healthcare",
+          "keywords": "case presentation clinical medicine"
+        },
+        {
+          "id": "vital",
+          "name": "Vital",
+          "useCase": "Quality & Safety Report",
+          "category": "Healthcare",
+          "keywords": "hospital quality safety report"
+        },
+        {
+          "id": "rounds",
+          "name": "Rounds",
+          "useCase": "Grand Rounds",
+          "category": "Healthcare",
+          "keywords": "grand rounds antimicrobial"
+        },
+        {
+          "id": "thesis",
+          "name": "Thesis",
+          "useCase": "Thesis Defence",
+          "category": "Research",
+          "keywords": "thesis defence phd viva"
+        },
+        {
+          "id": "abstract",
+          "name": "Abstract",
+          "useCase": "Conference Paper",
+          "category": "Research",
+          "keywords": "conference paper speech recognition"
+        },
+        {
+          "id": "fieldnotes",
+          "name": "Field Notes",
+          "useCase": "Research Proposal",
+          "category": "Research",
+          "keywords": "research proposal groundwater"
+        },
+        {
+          "id": "gala",
+          "name": "Gala",
+          "useCase": "Symposium & Annual Day",
+          "category": "Events",
+          "keywords": "symposium annual day event"
+        },
+        {
+          "id": "convocation",
+          "name": "Convocation",
+          "useCase": "Graduation Ceremony",
+          "category": "Events",
+          "keywords": "graduation convocation ceremony"
+        },
+        {
+          "id": "fest",
+          "name": "Fest",
+          "useCase": "Cultural Fest",
+          "category": "Events",
+          "keywords": "cultural fest event"
+        }
+      ]
+    },
+    "mobileMenu": [
+      "Explore Templates",
+      "College PPTs",
+      "Corporate",
+      "Business",
+      "Healthcare",
+      "Research",
+      "Events",
+      "How It Works",
+      "Sign In",
+      "Get Started"
+    ]
+  },
+  "footer": {
+    "brand": {
+      "text": "Professionally designed presentation templates for college projects, research, business and beyond.",
+      "tagline": "Choose. Customise. Present."
+    },
+    "columns": [
+      {
+        "title": "Templates",
+        "links": [
+          {
+            "label": "Explore all",
+            "href": "/templates"
+          },
+          {
+            "label": "College",
+            "href": "/college"
+          },
+          {
+            "label": "Corporate",
+            "href": "/corporate"
+          },
+          {
+            "label": "Business",
+            "href": "/business"
+          },
+          {
+            "label": "Healthcare",
+            "href": "/healthcare"
+          },
+          {
+            "label": "Research",
+            "href": "/research"
+          },
+          {
+            "label": "Events",
+            "href": "/events"
+          }
+        ]
+      },
+      {
+        "title": "College PPTs",
+        "links": [
+          {
+            "label": "Final Year Project",
+            "href": "/college?use=fyp"
+          },
+          {
+            "label": "Project Reviews",
+            "href": "/college?use=review"
+          },
+          {
+            "label": "Mini Project",
+            "href": "/college?use=mini"
+          },
+          {
+            "label": "Seminar",
+            "href": "/college?use=seminar"
+          },
+          {
+            "label": "Internship",
+            "href": "/college?use=intern"
+          },
+          {
+            "label": "Hackathon Pitch",
+            "href": "/college?use=hackathon"
+          }
+        ]
+      },
+      {
+        "title": "Product",
+        "links": [
+          {
+            "label": "How It Works",
+            "href": "/how-it-works"
+          },
+          {
+            "label": "Personalise editor",
+            "href": "/editor"
+          },
+          {
+            "label": "Template preview",
+            "href": "/templates/meridian"
+          },
+          {
+            "label": "Sign in",
+            "href": "/sign-in"
+          },
+          {
+            "label": "Create account",
+            "href": "/sign-up"
+          }
+        ]
+      },
+      {
+        "title": "Support",
+        "links": [
+          {
+            "label": "Help centre",
+            "href": "#"
+          },
+          {
+            "label": "Contact",
+            "href": "#"
+          },
+          {
+            "label": "Licence",
+            "href": "#"
+          },
+          {
+            "label": "Privacy",
+            "href": "#"
+          },
+          {
+            "label": "Terms",
+            "href": "#"
+          }
+        ]
+      }
+    ],
+    "legal": "© 2026 CampusDeck. All rights reserved.",
+    "prototypeNote": "Interface prototype · templates, names and figures are sample content"
+  }
+}

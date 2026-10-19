@@ -29,12 +29,16 @@ import { useApp } from "../lib/context";
 import { api, readImage, send } from "../lib/api";
 import {
   layouts,
+  makeDeck,
   newSlide,
   uid,
   type Deck,
   type Slide,
   type Template,
 } from "../lib/model";
+import { getTemplateThemes, resolveSlideDesign } from "../lib/slides/resolve";
+import { switchDeckDesign, resetDeckText } from "../lib/editor";
+import editorConfig from "../data/editor.json" with { type: "json" };
 import { SlideView } from "../components/SlideView";
 import { Field } from "../components/Fields";
 import {
@@ -61,6 +65,7 @@ export default function Editor() {
     [zoom, setZoom] = useState(100),
     [version, setVersion] = useState(0),
     [confirmDelete, setConfirmDelete] = useState(false);
+  const [resetOpen, setResetOpen] = useState(false);
   const history = useRef<Deck[]>([]),
     future = useRef<Deck[]>([]),
     current = useRef<Deck | null>(null),
@@ -74,7 +79,35 @@ export default function Editor() {
     if (loading) return;
     let active = true;
     const load = async () => {
+      setLoadError("");
       try {
+        const startingTemplate = templates.find(
+          (template) => template.id === (id || "meridian"),
+        );
+        if (startingTemplate) {
+          const profile = user
+            ? await api<Deck["profile"] | null>("/profile").catch(() => null)
+            : null;
+          const created = profile
+            ? makeDeck(startingTemplate, profile)
+            : makeDeck(startingTemplate);
+          const theme = Number(
+            new URLSearchParams(location.search).get("theme"),
+          );
+          if (
+            new URLSearchParams(location.search).has("theme") &&
+            Number.isInteger(theme) &&
+            theme >= 0 &&
+            theme <= 2
+          )
+            created.theme = theme;
+          if (active)
+            navigate("/editor/" + created.id, {
+              replace: true,
+              state: { deck: created, ownerId: user?.id || null },
+            });
+          return;
+        }
         const state = location.state as {
           deck?: Deck;
           ownerId?: string | null;
@@ -228,17 +261,19 @@ export default function Editor() {
   const save = async () => {
     if (!deck) return;
     if (!user) {
-      navigate("/auth?returnTo=" + encodeURIComponent("/editor/" + deck.id));
-      return;
+      navigate("/sign-in?returnTo=" + encodeURIComponent("/editor/" + deck.id));
+      return false;
     }
     setStatus("Saving…");
     try {
       await saveQueue.current;
       await send("/projects/" + deck.id, deck, "PUT");
       setStatus("All changes saved");
+      return true;
     } catch (e) {
       setStatus("Save failed — retry");
       toast((e as Error).message);
+      return false;
     }
   };
   if (loadError)
@@ -254,6 +289,21 @@ export default function Editor() {
       />
     );
   if (!deck || !t || !s) return <Spinner label="Opening your presentation…" />;
+  const themes = getTemplateThemes(t);
+  const selectedTheme = deck.theme ?? t.defaultTheme ?? 0;
+  const visibleAccent = t.handoffId
+    ? resolveSlideDesign(t, deck).cover.acc
+    : deck.accent;
+  const coverSlide =
+    deck.slides.find((slide) => slide.layout === "cover") || deck.slides[0];
+  const designIds = editorConfig.designPicker.includes(t.id)
+    ? editorConfig.designPicker
+    : [t.id, ...editorConfig.designPicker.slice(0, 7)];
+  const designs = designIds
+    .map((designId) => templates.find((template) => template.id === designId))
+    .filter(
+      (template): template is Template => !!template && !template.premium,
+    );
   return (
     <div className="editor-app" data-version={version}>
       <header className="editor-topbar">
@@ -261,6 +311,14 @@ export default function Editor() {
           className="icon-btn editor-back"
           to="/workspace"
           aria-label="Back to workspace"
+          onClick={(event) => {
+            if (user) {
+              event.preventDefault();
+              void save().then((saved) => {
+                if (saved) navigate("/workspace");
+              });
+            }
+          }}
         >
           <ArrowLeft size={20} />
         </Link>
@@ -283,6 +341,10 @@ export default function Editor() {
                 });
             }}
           />
+          <small className="editor-deck-meta">
+            {t.name} · {themes[selectedTheme]?.name || "Original"} theme ·{" "}
+            {deck.slides.length} slides
+          </small>
           <span
             className={status.startsWith("Save failed") ? "save-error" : ""}
           >
@@ -391,18 +453,20 @@ export default function Editor() {
               <button
                 key={slide.id}
                 className={"slide-thumb " + (index === i ? "active" : "")}
+                aria-current={index === i ? "true" : undefined}
                 onClick={() => setIndex(i)}
-                aria-label={"Select slide " + (i + 1) + ": " + slide.title}
               >
                 <span>{String(i + 1).padStart(2, "0")}</span>
                 <div>
-                  <SlideView
-                    deck={deck}
-                    template={t}
-                    slide={slide}
-                    index={i}
-                    total={deck.slides.length}
-                  />
+                  <div aria-hidden="true">
+                    <SlideView
+                      deck={deck}
+                      template={t}
+                      slide={slide}
+                      index={i}
+                      total={deck.slides.length}
+                    />
+                  </div>
                   <small>{slide.title}</small>
                 </div>
               </button>
@@ -525,9 +589,15 @@ export default function Editor() {
           </details>
         </section>
         <aside className="inspector">
-          <div className="inspector-tabs">
+          <div
+            className="inspector-tabs"
+            role="tablist"
+            aria-label="Editor panels"
+          >
             <button
               className={panel === "content" ? "active" : ""}
+              role="tab"
+              aria-selected={panel === "content"}
               onClick={() => setPanel("content")}
             >
               <Type size={15} />
@@ -535,6 +605,8 @@ export default function Editor() {
             </button>
             <button
               className={panel === "design" ? "active" : ""}
+              role="tab"
+              aria-selected={panel === "design"}
               onClick={() => setPanel("design")}
             >
               <Settings2 size={15} />
@@ -545,8 +617,39 @@ export default function Editor() {
             {panel === "content" ? (
               <>
                 <div className="inspector-heading">
-                  <span>SLIDE {String(index + 1).padStart(2, "0")}</span>
-                  <h3>Make your point.</h3>
+                  <span>PERSONALISE YOUR PRESENTATION</span>
+                  <h3>Presentation details</h3>
+                  <p>Your title and academic details carry through the deck.</p>
+                  {t.handoffId && (
+                    <button
+                      className="link-button editor-reset"
+                      onClick={() => setResetOpen(true)}
+                    >
+                      Sample text
+                    </button>
+                  )}
+                </div>
+                {t.handoffId && s !== coverSlide && (
+                  <Field
+                    label="Presentation title"
+                    value={coverSlide.title}
+                    maxLength={160}
+                    multiline
+                    onChange={(title) =>
+                      change((d) => {
+                        const cover =
+                          d.slides.find((slide) => slide.layout === "cover") ||
+                          d.slides[0];
+                        cover.title = title;
+                      })
+                    }
+                  />
+                )}
+                <div className="editor-slide-tag">
+                  This slide{" "}
+                  <span>
+                    {String(index + 1).padStart(2, "0")} · {s.layout}
+                  </span>
                 </div>
                 <Field
                   label="Heading"
@@ -555,16 +658,62 @@ export default function Editor() {
                   maxLength={160}
                   multiline
                 />
+                {t.handoffId && s.layout === "cover" && (
+                  <Field
+                    label="Top label"
+                    value={s.eyebrow || ""}
+                    maxLength={160}
+                    onChange={(eyebrow) => edit({ eyebrow })}
+                  />
+                )}
+                {s.layout === "problem" && (
+                  <Field
+                    label="Highlighted question"
+                    value={s.question || ""}
+                    maxLength={360}
+                    multiline
+                    onChange={(question) => edit({ question })}
+                  />
+                )}
                 <Field
-                  label="Subtitle / label"
+                  label={
+                    s.layout === "problem"
+                      ? "Problem statement"
+                      : "Subtitle / label"
+                  }
                   value={s.subtitle}
                   onChange={(subtitle) => edit({ subtitle })}
                   maxLength={360}
                   multiline
                 />
-                {!["cover", "closing", "table", "chart", "section"].includes(
-                  s.layout,
-                ) && (
+                {s.layout === "architecture" && (
+                  <div className="editor-architecture">
+                    <h4>Diagram blocks, left to right</h4>
+                    {Array.from({ length: 5 }, (_, i) => (
+                      <Field
+                        key={i}
+                        label={"Diagram block " + (i + 1)}
+                        value={s.body[i] || ""}
+                        maxLength={100}
+                        onChange={(value) => {
+                          const body = Array.from({ length: 5 }, (_, j) =>
+                            j === i ? value : s.body[j] || "",
+                          );
+                          edit({ body });
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
+                {![
+                  "cover",
+                  "closing",
+                  "table",
+                  "chart",
+                  "section",
+                  "architecture",
+                  "team",
+                ].includes(s.layout) && (
                   <Field
                     label="Content"
                     value={s.body.join("\n")}
@@ -739,7 +888,7 @@ export default function Editor() {
                     )}
                   </div>
                 )}
-                {["cover", "closing"].includes(s.layout) && (
+                {(t.handoffId || ["cover", "closing"].includes(s.layout)) && (
                   <>
                     <div className="inspector-divider" />
                     <h4>Your details</h4>
@@ -782,8 +931,103 @@ export default function Editor() {
               <>
                 <div className="inspector-heading">
                   <span>THE LOOK & FEEL</span>
-                  <h3>A little more you.</h3>
+                  <h3>Make it your own</h3>
                 </div>
+                {t.handoffId && (
+                  <>
+                    <h4>Template</h4>
+                    <p className="editor-design-help">
+                      Your text and slides stay with you when you switch
+                      designs.
+                    </p>
+                    <div className="editor-design-picker">
+                      {designs.map((design) => (
+                        <button
+                          key={design.id}
+                          className={design.id === t.id ? "active" : ""}
+                          aria-pressed={design.id === t.id}
+                          onClick={() =>
+                            change((d) =>
+                              Object.assign(d, switchDeckDesign(d, design)),
+                            )
+                          }
+                        >
+                          <div aria-hidden="true">
+                            <SlideView
+                              template={design}
+                              deck={{
+                                ...deck,
+                                templateId: design.id,
+                                templateSnapshot: design,
+                                theme: design.defaultTheme,
+                                accent: design.accent,
+                                customAccent: false,
+                              }}
+                              slide={coverSlide}
+                            />
+                          </div>
+                          <span>
+                            <span className="sr-only">Use design </span>
+                            {design.name}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                    <h4>Colour theme</h4>
+                    <div className="editor-themes">
+                      {themes.map((theme, i) => (
+                        <button
+                          key={theme.name}
+                          aria-label={"Use theme " + theme.name}
+                          aria-pressed={selectedTheme === i}
+                          className={selectedTheme === i ? "active" : ""}
+                          onClick={() =>
+                            change((d) => {
+                              d.theme = i;
+                              d.accent = t.accent;
+                              d.customAccent = false;
+                            })
+                          }
+                        >
+                          <span className="editor-theme-colours">
+                            {theme.swatch.map((colour, n) => (
+                              <svg
+                                key={n}
+                                viewBox="0 0 20 20"
+                                aria-hidden="true"
+                              >
+                                <rect width="20" height="20" fill={colour} />
+                              </svg>
+                            ))}
+                          </span>
+                          <span>{theme.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                    <label className="field">
+                      <span>Headline typeface</span>
+                      <select
+                        value={deck.headlineFont || "default"}
+                        onChange={(event) =>
+                          change((d) => {
+                            d.headlineFont = event.target
+                              .value as Deck["headlineFont"];
+                          })
+                        }
+                      >
+                        <option value="default">Original typeface</option>
+                        <option value="serif">Editorial serif</option>
+                        <option value="geo">Geometric · Sora</option>
+                        <option value="grotesk">
+                          Technical · Space Grotesk
+                        </option>
+                        <option value="neutral">Neutral · Geist</option>
+                        <option value="condensed">Condensed · Archivo</option>
+                      </select>
+                    </label>
+                    <div className="inspector-divider" />
+                  </>
+                )}
                 <label className="field">
                   <span>Slide layout</span>
                   <select
@@ -806,14 +1050,15 @@ export default function Editor() {
                     <input
                       aria-label="Accent colour"
                       type="color"
-                      value={deck.accent}
+                      value={visibleAccent}
                       onChange={(e) =>
                         change((d) => {
                           d.accent = e.target.value;
+                          d.customAccent = true;
                         })
                       }
                     />
-                    <span>{deck.accent.toUpperCase()}</span>
+                    <span>{visibleAccent.toUpperCase()}</span>
                   </div>
                 </label>
                 <div className="color-swatches">
@@ -827,12 +1072,13 @@ export default function Editor() {
                   ].map((c, i) => (
                     <button
                       key={i}
-                      className={deck.accent === c ? "active" : ""}
+                      className={visibleAccent === c ? "active" : ""}
                       style={{ background: c }}
                       aria-label={"Use accent " + c}
                       onClick={() =>
                         change((d) => {
                           d.accent = c;
+                          d.customAccent = true;
                         })
                       }
                     />
@@ -848,6 +1094,9 @@ export default function Editor() {
                       })
                     }
                   >
+                    {t.handoffId && (
+                      <option value="default">Original body typeface</option>
+                    )}
                     <option>Arial</option>
                     <option>Georgia</option>
                     <option>Trebuchet MS</option>
@@ -988,6 +1237,32 @@ export default function Editor() {
               }}
             >
               Remove slide
+            </button>
+          </div>
+        </Modal>
+      )}
+      {resetOpen && (
+        <Modal title="Restore sample text?" onClose={() => setResetOpen(false)}>
+          <p>
+            This replaces the presentation text and academic details with the
+            design’s sample content. Your slide order, images and speaker notes
+            stay in place. You can undo this change.
+          </p>
+          <div className="modal-actions">
+            <button
+              className="btn btn-outline"
+              onClick={() => setResetOpen(false)}
+            >
+              Keep my text
+            </button>
+            <button
+              className="btn btn-primary"
+              onClick={() => {
+                change((d) => Object.assign(d, resetDeckText(d, t)));
+                setResetOpen(false);
+              }}
+            >
+              Restore sample text
             </button>
           </div>
         </Modal>

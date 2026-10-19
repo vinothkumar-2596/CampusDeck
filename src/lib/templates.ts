@@ -1,4 +1,6 @@
 import type { Template, Category } from "./model";
+import { handoffTemplates, getContentSet } from "./slides/content.js";
+import { designFamilies } from "./slides/resolve.js";
 
 const definitions = [
   [
@@ -254,7 +256,7 @@ const definitions = [
     "COLLEGE SYMPOSIUM · SAMPLE",
   ],
 ];
-export const templates: Template[] = definitions.map((d, i) => ({
+export const legacyTemplates: Template[] = definitions.map((d, i) => ({
   id: d[0],
   name: d[1],
   category: d[2],
@@ -279,13 +281,66 @@ export const templates: Template[] = definitions.map((d, i) => ({
   published: true,
   premium: false,
   slides: 16,
+  legacy: true,
 }));
+export const templates: Template[] = handoffTemplates.map((t) => {
+  const family = designFamilies.find((f) => f.id === t.family)!;
+  const theme = family.themes[t.defaultTheme];
+  return {
+    id: t.id,
+    name: t.name,
+    category: t.category[0].toUpperCase() + t.category.slice(1),
+    department: t.departmentLabel || "All departments",
+    style: t.styleLabel,
+    description:
+      `${t.name} is a ${t.styleLabel.toLowerCase()} presentation for ${t.useCase.toLowerCase()}. ${getContentSet(t.id).detailPage.description}`.slice(
+        0,
+        500,
+      ),
+    tags: [
+      t.requirementLabel || t.useCase,
+      t.departmentLabel || t.category,
+      t.styleLabel,
+      t.category === "college" ? "College" : "Professional",
+      ...t.keywords,
+    ].slice(0, 12),
+    accent: theme.cover.acc,
+    bg: theme.cover.bg,
+    ink: theme.cover.ink,
+    light: theme.cover.panel,
+    family: designFamilies.findIndex((f) => f.id === t.family),
+    cover: t.sample.title,
+    subtitle: t.sample.subtitle,
+    published: true,
+    premium: false,
+    slides: getContentSet(t.id).detailPage.insideList.length,
+    handoffId: t.id,
+    familyKey: t.family,
+    defaultTheme: t.defaultTheme,
+  };
+});
+export const allTemplates: Template[] = [
+  ...templates,
+  ...legacyTemplates.filter((old) => !templates.some((t) => t.id === old.id)),
+];
 export const initialCategories: Category[] = [
-  ...new Set(templates.map((t) => t.category)),
-].map((name, i) => ({
-  id: `category-${i}`,
+  ...new Set(allTemplates.map((t) => t.category)),
+].map((name) => ({
+  id: `category-${name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")}`,
   name,
-  parent: i < 9 ? "College" : null,
+  parent: [
+    "College",
+    "Business",
+    "Corporate",
+    "Healthcare",
+    "Research",
+    "Events",
+  ].includes(name)
+    ? null
+    : "College",
 }));
 export function findTemplates(
   items: Template[],
@@ -315,12 +370,24 @@ export function findTemplates(
       ) &&
       (!category ||
         category === "All templates" ||
-        (category === "College" ? t.family < 12 : t.category === category)) &&
+        (category === "College"
+          ? t.handoffId
+            ? t.category === "College"
+            : t.family < 12
+          : t.category === category)) &&
       (!department || t.department === department) &&
       (!style || t.style === style) &&
-      (!tone ||
-        (tone === "Dark"
-          ? ["#182626", "#1d3d61", "#252d38", "#17283f"].includes(t.bg)
-          : !["#182626", "#1d3d61", "#252d38", "#17283f"].includes(t.bg))),
+      (!tone || (tone === "Dark" ? isDark(t.bg) : !isDark(t.bg))),
+  );
+}
+function isDark(hex: string) {
+  return (
+    [1, 3, 5].reduce(
+      (sum, offset, i) =>
+        sum +
+        parseInt(hex.slice(offset, offset + 2), 16) *
+          [0.2126, 0.7152, 0.0722][i],
+      0,
+    ) < 130
   );
 }

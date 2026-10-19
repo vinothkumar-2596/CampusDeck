@@ -93,6 +93,12 @@ export default function Admin() {
   if (!data) return <Spinner />;
   const edit = (patch: Partial<Template>) =>
     setEditing((e) => (e ? { ...e, ...patch } : e));
+  const familyId = (t: Template) =>
+    t.handoffId ? "handoff:" + t.familyKey : "legacy:" + t.family;
+  const designSources = data.templates.filter(
+    (t, index, list) =>
+      list.findIndex((item) => familyId(item) === familyId(t)) === index,
+  );
   return (
     <div className="container admin-page">
       <div className="workspace-heading">
@@ -425,28 +431,30 @@ export default function Admin() {
                 <label className="field">
                   <span>Design family</span>
                   <select
-                    value={editing.family}
+                    value={familyId(editing)}
                     onChange={(e) => {
-                      const base = data.templates.find(
-                        (t) => t.family === Number(e.target.value),
+                      const base = designSources.find(
+                        (t) => familyId(t) === e.target.value,
                       );
-                      edit({
-                        family: Number(e.target.value),
-                        ...(base
-                          ? {
-                              bg: base.bg,
-                              ink: base.ink,
-                              light: base.light,
-                              accent: base.accent,
-                            }
-                          : {}),
-                      });
+                      if (base)
+                        edit({
+                          family: base.family,
+                          handoffId: base.handoffId,
+                          familyKey: base.familyKey,
+                          defaultTheme: base.defaultTheme,
+                          legacy: base.legacy,
+                          slides: base.slides,
+                          bg: base.bg,
+                          ink: base.ink,
+                          light: base.light,
+                          accent: base.accent,
+                        });
                     }}
                   >
-                    {Array.from({ length: 18 }, (_, i) => (
-                      <option key={i} value={i}>
-                        {data.templates.find((t) => t.family === i)?.name ||
-                          "Family " + i}
+                    {designSources.map((t) => (
+                      <option key={familyId(t)} value={familyId(t)}>
+                        {t.name}
+                        {t.legacy ? " (original)" : ""}
                       </option>
                     ))}
                   </select>
@@ -524,7 +532,8 @@ export default function Admin() {
                 slide={makeDeck(editing).slides[0]}
               />
               <p className="muted">
-                Live preview · 16 editable layouts · PPTX engine connected
+                Live preview · {editing.slides} editable slides · PPTX engine
+                connected
               </p>
               <div className="admin-preview-grid">
                 {makeDeck(editing)

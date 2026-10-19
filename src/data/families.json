@@ -1,0 +1,1040 @@
+{
+  "_note": "Visual families used by the slide renderer. Each has 3 colour themes. \"cover\" colours paint the title slide; \"inner\" colours paint content slides (null = content slides reuse the cover colours, i.e. a dark deck). Sizes use cqw (percent of slide width).",
+  "families": [
+    {
+      "id": "meridian",
+      "name": "Meridian",
+      "typefaces": "Sora and Geist",
+      "typography": {
+        "display": "'Sora', 'Geist', system-ui, sans-serif",
+        "displayWeight": 600,
+        "displayLetterSpacing": "-0.025em",
+        "displayStretch": "100%",
+        "displayTransform": "none",
+        "body": "'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif"
+      },
+      "accentMark": {
+        "width": "2.2cqw",
+        "height": "0.32cqw",
+        "radius": "0"
+      },
+      "avatarRadius": "50%",
+      "swatches": [
+        "#14263F",
+        "#0B3B3A",
+        "#33172E"
+      ],
+      "themes": [
+        {
+          "name": "Navy",
+          "swatch": [
+            "#14263F",
+            "#6E8BFF"
+          ],
+          "cover": {
+            "bg": "#14263F",
+            "ink": "#FFFFFF",
+            "sub": "#A9B7CC",
+            "acc": "#6E8BFF",
+            "acc2": "#A9BBFF",
+            "panel": "#1C3354",
+            "line": "rgba(255,255,255,0.16)"
+          },
+          "inner": {
+            "bg": "#FFFFFF",
+            "ink": "#14263F",
+            "sub": "#5B6B82",
+            "acc": "#315CFD",
+            "acc2": "#AFC0FF",
+            "panel": "#EDF1F8",
+            "line": "#E2E8F0",
+            "bar": "#C9D4EA"
+          }
+        },
+        {
+          "name": "Teal",
+          "swatch": [
+            "#0B3B3A",
+            "#3CC3AE"
+          ],
+          "cover": {
+            "bg": "#0B3B3A",
+            "ink": "#FFFFFF",
+            "sub": "#9CC4BE",
+            "acc": "#3CC3AE",
+            "acc2": "#9FE3D6",
+            "panel": "#11504E",
+            "line": "rgba(255,255,255,0.16)"
+          },
+          "inner": {
+            "bg": "#FFFFFF",
+            "ink": "#0B3B3A",
+            "sub": "#4F6B67",
+            "acc": "#0D8278",
+            "acc2": "#9FD9CF",
+            "panel": "#E8F3F1",
+            "line": "#DCE8E5",
+            "bar": "#BFDDD8"
+          }
+        },
+        {
+          "name": "Plum",
+          "swatch": [
+            "#33172E",
+            "#E5809F"
+          ],
+          "cover": {
+            "bg": "#33172E",
+            "ink": "#FFFFFF",
+            "sub": "#CDB2C6",
+            "acc": "#E5809F",
+            "acc2": "#F3BACB",
+            "panel": "#45203E",
+            "line": "rgba(255,255,255,0.16)"
+          },
+          "inner": {
+            "bg": "#FFFFFF",
+            "ink": "#33172E",
+            "sub": "#6E5368",
+            "acc": "#B23A66",
+            "acc2": "#EDB6C8",
+            "panel": "#F7EEF2",
+            "line": "#EBDFE5",
+            "bar": "#E9CBD6"
+          }
+        }
+      ]
+    },
+    {
+      "id": "atlas",
+      "name": "Atlas",
+      "typefaces": "Geist and Geist Mono",
+      "typography": {
+        "display": "'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif",
+        "displayWeight": 600,
+        "displayLetterSpacing": "-0.035em",
+        "displayStretch": "100%",
+        "displayTransform": "none",
+        "body": "'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif"
+      },
+      "accentMark": {
+        "width": "1cqw",
+        "height": "1cqw",
+        "radius": "0"
+      },
+      "avatarRadius": "0.8cqw",
+      "swatches": [
+        "#315CFD",
+        "#0D8278",
+        "#111111"
+      ],
+      "themes": [
+        {
+          "name": "Blue",
+          "swatch": [
+            "#FFFFFF",
+            "#315CFD"
+          ],
+          "cover": {
+            "bg": "#FFFFFF",
+            "ink": "#111827",
+            "sub": "#64748B",
+            "acc": "#315CFD",
+            "acc2": "#E1E8FF",
+            "panel": "#F3F6FB",
+            "line": "#E2E8F0",
+            "bar": "#C5D2FF"
+          },
+          "inner": null
+        },
+        {
+          "name": "Teal",
+          "swatch": [
+            "#FFFFFF",
+            "#0D8278"
+          ],
+          "cover": {
+            "bg": "#FFFFFF",
+            "ink": "#0F1F1D",
+            "sub": "#5B6B69",
+            "acc": "#0D8278",
+            "acc2": "#DAEFEB",
+            "panel": "#F1F7F6",
+            "line": "#E1EAE8",
+            "bar": "#B5DDD6"
+          },
+          "inner": null
+        },
+        {
+          "name": "Graphite",
+          "swatch": [
+            "#F7F7F5",
+            "#111111"
+          ],
+          "cover": {
+            "bg": "#F7F7F5",
+            "ink": "#111111",
+            "sub": "#66665F",
+            "acc": "#111111",
+            "acc2": "#E6E6E1",
+            "panel": "#EEEEEA",
+            "line": "#DEDED8",
+            "bar": "#CFCFC8"
+          },
+          "inner": null
+        }
+      ]
+    },
+    {
+      "id": "kepler",
+      "name": "Kepler",
+      "typefaces": "Space Grotesk",
+      "typography": {
+        "display": "'Space Grotesk', 'Geist', system-ui, sans-serif",
+        "displayWeight": 600,
+        "displayLetterSpacing": "-0.03em",
+        "displayStretch": "100%",
+        "displayTransform": "none",
+        "body": "'Space Grotesk', 'Geist', system-ui, sans-serif"
+      },
+      "accentMark": {
+        "width": "0.9cqw",
+        "height": "0.9cqw",
+        "radius": "50%"
+      },
+      "avatarRadius": "50%",
+      "swatches": [
+        "#7C9CFF",
+        "#3DDC97",
+        "#FFB547"
+      ],
+      "themes": [
+        {
+          "name": "Indigo",
+          "swatch": [
+            "#0B1020",
+            "#7C9CFF"
+          ],
+          "cover": {
+            "bg": "#0B1020",
+            "ink": "#F5F7FF",
+            "sub": "#9AA3BD",
+            "acc": "#7C9CFF",
+            "acc2": "#C3D0FF",
+            "panel": "#141B33",
+            "line": "rgba(255,255,255,0.12)",
+            "dot": "rgba(255,255,255,0.12)",
+            "bar": "#2A3762"
+          },
+          "inner": null
+        },
+        {
+          "name": "Green",
+          "swatch": [
+            "#08140F",
+            "#3DDC97"
+          ],
+          "cover": {
+            "bg": "#08140F",
+            "ink": "#F2FBF6",
+            "sub": "#94AFA2",
+            "acc": "#3DDC97",
+            "acc2": "#B9F2D7",
+            "panel": "#0F2219",
+            "line": "rgba(255,255,255,0.12)",
+            "dot": "rgba(255,255,255,0.11)",
+            "bar": "#1C4433"
+          },
+          "inner": null
+        },
+        {
+          "name": "Amber",
+          "swatch": [
+            "#15100A",
+            "#FFB547"
+          ],
+          "cover": {
+            "bg": "#15100A",
+            "ink": "#FFF8EE",
+            "sub": "#B8A88F",
+            "acc": "#FFB547",
+            "acc2": "#FFE0A8",
+            "panel": "#221A10",
+            "line": "rgba(255,255,255,0.12)",
+            "dot": "rgba(255,255,255,0.11)",
+            "bar": "#4A3A20"
+          },
+          "inner": null
+        }
+      ]
+    },
+    {
+      "id": "halcyon",
+      "name": "Halcyon",
+      "typefaces": "Instrument Serif and Newsreader",
+      "typography": {
+        "display": "'Instrument Serif', Georgia, 'Times New Roman', serif",
+        "displayWeight": 400,
+        "displayLetterSpacing": "-0.01em",
+        "displayStretch": "100%",
+        "displayTransform": "none",
+        "body": "'Newsreader', Georgia, serif"
+      },
+      "accentMark": {
+        "width": "0.9cqw",
+        "height": "0.9cqw",
+        "radius": "50%"
+      },
+      "avatarRadius": "50%",
+      "swatches": [
+        "#B4532A",
+        "#2F6B4F",
+        "#1E3A8A"
+      ],
+      "themes": [
+        {
+          "name": "Terracotta",
+          "swatch": [
+            "#F6F2EA",
+            "#B4532A"
+          ],
+          "cover": {
+            "bg": "#F6F2EA",
+            "ink": "#1C1917",
+            "sub": "#6B625A",
+            "acc": "#B4532A",
+            "acc2": "#E3C2AE",
+            "panel": "#EDE6DA",
+            "line": "#DDD3C4",
+            "bar": "#D9B7A3"
+          },
+          "inner": null
+        },
+        {
+          "name": "Forest",
+          "swatch": [
+            "#F2F4EE",
+            "#2F6B4F"
+          ],
+          "cover": {
+            "bg": "#F2F4EE",
+            "ink": "#18211C",
+            "sub": "#5E6A61",
+            "acc": "#2F6B4F",
+            "acc2": "#C3D8C8",
+            "panel": "#E5EBE0",
+            "line": "#D5DCCF",
+            "bar": "#B7CDBD"
+          },
+          "inner": null
+        },
+        {
+          "name": "Ink",
+          "swatch": [
+            "#F4F4F1",
+            "#1E3A8A"
+          ],
+          "cover": {
+            "bg": "#F4F4F1",
+            "ink": "#121826",
+            "sub": "#5F6472",
+            "acc": "#1E3A8A",
+            "acc2": "#C9D3EE",
+            "panel": "#E7E8E3",
+            "line": "#D8D9D2",
+            "bar": "#BAC5E6"
+          },
+          "inner": null
+        }
+      ]
+    },
+    {
+      "id": "vertex",
+      "name": "Vertex",
+      "typefaces": "Archivo Condensed and Geist",
+      "typography": {
+        "display": "'Archivo', 'Geist', system-ui, sans-serif",
+        "displayWeight": 800,
+        "displayLetterSpacing": "-0.01em",
+        "displayStretch": "75%",
+        "displayTransform": "uppercase",
+        "body": "'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif"
+      },
+      "accentMark": {
+        "width": "1cqw",
+        "height": "1cqw",
+        "radius": "0"
+      },
+      "avatarRadius": "0.8cqw",
+      "swatches": [
+        "#315CFD",
+        "#D63D24",
+        "#111827"
+      ],
+      "themes": [
+        {
+          "name": "Blue",
+          "swatch": [
+            "#315CFD",
+            "#A9BCFF"
+          ],
+          "cover": {
+            "bg": "#315CFD",
+            "ink": "#FFFFFF",
+            "sub": "#DCE4FF",
+            "acc": "#FFFFFF",
+            "acc2": "#A9BCFF",
+            "panel": "#2448D8",
+            "line": "rgba(255,255,255,0.3)"
+          },
+          "inner": {
+            "bg": "#FFFFFF",
+            "ink": "#0F172A",
+            "sub": "#5A6478",
+            "acc": "#315CFD",
+            "acc2": "#A9BCFF",
+            "panel": "#EEF2FF",
+            "line": "#E2E8F0",
+            "bar": "#C3CFFF"
+          }
+        },
+        {
+          "name": "Coral",
+          "swatch": [
+            "#D63D24",
+            "#FFB4A3"
+          ],
+          "cover": {
+            "bg": "#D63D24",
+            "ink": "#FFFFFF",
+            "sub": "#FFE2DB",
+            "acc": "#FFFFFF",
+            "acc2": "#FFB4A3",
+            "panel": "#B9301A",
+            "line": "rgba(255,255,255,0.3)"
+          },
+          "inner": {
+            "bg": "#FFFFFF",
+            "ink": "#1A1210",
+            "sub": "#6F5F5B",
+            "acc": "#D63D24",
+            "acc2": "#F7B6A8",
+            "panel": "#FDEFEB",
+            "line": "#F0E2DE",
+            "bar": "#F4C2B7"
+          }
+        },
+        {
+          "name": "Black",
+          "swatch": [
+            "#111827",
+            "#FACC15"
+          ],
+          "cover": {
+            "bg": "#111827",
+            "ink": "#FFFFFF",
+            "sub": "#A5ADBD",
+            "acc": "#FACC15",
+            "acc2": "#FACC15",
+            "panel": "#1F2937",
+            "line": "rgba(255,255,255,0.18)"
+          },
+          "inner": {
+            "bg": "#FFFFFF",
+            "ink": "#111827",
+            "sub": "#5B6472",
+            "acc": "#111827",
+            "acc2": "#FACC15",
+            "panel": "#F3F4F6",
+            "line": "#E5E7EB",
+            "bar": "#D1D5DB"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ledger",
+      "name": "Ledger",
+      "typefaces": "Archivo and Geist",
+      "typography": {
+        "display": "'Archivo', 'Geist', system-ui, sans-serif",
+        "displayWeight": 700,
+        "displayLetterSpacing": "-0.025em",
+        "displayStretch": "100%",
+        "displayTransform": "none",
+        "body": "'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif"
+      },
+      "accentMark": {
+        "width": "2.2cqw",
+        "height": "0.32cqw",
+        "radius": "0"
+      },
+      "avatarRadius": "0.8cqw",
+      "swatches": [
+        "#315CFD",
+        "#0D8278",
+        "#B7892B"
+      ],
+      "themes": [
+        {
+          "name": "Blue",
+          "swatch": [
+            "#14263F",
+            "#315CFD"
+          ],
+          "cover": {
+            "bg": "#FFFFFF",
+            "ink": "#14263F",
+            "sub": "#5B6B82",
+            "acc": "#315CFD",
+            "acc2": "#A9BBFF",
+            "panel": "#14263F",
+            "line": "#E2E8F0"
+          },
+          "inner": {
+            "bg": "#FFFFFF",
+            "ink": "#14263F",
+            "sub": "#5B6B82",
+            "acc": "#315CFD",
+            "acc2": "#A9BBFF",
+            "panel": "#EFF2F7",
+            "line": "#E2E8F0",
+            "bar": "#C9D4EA"
+          }
+        },
+        {
+          "name": "Teal",
+          "swatch": [
+            "#1F2933",
+            "#0D8278"
+          ],
+          "cover": {
+            "bg": "#FFFFFF",
+            "ink": "#1F2933",
+            "sub": "#5F6B76",
+            "acc": "#0D8278",
+            "acc2": "#8FD5C9",
+            "panel": "#1F2933",
+            "line": "#E3E7EA"
+          },
+          "inner": {
+            "bg": "#FFFFFF",
+            "ink": "#1F2933",
+            "sub": "#5F6B76",
+            "acc": "#0D8278",
+            "acc2": "#8FD5C9",
+            "panel": "#F0F3F4",
+            "line": "#E3E7EA",
+            "bar": "#C5DEDA"
+          }
+        },
+        {
+          "name": "Gold",
+          "swatch": [
+            "#172033",
+            "#B7892B"
+          ],
+          "cover": {
+            "bg": "#FFFFFF",
+            "ink": "#172033",
+            "sub": "#5D6677",
+            "acc": "#B7892B",
+            "acc2": "#E7C77D",
+            "panel": "#172033",
+            "line": "#E5E2DA"
+          },
+          "inner": {
+            "bg": "#FFFFFF",
+            "ink": "#172033",
+            "sub": "#5D6677",
+            "acc": "#9A7020",
+            "acc2": "#E7C77D",
+            "panel": "#F5F2EA",
+            "line": "#E5E2DA",
+            "bar": "#E6D6AE"
+          }
+        }
+      ]
+    },
+    {
+      "id": "pulse",
+      "name": "Pulse",
+      "typefaces": "Sora and Geist",
+      "typography": {
+        "display": "'Sora', 'Geist', system-ui, sans-serif",
+        "displayWeight": 600,
+        "displayLetterSpacing": "-0.025em",
+        "displayStretch": "100%",
+        "displayTransform": "none",
+        "body": "'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif"
+      },
+      "accentMark": {
+        "width": "1cqw",
+        "height": "1cqw",
+        "radius": "0.25cqw"
+      },
+      "avatarRadius": "50%",
+      "swatches": [
+        "#0D8278",
+        "#315CFD",
+        "#C2416B"
+      ],
+      "themes": [
+        {
+          "name": "Teal",
+          "swatch": [
+            "#FFFFFF",
+            "#0D8278"
+          ],
+          "cover": {
+            "bg": "#FFFFFF",
+            "ink": "#0F2A2E",
+            "sub": "#567075",
+            "acc": "#0D8278",
+            "acc2": "#9BD3CB",
+            "panel": "#E7F4F2",
+            "line": "#DCEAE8",
+            "bar": "#B8DDD7"
+          },
+          "inner": null
+        },
+        {
+          "name": "Blue",
+          "swatch": [
+            "#FFFFFF",
+            "#315CFD"
+          ],
+          "cover": {
+            "bg": "#FFFFFF",
+            "ink": "#0F2240",
+            "sub": "#566781",
+            "acc": "#315CFD",
+            "acc2": "#A9BEFF",
+            "panel": "#EAF0FF",
+            "line": "#DFE6F3",
+            "bar": "#C3D0FF"
+          },
+          "inner": null
+        },
+        {
+          "name": "Rose",
+          "swatch": [
+            "#FFFFFF",
+            "#C2416B"
+          ],
+          "cover": {
+            "bg": "#FFFFFF",
+            "ink": "#3A1424",
+            "sub": "#7A5A67",
+            "acc": "#C2416B",
+            "acc2": "#F1B5C7",
+            "panel": "#FBEEF2",
+            "line": "#F0DEE5",
+            "bar": "#F1C6D3"
+          },
+          "inner": null
+        }
+      ]
+    },
+    {
+      "id": "gala",
+      "name": "Gala",
+      "typefaces": "Instrument Serif and Geist",
+      "typography": {
+        "display": "'Instrument Serif', Georgia, 'Times New Roman', serif",
+        "displayWeight": 400,
+        "displayLetterSpacing": "-0.01em",
+        "displayStretch": "100%",
+        "displayTransform": "none",
+        "body": "'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif"
+      },
+      "accentMark": {
+        "width": "2.2cqw",
+        "height": "0.18cqw",
+        "radius": "0"
+      },
+      "avatarRadius": "50%",
+      "swatches": [
+        "#D4A64A",
+        "#FF7A59",
+        "#7EE0C3"
+      ],
+      "themes": [
+        {
+          "name": "Gold",
+          "swatch": [
+            "#0E1117",
+            "#D4A64A"
+          ],
+          "cover": {
+            "bg": "#0E1117",
+            "ink": "#F7F3EA",
+            "sub": "#A59E90",
+            "acc": "#D4A64A",
+            "acc2": "#EBD39A",
+            "panel": "#171B24",
+            "line": "rgba(247,243,234,0.16)",
+            "bar": "#3A3424"
+          },
+          "inner": null
+        },
+        {
+          "name": "Coral",
+          "swatch": [
+            "#101C33",
+            "#FF7A59"
+          ],
+          "cover": {
+            "bg": "#101C33",
+            "ink": "#F5F7FB",
+            "sub": "#9DA9C0",
+            "acc": "#FF7A59",
+            "acc2": "#FFC2B0",
+            "panel": "#17264A",
+            "line": "rgba(255,255,255,0.14)",
+            "bar": "#2B3A60"
+          },
+          "inner": null
+        },
+        {
+          "name": "Mint",
+          "swatch": [
+            "#241228",
+            "#7EE0C3"
+          ],
+          "cover": {
+            "bg": "#241228",
+            "ink": "#FBF6FC",
+            "sub": "#BBA5BF",
+            "acc": "#7EE0C3",
+            "acc2": "#C6F2E5",
+            "panel": "#311A36",
+            "line": "rgba(255,255,255,0.14)",
+            "bar": "#4A2E50"
+          },
+          "inner": null
+        }
+      ]
+    },
+    {
+      "id": "swiss",
+      "name": "Swiss",
+      "typefaces": "Geist",
+      "typography": {
+        "display": "'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif",
+        "displayWeight": 700,
+        "displayLetterSpacing": "-0.05em",
+        "displayStretch": "100%",
+        "displayTransform": "none",
+        "body": "'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif"
+      },
+      "accentMark": {
+        "width": "1cqw",
+        "height": "1cqw",
+        "radius": "50%"
+      },
+      "avatarRadius": "0",
+      "swatches": [
+        "#E5372B",
+        "#315CFD",
+        "#0A0A0A"
+      ],
+      "themes": [
+        {
+          "name": "Red",
+          "swatch": [
+            "#F1F0EC",
+            "#E5372B"
+          ],
+          "cover": {
+            "bg": "#F1F0EC",
+            "ink": "#111111",
+            "sub": "#5E5E5A",
+            "acc": "#E5372B",
+            "acc2": "#F2B8B2",
+            "panel": "#E6E4DE",
+            "line": "rgba(17,17,17,0.08)",
+            "bar": "#D4D2CB"
+          },
+          "inner": null
+        },
+        {
+          "name": "Blue",
+          "swatch": [
+            "#F0F2F5",
+            "#315CFD"
+          ],
+          "cover": {
+            "bg": "#F0F2F5",
+            "ink": "#0B1220",
+            "sub": "#5A6270",
+            "acc": "#315CFD",
+            "acc2": "#BCCBFF",
+            "panel": "#E3E7EE",
+            "line": "rgba(11,18,32,0.08)",
+            "bar": "#CDD3DD"
+          },
+          "inner": null
+        },
+        {
+          "name": "Black",
+          "swatch": [
+            "#F2F2F0",
+            "#0A0A0A"
+          ],
+          "cover": {
+            "bg": "#F2F2F0",
+            "ink": "#0A0A0A",
+            "sub": "#5C5C5C",
+            "acc": "#0A0A0A",
+            "acc2": "#CFCFCB",
+            "panel": "#E4E4E1",
+            "line": "rgba(10,10,10,0.08)",
+            "bar": "#CFCFCB"
+          },
+          "inner": null
+        }
+      ]
+    },
+    {
+      "id": "strata",
+      "name": "Strata",
+      "typefaces": "Sora and Geist",
+      "typography": {
+        "display": "'Sora', 'Geist', system-ui, sans-serif",
+        "displayWeight": 600,
+        "displayLetterSpacing": "-0.03em",
+        "displayStretch": "100%",
+        "displayTransform": "none",
+        "body": "'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif"
+      },
+      "accentMark": {
+        "width": "1cqw",
+        "height": "1cqw",
+        "radius": "0.25cqw"
+      },
+      "avatarRadius": "1.2cqw",
+      "swatches": [
+        "#5B7BFF",
+        "#F5A524",
+        "#F07FAE"
+      ],
+      "themes": [
+        {
+          "name": "Blue",
+          "swatch": [
+            "#14263F",
+            "#5B7BFF"
+          ],
+          "cover": {
+            "bg": "#14263F",
+            "ink": "#FFFFFF",
+            "sub": "#A8B6CC",
+            "acc": "#5B7BFF",
+            "acc2": "#9DB4FF",
+            "panel": "#1C3354",
+            "line": "rgba(255,255,255,0.14)",
+            "bar": "#2D4670"
+          },
+          "inner": null
+        },
+        {
+          "name": "Amber",
+          "swatch": [
+            "#0F0F10",
+            "#F5A524"
+          ],
+          "cover": {
+            "bg": "#0F0F10",
+            "ink": "#FAFAF7",
+            "sub": "#A3A39C",
+            "acc": "#F5A524",
+            "acc2": "#FFD58A",
+            "panel": "#1A1A1C",
+            "line": "rgba(255,255,255,0.12)",
+            "bar": "#3A3428"
+          },
+          "inner": null
+        },
+        {
+          "name": "Pink",
+          "swatch": [
+            "#2A1030",
+            "#F07FAE"
+          ],
+          "cover": {
+            "bg": "#2A1030",
+            "ink": "#FFF7FB",
+            "sub": "#C9AFCB",
+            "acc": "#F07FAE",
+            "acc2": "#F9C3D9",
+            "panel": "#36163E",
+            "line": "rgba(255,255,255,0.14)",
+            "bar": "#4D2A55"
+          },
+          "inner": null
+        }
+      ]
+    },
+    {
+      "id": "canopy",
+      "name": "Canopy",
+      "typefaces": "Newsreader and Geist",
+      "typography": {
+        "display": "'Newsreader', Georgia, serif",
+        "displayWeight": 600,
+        "displayLetterSpacing": "-0.02em",
+        "displayStretch": "100%",
+        "displayTransform": "none",
+        "body": "'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif"
+      },
+      "accentMark": {
+        "width": "1cqw",
+        "height": "1cqw",
+        "radius": "0 100% 0 100%"
+      },
+      "avatarRadius": "50%",
+      "swatches": [
+        "#2F6B4F",
+        "#1F5F8B",
+        "#B0573A"
+      ],
+      "themes": [
+        {
+          "name": "Green",
+          "swatch": [
+            "#F3F6F1",
+            "#2F6B4F"
+          ],
+          "cover": {
+            "bg": "#F3F6F1",
+            "ink": "#13261C",
+            "sub": "#59695E",
+            "acc": "#2F6B4F",
+            "acc2": "#8DB596",
+            "panel": "#E3EBDF",
+            "line": "#D5DFD1",
+            "bar": "#BCD3C1"
+          },
+          "inner": null
+        },
+        {
+          "name": "Ocean",
+          "swatch": [
+            "#F1F5F8",
+            "#1F5F8B"
+          ],
+          "cover": {
+            "bg": "#F1F5F8",
+            "ink": "#0E2234",
+            "sub": "#58697A",
+            "acc": "#1F5F8B",
+            "acc2": "#8DB6D3",
+            "panel": "#E1EAF1",
+            "line": "#D3DEE7",
+            "bar": "#BBD0E0"
+          },
+          "inner": null
+        },
+        {
+          "name": "Clay",
+          "swatch": [
+            "#F7F2EC",
+            "#B0573A"
+          ],
+          "cover": {
+            "bg": "#F7F2EC",
+            "ink": "#2A1A12",
+            "sub": "#75655A",
+            "acc": "#B0573A",
+            "acc2": "#DDB09C",
+            "panel": "#EEE3D7",
+            "line": "#E2D5C7",
+            "bar": "#E2C4B5"
+          },
+          "inner": null
+        }
+      ]
+    },
+    {
+      "id": "mono",
+      "name": "Mono",
+      "typefaces": "Geist",
+      "typography": {
+        "display": "'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif",
+        "displayWeight": 500,
+        "displayLetterSpacing": "-0.055em",
+        "displayStretch": "100%",
+        "displayTransform": "none",
+        "body": "'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif"
+      },
+      "accentMark": {
+        "width": "0.9cqw",
+        "height": "0.9cqw",
+        "radius": "50%"
+      },
+      "avatarRadius": "50%",
+      "swatches": [
+        "#0A0A0A",
+        "#315CFD",
+        "#0D8278"
+      ],
+      "themes": [
+        {
+          "name": "Black",
+          "swatch": [
+            "#FFFFFF",
+            "#0A0A0A"
+          ],
+          "cover": {
+            "bg": "#FFFFFF",
+            "ink": "#0A0A0A",
+            "sub": "#6B7280",
+            "acc": "#0A0A0A",
+            "acc2": "#E5E7EB",
+            "panel": "#F4F4F5",
+            "line": "#E5E7EB",
+            "bar": "#D4D4D8"
+          },
+          "inner": null
+        },
+        {
+          "name": "Blue",
+          "swatch": [
+            "#FFFFFF",
+            "#315CFD"
+          ],
+          "cover": {
+            "bg": "#FFFFFF",
+            "ink": "#0B1324",
+            "sub": "#64748B",
+            "acc": "#315CFD",
+            "acc2": "#DCE4FF",
+            "panel": "#F1F5F9",
+            "line": "#E2E8F0",
+            "bar": "#C9D5FF"
+          },
+          "inner": null
+        },
+        {
+          "name": "Teal",
+          "swatch": [
+            "#FFFFFF",
+            "#0D8278"
+          ],
+          "cover": {
+            "bg": "#FFFFFF",
+            "ink": "#0C1A19",
+            "sub": "#5F6E6C",
+            "acc": "#0D8278",
+            "acc2": "#D2ECE8",
+            "panel": "#F0F6F5",
+            "line": "#E1EAE8",
+            "bar": "#BFE0DA"
+          },
+          "inner": null
+        }
+      ]
+    }
+  ]
+}

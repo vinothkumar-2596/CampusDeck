@@ -1,8 +1,5 @@
 import { useEffect, useRef, type ReactNode } from "react";
-import { Link } from "react-router-dom";
 import {
-  ArrowUpRight,
-  Bookmark,
   Check,
   ChevronLeft,
   ChevronRight,
@@ -11,8 +8,7 @@ import {
   LoaderCircle,
   X,
 } from "lucide-react";
-import { useApp } from "../lib/context";
-import { makeDeck, type Deck, type Template } from "../lib/model";
+import { type Deck, type Template } from "../lib/model";
 import { SlideView } from "./SlideView";
 export function Spinner({ label = "Loading…" }: { label?: string }) {
   return (
@@ -40,76 +36,19 @@ export function Empty({
     </div>
   );
 }
-export function TemplateCard({
-  template: t,
-  index = 0,
-}: {
-  template: Template;
-  index?: number;
-}) {
-  const { saved, toggleSaved } = useApp();
-  const deck = makeDeck(t);
-  return (
-    <article className="template-card">
-      <div className="card-preview">
-        <Link to={"/templates/" + t.id} aria-label={"Preview " + t.name}>
-          <SlideView template={t} slide={deck.slides[0]} />
-          <span className="preview-overlay">
-            Explore this design <ArrowUpRight size={16} />
-          </span>
-        </Link>
-        <span className="card-label">
-          {index === 0 ? "EDITOR’S PICK" : t.style.toUpperCase()}
-        </span>
-        <button
-          className={"save-btn " + (saved.includes(t.id) ? "is-saved" : "")}
-          aria-label={(saved.includes(t.id) ? "Unsave " : "Save ") + t.name}
-          onClick={() => void toggleSaved(t.id)}
-        >
-          <Bookmark
-            size={16}
-            fill={saved.includes(t.id) ? "currentColor" : "none"}
-          />
-        </button>
-      </div>
-      <div className="card-info">
-        <div>
-          <Link to={"/templates/" + t.id}>
-            <h3>{t.name}</h3>
-          </Link>
-          <p>
-            {t.category} <span>·</span>{" "}
-            {t.department === "All departments"
-              ? "All disciplines"
-              : t.department}
-          </p>
-        </div>
-        <span className="free-label">{t.premium ? "Premium" : "Free"}</span>
-      </div>
-      <div className="card-meta">
-        <span>
-          <Layers size={13} />
-          {t.slides} slides
-        </span>
-        <span>16:9</span>
-        <span className="pptx-chip">PPTX</span>
-        <Link to={"/customise/" + t.id}>
-          Customise <ArrowUpRight size={13} />
-        </Link>
-      </div>
-    </article>
-  );
-}
+export { TemplateCard } from "./TemplateCard";
 export function Modal({
   title,
   onClose,
   children,
   wide = false,
+  fullScreen = false,
 }: {
   title: string;
   onClose: () => void;
   children: ReactNode;
   wide?: boolean;
+  fullScreen?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null),
     close = useRef(onClose);
@@ -162,7 +101,11 @@ export function Modal({
         aria-modal="true"
         aria-label={title}
         tabIndex={-1}
-        className={"modal " + (wide ? "modal-wide" : "")}
+        className={
+          "modal " +
+          (wide ? "modal-wide " : "") +
+          (fullScreen ? "modal-fullscreen" : "")
+        }
       >
         <div className="modal-heading">
           <h2>{title}</h2>
@@ -194,15 +137,20 @@ export function PresentationPreview({
 }) {
   useEffect(() => {
     const key = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight")
-        setIndex(Math.min(index + 1, deck.slides.length - 1));
-      if (e.key === "ArrowLeft") setIndex(Math.max(index - 1, 0));
+      if (["ArrowRight", "PageDown", " "].includes(e.key)) {
+        e.preventDefault();
+        setIndex((index + 1) % deck.slides.length);
+      }
+      if (["ArrowLeft", "PageUp"].includes(e.key)) {
+        e.preventDefault();
+        setIndex((index - 1 + deck.slides.length) % deck.slides.length);
+      }
     };
     document.addEventListener("keydown", key);
     return () => document.removeEventListener("keydown", key);
   }, [index, deck.slides.length, setIndex]);
   return (
-    <Modal title={deck.title} onClose={onClose} wide>
+    <Modal title={deck.title} onClose={onClose} wide fullScreen>
       <div className="full-preview">
         <SlideView
           deck={deck}
@@ -215,9 +163,10 @@ export function PresentationPreview({
       <div className="preview-controls">
         <button
           className="icon-btn"
-          disabled={index === 0}
           aria-label="Previous slide"
-          onClick={() => setIndex(index - 1)}
+          onClick={() =>
+            setIndex((index - 1 + deck.slides.length) % deck.slides.length)
+          }
         >
           <ChevronLeft />
         </button>
@@ -226,12 +175,31 @@ export function PresentationPreview({
         </span>
         <button
           className="icon-btn"
-          disabled={index === deck.slides.length - 1}
           aria-label="Next slide"
-          onClick={() => setIndex(index + 1)}
+          onClick={() => setIndex((index + 1) % deck.slides.length)}
         >
           <ChevronRight />
         </button>
+      </div>
+      <div className="presentation-thumbnails" aria-label="Presentation slides">
+        {deck.slides.map((slide, i) => (
+          <button
+            key={slide.id}
+            aria-current={index === i ? "true" : undefined}
+            onClick={() => setIndex(i)}
+          >
+            <span className="sr-only">Preview slide {i + 1}</span>
+            <div aria-hidden="true">
+              <SlideView
+                template={template}
+                deck={deck}
+                slide={slide}
+                index={i}
+                total={deck.slides.length}
+              />
+            </div>
+          </button>
+        ))}
       </div>
     </Modal>
   );

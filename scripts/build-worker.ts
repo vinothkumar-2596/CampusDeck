@@ -40,10 +40,18 @@ const origin =
   (process.env.VERCEL_PROJECT_PRODUCTION_URL
     ? "https://" + process.env.VERCEL_PROJECT_PRODUCTION_URL
     : undefined) ||
-  "https://campusdeck-studio.smvec-2026.chatgpt.site";
+  "https://campusdeck-tau.vercel.app";
 const urls = [
   "/",
   "/explore",
+  "/templates",
+  "/college",
+  "/corporate",
+  "/business",
+  "/healthcare",
+  "/research",
+  "/events",
+  "/how-it-works",
   "/about",
   "/help",
   "/contact",

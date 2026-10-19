@@ -1,0 +1,1867 @@
+{
+  "_note": "All 33 sample templates. Names, people and figures are fictional sample content. Order = prototype catalogue order.",
+  "templates": [
+    {
+      "id": "meridian",
+      "name": "Meridian",
+      "category": "college",
+      "useCase": "Final Year Project",
+      "requirement": "fyp",
+      "requirementLabel": "Final Year Project",
+      "department": "cse",
+      "departmentLabel": "Computer Science",
+      "style": "Academic",
+      "styleLabel": "Academic",
+      "colour": "Navy",
+      "slideCount": 24,
+      "popularity": 98,
+      "addedOn": "2026-08-12",
+      "premium": true,
+      "badge": "Popular",
+      "keywords": [
+        "iot",
+        "irrigation",
+        "agriculture",
+        "sensors",
+        "machine",
+        "learning"
+      ],
+      "family": "meridian",
+      "contentSet": "acad",
+      "defaultTheme": 0,
+      "sample": {
+        "eyebrow": "Final Year Project · 2026–27",
+        "title": "Smart Irrigation System Using IoT and Machine Learning",
+        "subtitle": "Department of Computer Science and Engineering",
+        "team": [
+          "Priya R",
+          "Arun K",
+          "Divya S",
+          "Karthik M"
+        ],
+        "guide": "Dr. K. Senthil Kumar",
+        "department": "Computer Science & Engineering",
+        "date": "April 2027",
+        "question": "Can low-cost soil sensors cut water use without hurting yield?",
+        "problem": "Farmers irrigate on fixed schedules, so fields are routinely over- or under-watered.",
+        "problemPoints": [
+          "Manual schedules ignore soil moisture and weather",
+          "Existing smart systems cost too much for small farms",
+          "No early warning when moisture drops below crop needs"
+        ],
+        "architecture": [
+          "Soil sensors",
+          "ESP32 gateway",
+          "Cloud database",
+          "ML prediction",
+          "Farmer app"
+        ],
+        "coverIndex": null,
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "atlas",
+      "name": "Atlas",
+      "category": "college",
+      "useCase": "Project Review 2",
+      "requirement": "review",
+      "requirementLabel": "Project Review",
+      "department": "it",
+      "departmentLabel": "Information Technology",
+      "style": "Minimal",
+      "styleLabel": "Minimal",
+      "colour": "Blue",
+      "slideCount": 18,
+      "popularity": 95,
+      "addedOn": "2026-07-28",
+      "premium": false,
+      "badge": "Popular",
+      "keywords": [
+        "review",
+        "2",
+        "sign",
+        "language",
+        "deep",
+        "learning"
+      ],
+      "family": "atlas",
+      "contentSet": "acad",
+      "defaultTheme": 0,
+      "sample": {
+        "eyebrow": "Project Review — II",
+        "title": "Real-Time Sign Language Translation Using Deep Learning",
+        "subtitle": "Batch 2023–27",
+        "team": [
+          "Meena S",
+          "Rahul V",
+          "Joel P"
+        ],
+        "guide": "Prof. Anitha Rajan",
+        "department": "Information Technology",
+        "date": "January 2027",
+        "question": "How accurately can a phone camera read continuous signing?",
+        "problem": "Deaf and hard-of-hearing students rely on interpreters who are rarely available in class.",
+        "problemPoints": [
+          "Few tools support Indian Sign Language",
+          "Most models read isolated signs, not sentences",
+          "Real-time use needs low latency on phones"
+        ],
+        "architecture": [
+          "Video input",
+          "Hand landmarks",
+          "Sequence model",
+          "Translation",
+          "Speech output"
+        ],
+        "coverIndex": "02",
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "kepler",
+      "name": "Kepler",
+      "category": "college",
+      "useCase": "Hackathon Pitch",
+      "requirement": "hackathon",
+      "requirementLabel": "Hackathon",
+      "department": "cse",
+      "departmentLabel": "Computer Science",
+      "style": "Tech",
+      "styleLabel": "Dark and technical",
+      "colour": "Black",
+      "slideCount": 12,
+      "popularity": 90,
+      "addedOn": "2026-09-03",
+      "premium": true,
+      "badge": null,
+      "keywords": [
+        "pitch",
+        "agritech",
+        "edge",
+        "ai",
+        "dark"
+      ],
+      "family": "kepler",
+      "contentSet": "pitch",
+      "defaultTheme": 0,
+      "sample": {
+        "eyebrow": "Hackathon Pitch · Team Neurons",
+        "title": "AgriSense: Crop Disease Detection at the Edge",
+        "subtitle": "36-hour build · Agritech track",
+        "team": [
+          "Sanjay M",
+          "Fathima N",
+          "Rohit K",
+          "Lavanya P"
+        ],
+        "guide": "Ms. Deepa R",
+        "department": "Computer Science & Engineering",
+        "date": "National Hackathon 2026",
+        "question": "What if every farmer had a plant doctor in their pocket?",
+        "problem": "Crop diseases are spotted too late because expert diagnosis is slow and far away.",
+        "problemPoints": [
+          "Symptoms show days before yield is lost",
+          "Each extension officer covers thousands of farms",
+          "Patchy connectivity breaks cloud-only apps"
+        ],
+        "architecture": [
+          "Leaf photo",
+          "On-device model",
+          "Diagnosis",
+          "Treatment tips",
+          "Alert network"
+        ],
+        "coverIndex": null,
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "halcyon",
+      "name": "Halcyon",
+      "category": "college",
+      "useCase": "Technical Seminar",
+      "requirement": "seminar",
+      "requirementLabel": "Seminar",
+      "department": "civil",
+      "departmentLabel": "Civil",
+      "style": "Editorial",
+      "styleLabel": "Editorial serif",
+      "colour": "Orange",
+      "slideCount": 16,
+      "popularity": 84,
+      "addedOn": "2026-06-19",
+      "premium": true,
+      "badge": null,
+      "keywords": [
+        "seminar",
+        "microplastics",
+        "water",
+        "environment"
+      ],
+      "family": "halcyon",
+      "contentSet": "research",
+      "defaultTheme": 0,
+      "sample": {
+        "eyebrow": "Technical Seminar",
+        "title": "Microplastics in Urban Freshwater Systems",
+        "subtitle": "Sources, detection methods and mitigation",
+        "team": [
+          "Nandhini K"
+        ],
+        "guide": "Dr. R. Prakash",
+        "department": "Civil Engineering",
+        "date": "Final Year · Seminar Series",
+        "question": "Where do the particles we cannot see come from?",
+        "problem": "Microplastics reach rivers and lakes through stormwater, sewage and industrial runoff.",
+        "problemPoints": [
+          "Treatment plants were not built to capture them",
+          "Detection methods vary widely between studies",
+          "Urban drains concentrate particles at a few outlets"
+        ],
+        "architecture": [
+          "Sampling",
+          "Filtration",
+          "Spectroscopy",
+          "Classification",
+          "Mitigation"
+        ],
+        "coverIndex": "Nº 04",
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "vertex",
+      "name": "Vertex",
+      "category": "college",
+      "useCase": "Mini Project",
+      "requirement": "mini",
+      "requirementLabel": "Mini Project",
+      "department": "ece",
+      "departmentLabel": "Electronics & Communication",
+      "style": "Bold",
+      "styleLabel": "Bold colour",
+      "colour": "Blue",
+      "slideCount": 14,
+      "popularity": 80,
+      "addedOn": "2026-10-11",
+      "premium": false,
+      "badge": "New",
+      "keywords": [
+        "robotic",
+        "arm",
+        "gesture",
+        "arduino"
+      ],
+      "family": "vertex",
+      "contentSet": "acad",
+      "defaultTheme": 0,
+      "sample": {
+        "eyebrow": "Mini Project · Team ByteForce",
+        "title": "Gesture-Controlled Robotic Arm",
+        "subtitle": "Electronics & Communication · III Year",
+        "team": [
+          "Vishal R",
+          "Keerthana S",
+          "Imran A"
+        ],
+        "guide": "Mr. S. Balaji",
+        "department": "Electronics & Communication",
+        "date": "2026–27",
+        "question": "Can a glove replace a joystick for precise control?",
+        "problem": "Joystick-controlled arms are hard to learn and imprecise for delicate tasks.",
+        "problemPoints": [
+          "Operators need weeks of training",
+          "Fine movements are hard to repeat",
+          "Commercial gesture rigs are expensive"
+        ],
+        "architecture": [
+          "Flex sensors",
+          "IMU",
+          "Arduino",
+          "Servo driver",
+          "Robotic arm"
+        ],
+        "coverIndex": null,
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "canopy",
+      "name": "Canopy",
+      "category": "college",
+      "useCase": "Mini Project",
+      "requirement": "mini",
+      "requirementLabel": "Mini Project",
+      "department": "bio",
+      "departmentLabel": "Biotechnology",
+      "style": "Organic",
+      "styleLabel": "Organic",
+      "colour": "Green",
+      "slideCount": 15,
+      "popularity": 72,
+      "addedOn": "2026-05-30",
+      "premium": false,
+      "badge": null,
+      "keywords": [
+        "packaging",
+        "biodegradable",
+        "biotechnology"
+      ],
+      "family": "canopy",
+      "contentSet": "acad",
+      "defaultTheme": 0,
+      "sample": {
+        "eyebrow": "Mini Project · Biotechnology",
+        "title": "Biodegradable Packaging from Agricultural Waste",
+        "subtitle": "Turning banana fibre and starch into compostable film",
+        "team": [
+          "Aishwarya M",
+          "Gokul S",
+          "Reshma T"
+        ],
+        "guide": "Dr. P. Lakshmi",
+        "department": "Biotechnology",
+        "date": "2026–27",
+        "question": "Can farm waste replace single-use plastic film?",
+        "problem": "Plastic packaging lasts for centuries while crop residue is burned after every harvest.",
+        "problemPoints": [
+          "Residue burning pollutes the air each season",
+          "Imported bioplastics are costly",
+          "Film strength must match everyday packaging"
+        ],
+        "architecture": [
+          "Fibre extraction",
+          "Starch blend",
+          "Film casting",
+          "Strength tests",
+          "Composting"
+        ],
+        "coverIndex": null,
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "monolith",
+      "name": "Monolith",
+      "category": "college",
+      "useCase": "Internship Presentation",
+      "requirement": "intern",
+      "requirementLabel": "Internship",
+      "department": "cse",
+      "departmentLabel": "Computer Science",
+      "style": "Minimal",
+      "styleLabel": "Minimal",
+      "colour": "Black",
+      "slideCount": 12,
+      "popularity": 82,
+      "addedOn": "2026-10-06",
+      "premium": false,
+      "badge": "New",
+      "keywords": [
+        "internship",
+        "payments",
+        "api",
+        "software"
+      ],
+      "family": "mono",
+      "contentSet": "acad",
+      "defaultTheme": 0,
+      "sample": {
+        "eyebrow": "Internship Review",
+        "title": "Eight Weeks Building Payment APIs",
+        "subtitle": "Software Engineering Intern · Summer 2026",
+        "team": [
+          "Harini V"
+        ],
+        "guide": "Karan Mehta",
+        "department": "Computer Science & Engineering",
+        "date": "July 2026",
+        "question": "What does production engineering teach that class does not?",
+        "problem": "The team needed a faster, safer way to reconcile failed UPI payments.",
+        "problemPoints": [
+          "Each batch took a full day to reconcile",
+          "Failures were investigated by hand",
+          "No dashboard showed retry status"
+        ],
+        "architecture": [
+          "Webhook",
+          "Queue",
+          "Retry service",
+          "Ledger",
+          "Dashboard"
+        ],
+        "coverIndex": null,
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "raster",
+      "name": "Raster",
+      "category": "college",
+      "useCase": "Technical Symposium",
+      "requirement": "symposium",
+      "requirementLabel": "Symposium",
+      "department": "mech",
+      "departmentLabel": "Mechanical",
+      "style": "Swiss",
+      "styleLabel": "Swiss grid",
+      "colour": "Red",
+      "slideCount": 16,
+      "popularity": 76,
+      "addedOn": "2026-09-22",
+      "premium": false,
+      "badge": null,
+      "keywords": [
+        "paper",
+        "presentation",
+        "drone",
+        "generative",
+        "design"
+      ],
+      "family": "swiss",
+      "contentSet": "research",
+      "defaultTheme": 0,
+      "sample": {
+        "eyebrow": "Paper Presentation",
+        "title": "Generative Design for Lightweight Drone Frames",
+        "subtitle": "Topology optimisation with additive manufacturing",
+        "team": [
+          "Adithya N",
+          "Pranav S"
+        ],
+        "guide": "Dr. M. Kannan",
+        "department": "Mechanical Engineering",
+        "date": "National Symposium 2026",
+        "question": "How light can a frame get before it fails?",
+        "problem": "Drone frames are over-built, and the extra weight cuts flight time.",
+        "problemPoints": [
+          "Conventional frames use uniform wall thickness",
+          "Weight directly limits battery endurance",
+          "Manual redesign cycles are slow"
+        ],
+        "architecture": [
+          "Load cases",
+          "Optimisation",
+          "Smoothing",
+          "3D printing",
+          "Load testing"
+        ],
+        "coverIndex": "04",
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "sextant",
+      "name": "Sextant",
+      "category": "college",
+      "useCase": "Project Review 3",
+      "requirement": "review",
+      "requirementLabel": "Project Review",
+      "department": "ece",
+      "departmentLabel": "Electronics & Communication",
+      "style": "Minimal",
+      "styleLabel": "Minimal",
+      "colour": "Teal",
+      "slideCount": 20,
+      "popularity": 88,
+      "addedOn": "2026-08-30",
+      "premium": false,
+      "badge": null,
+      "keywords": [
+        "review",
+        "3",
+        "ecg",
+        "wearable"
+      ],
+      "family": "atlas",
+      "contentSet": "acad",
+      "defaultTheme": 1,
+      "sample": {
+        "eyebrow": "Project Review — III",
+        "title": "Low-Cost ECG Monitoring with Wearable Sensors",
+        "subtitle": "Batch 2023–27",
+        "team": [
+          "Swetha K",
+          "Naveen R",
+          "Abdul H"
+        ],
+        "guide": "Dr. G. Revathi",
+        "department": "Electronics & Communication",
+        "date": "March 2027",
+        "question": "Can an affordable wearable flag arrhythmia reliably?",
+        "problem": "Continuous cardiac monitoring is expensive and rarely available outside hospitals.",
+        "problemPoints": [
+          "Holter monitors are costly and bulky",
+          "Rural clinics lack cardiologists",
+          "Intermittent symptoms are easily missed"
+        ],
+        "architecture": [
+          "Electrodes",
+          "Analog front-end",
+          "Microcontroller",
+          "Bluetooth LE",
+          "Mobile alerts"
+        ],
+        "coverIndex": "03",
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "tropic",
+      "name": "Tropic",
+      "category": "college",
+      "useCase": "Final Year Project",
+      "requirement": "fyp",
+      "requirementLabel": "Final Year Project",
+      "department": "aids",
+      "departmentLabel": "AI & Data Science",
+      "style": "Academic",
+      "styleLabel": "Academic",
+      "colour": "Teal",
+      "slideCount": 22,
+      "popularity": 86,
+      "addedOn": "2026-10-14",
+      "premium": true,
+      "badge": "New",
+      "keywords": [
+        "traffic",
+        "graph",
+        "neural",
+        "network",
+        "data",
+        "science"
+      ],
+      "family": "meridian",
+      "contentSet": "acad",
+      "defaultTheme": 1,
+      "sample": {
+        "eyebrow": "Final Year Project · 2026–27",
+        "title": "Traffic Density Prediction Using Graph Neural Networks",
+        "subtitle": "Department of Artificial Intelligence and Data Science",
+        "team": [
+          "Sharmila D",
+          "Vignesh P",
+          "Hari K",
+          "Nivetha S"
+        ],
+        "guide": "Dr. J. Arul Prasad",
+        "department": "AI & Data Science",
+        "date": "April 2027",
+        "question": "Can a city's road network predict its own jams?",
+        "problem": "Signal timings are fixed, so junctions jam even when nearby roads are clear.",
+        "problemPoints": [
+          "Traffic swings sharply by hour and weather",
+          "Junctions influence each other across the network",
+          "Existing models ignore road topology"
+        ],
+        "architecture": [
+          "Sensor feeds",
+          "Road graph",
+          "GNN model",
+          "Forecast",
+          "Signal plan"
+        ],
+        "coverIndex": null,
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "circuit",
+      "name": "Circuit",
+      "category": "college",
+      "useCase": "Final Year Project",
+      "requirement": "fyp",
+      "requirementLabel": "Final Year Project",
+      "department": "eee",
+      "departmentLabel": "Electrical & Electronics",
+      "style": "Tech",
+      "styleLabel": "Dark and technical",
+      "colour": "Green",
+      "slideCount": 20,
+      "popularity": 78,
+      "addedOn": "2026-07-02",
+      "premium": false,
+      "badge": null,
+      "keywords": [
+        "solar",
+        "mppt",
+        "battery",
+        "power",
+        "electronics"
+      ],
+      "family": "kepler",
+      "contentSet": "acad",
+      "defaultTheme": 1,
+      "sample": {
+        "eyebrow": "Final Year Project · EEE",
+        "title": "Solar MPPT Controller with Battery Health Prediction",
+        "subtitle": "Electrical and Electronics Engineering",
+        "team": [
+          "Ramesh K",
+          "Bhuvana S",
+          "Ajay T"
+        ],
+        "guide": "Dr. N. Suresh",
+        "department": "Electrical & Electronics",
+        "date": "April 2027",
+        "question": "How much more energy can a smarter controller harvest?",
+        "problem": "Small solar installations waste energy and wear out batteries early.",
+        "problemPoints": [
+          "Basic PWM controllers miss the maximum power point",
+          "Battery wear goes unnoticed until failure",
+          "Monitoring hardware adds cost"
+        ],
+        "architecture": [
+          "PV panel",
+          "Buck converter",
+          "MPPT algorithm",
+          "Battery manager",
+          "Health model"
+        ],
+        "coverIndex": null,
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "folio",
+      "name": "Folio",
+      "category": "college",
+      "useCase": "Research Presentation",
+      "requirement": "research",
+      "requirementLabel": "Research",
+      "department": "cse",
+      "departmentLabel": "Computer Science",
+      "style": "Editorial",
+      "styleLabel": "Editorial serif",
+      "colour": "Green",
+      "slideCount": 18,
+      "popularity": 70,
+      "addedOn": "2026-04-18",
+      "premium": false,
+      "badge": null,
+      "keywords": [
+        "federated",
+        "learning",
+        "privacy",
+        "healthcare",
+        "paper"
+      ],
+      "family": "halcyon",
+      "contentSet": "research",
+      "defaultTheme": 1,
+      "sample": {
+        "eyebrow": "Research Presentation",
+        "title": "Federated Learning for Privacy-Preserving Healthcare Analytics",
+        "subtitle": "A comparative study of aggregation strategies",
+        "team": [
+          "Kavya R"
+        ],
+        "guide": "Dr. S. Mohan",
+        "department": "Computer Science & Engineering",
+        "date": "Student Research Colloquium",
+        "question": "Can hospitals learn together without sharing records?",
+        "problem": "Patient data cannot leave hospitals, so models train on small local datasets.",
+        "problemPoints": [
+          "Privacy law restricts pooling data",
+          "Local models overfit small cohorts",
+          "Aggregation trades accuracy for privacy"
+        ],
+        "architecture": [
+          "Local training",
+          "Secure upload",
+          "Aggregation",
+          "Global model",
+          "Evaluation"
+        ],
+        "coverIndex": "Nº 12",
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "plain",
+      "name": "Plain",
+      "category": "college",
+      "useCase": "Academic Assignment",
+      "requirement": "assign",
+      "requirementLabel": "Assignment",
+      "department": "it",
+      "departmentLabel": "Information Technology",
+      "style": "Minimal",
+      "styleLabel": "Minimal",
+      "colour": "Blue",
+      "slideCount": 10,
+      "popularity": 62,
+      "addedOn": "2026-03-11",
+      "premium": false,
+      "badge": null,
+      "keywords": [
+        "assignment",
+        "operating",
+        "systems",
+        "scheduling"
+      ],
+      "family": "mono",
+      "contentSet": "acad",
+      "defaultTheme": 1,
+      "sample": {
+        "eyebrow": "Assignment 2 · CS3401",
+        "title": "Process Scheduling Algorithms Compared",
+        "subtitle": "FCFS, SJF, Round Robin and Priority",
+        "team": [
+          "Arjun S"
+        ],
+        "guide": "Prof. L. Kavitha",
+        "department": "Information Technology",
+        "date": "September 2026",
+        "question": "Which scheduler keeps waiting time lowest?",
+        "problem": "Each scheduling algorithm balances throughput, waiting time and fairness differently.",
+        "problemPoints": [
+          "FCFS is simple but suffers convoy effects",
+          "SJF minimises waiting but needs burst estimates",
+          "Round Robin trades throughput for fairness"
+        ],
+        "architecture": [
+          "Process queue",
+          "Scheduler",
+          "CPU",
+          "Metrics",
+          "Comparison"
+        ],
+        "coverIndex": null,
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "sprint",
+      "name": "Sprint",
+      "category": "college",
+      "useCase": "Hackathon Pitch",
+      "requirement": "hackathon",
+      "requirementLabel": "Hackathon",
+      "department": "it",
+      "departmentLabel": "Information Technology",
+      "style": "Bold",
+      "styleLabel": "Bold colour",
+      "colour": "Orange",
+      "slideCount": 12,
+      "popularity": 92,
+      "addedOn": "2026-08-21",
+      "premium": false,
+      "badge": "Popular",
+      "keywords": [
+        "pitch",
+        "canteen",
+        "app",
+        "startup"
+      ],
+      "family": "vertex",
+      "contentSet": "pitch",
+      "defaultTheme": 1,
+      "sample": {
+        "eyebrow": "Hackathon · Team Overclocked",
+        "title": "QueueLess: Skip the Canteen Line",
+        "subtitle": "Pre-order and pick up between classes",
+        "team": [
+          "Nikhil P",
+          "Sneha J",
+          "Tarun B",
+          "Ayesha F"
+        ],
+        "guide": "Mr. Joseph D",
+        "department": "Information Technology",
+        "date": "Campus Hackathon 2026",
+        "question": "What if lunch break was actually a break?",
+        "problem": "Students lose most of their lunch break waiting in canteen queues.",
+        "problemPoints": [
+          "Peak-hour queues run past 20 minutes",
+          "Canteens cannot predict demand",
+          "Cash handling slows every order"
+        ],
+        "architecture": [
+          "Student app",
+          "Order API",
+          "Kitchen display",
+          "UPI payment",
+          "Pickup alert"
+        ],
+        "coverIndex": null,
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "ward",
+      "name": "Ward",
+      "category": "college",
+      "useCase": "Nursing Seminar",
+      "requirement": "seminar",
+      "requirementLabel": "Seminar",
+      "department": "nursing",
+      "departmentLabel": "Nursing",
+      "style": "Academic",
+      "styleLabel": "Academic",
+      "colour": "Red",
+      "slideCount": 14,
+      "popularity": 68,
+      "addedOn": "2026-06-02",
+      "premium": false,
+      "badge": null,
+      "keywords": [
+        "nursing",
+        "infection",
+        "control",
+        "critical",
+        "care"
+      ],
+      "family": "pulse",
+      "contentSet": "health",
+      "defaultTheme": 2,
+      "sample": {
+        "eyebrow": "Nursing Seminar",
+        "title": "Infection Control Practices in Critical Care Units",
+        "subtitle": "B.Sc. Nursing · IV Year",
+        "team": [
+          "Jency M"
+        ],
+        "guide": "Critical Care Nursing",
+        "department": "College of Nursing",
+        "date": "February 2027",
+        "question": "Which simple habits prevent the most infections?",
+        "problem": "Healthcare-associated infections remain a leading complication in intensive care.",
+        "problemPoints": [
+          "Hand hygiene slips during busy shifts",
+          "Device-related infections need strict care bundles",
+          "Staff training is often inconsistent"
+        ],
+        "architecture": [
+          "Hand hygiene",
+          "Protective equipment",
+          "Device bundles",
+          "Surveillance",
+          "Audit"
+        ],
+        "coverIndex": null,
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "brief",
+      "name": "Brief",
+      "category": "college",
+      "useCase": "Internship Presentation",
+      "requirement": "intern",
+      "requirementLabel": "Internship",
+      "department": "mba",
+      "departmentLabel": "Management",
+      "style": "Corporate",
+      "styleLabel": "Corporate",
+      "colour": "Navy",
+      "slideCount": 14,
+      "popularity": 66,
+      "addedOn": "2026-05-14",
+      "premium": false,
+      "badge": null,
+      "keywords": [
+        "mba",
+        "internship",
+        "retail",
+        "forecasting"
+      ],
+      "family": "ledger",
+      "contentSet": "acad",
+      "defaultTheme": 2,
+      "sample": {
+        "eyebrow": "Summer Internship Report",
+        "title": "Retail Demand Forecasting for a Regional Grocery Chain",
+        "subtitle": "MBA · Business Analytics",
+        "team": [
+          "Divya Narayanan"
+        ],
+        "guide": "Dr. R. Srinivasan",
+        "department": "Management Studies",
+        "date": "August 2026",
+        "question": "Can better forecasts cut waste without emptying shelves?",
+        "problem": "Stores reorder by instinct, which leads to stock-outs and spoilage.",
+        "problemPoints": [
+          "Perishables are over-ordered before weekends",
+          "Festive demand spikes are missed",
+          "Store managers lack simple reports"
+        ],
+        "architecture": [
+          "POS data",
+          "Cleaning",
+          "Forecast model",
+          "Reorder plan",
+          "Store report"
+        ],
+        "coverIndex": null,
+        "coverKpi": "92%",
+        "coverKpiLabel": "Forecast accuracy"
+      }
+    },
+    {
+      "id": "ledger",
+      "name": "Ledger",
+      "category": "corporate",
+      "useCase": "Quarterly Business Review",
+      "requirement": "qbr",
+      "requirementLabel": "Quarterly Review",
+      "department": null,
+      "departmentLabel": null,
+      "style": "Corporate",
+      "styleLabel": "Corporate",
+      "colour": "Navy",
+      "slideCount": 20,
+      "popularity": 89,
+      "addedOn": "2026-07-15",
+      "premium": true,
+      "badge": "Popular",
+      "keywords": [
+        "qbr",
+        "quarterly",
+        "review",
+        "finance",
+        "revenue"
+      ],
+      "family": "ledger",
+      "contentSet": "corp",
+      "defaultTheme": 0,
+      "sample": {
+        "eyebrow": "Finance & Strategy",
+        "title": "Q3 2026 Business Review",
+        "subtitle": "Revenue, pipeline and priorities for Q4",
+        "team": [
+          "Ananya Rao",
+          "Vikram Shah",
+          "Leela Menon",
+          "Arjun Das"
+        ],
+        "guide": "Leadership team",
+        "department": "Finance & Strategy",
+        "date": "October 2026",
+        "question": "Where we double down in Q4.",
+        "problem": "Growth held steady while acquisition costs rose in two key regions.",
+        "problemPoints": [
+          "Enterprise revenue grew for a third straight quarter",
+          "Acquisition costs rose in the North and West",
+          "Q4 pipeline coverage stands at 3.1×"
+        ],
+        "architecture": [
+          "Retain",
+          "Expand",
+          "Acquire",
+          "Optimise",
+          "Invest"
+        ],
+        "coverIndex": null,
+        "coverKpi": "+18%",
+        "coverKpiLabel": "Revenue vs Q3 2025"
+      }
+    },
+    {
+      "id": "strata",
+      "name": "Strata",
+      "category": "corporate",
+      "useCase": "Strategy Deck",
+      "requirement": "strategy",
+      "requirementLabel": "Strategy",
+      "department": null,
+      "departmentLabel": null,
+      "style": "Corporate",
+      "styleLabel": "Corporate",
+      "colour": "Navy",
+      "slideCount": 18,
+      "popularity": 74,
+      "addedOn": "2026-06-25",
+      "premium": true,
+      "badge": null,
+      "keywords": [
+        "strategy",
+        "offsite",
+        "leadership",
+        "plan"
+      ],
+      "family": "strata",
+      "contentSet": "corp",
+      "defaultTheme": 0,
+      "sample": {
+        "eyebrow": "Leadership Offsite",
+        "title": "2027 Strategy: Building for Scale",
+        "subtitle": "Priorities, bets and operating plan",
+        "team": [
+          "Ananya Rao",
+          "Vikram Shah",
+          "Leela Menon",
+          "Arjun Das"
+        ],
+        "guide": "Executive team",
+        "department": "Strategy Office",
+        "date": "November 2026",
+        "question": "What must be true for us to double by 2028?",
+        "problem": "Our operating model was built for one market; we now serve four.",
+        "problemPoints": [
+          "Teams duplicate work across regions",
+          "Decisions have slowed as we grew",
+          "Platform investment lags product demand"
+        ],
+        "architecture": [
+          "Customer",
+          "Product",
+          "Platform",
+          "People",
+          "Operations"
+        ],
+        "coverIndex": null,
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "boardroom",
+      "name": "Boardroom",
+      "category": "corporate",
+      "useCase": "Board Update",
+      "requirement": "board",
+      "requirementLabel": "Board Update",
+      "department": null,
+      "departmentLabel": null,
+      "style": "Minimal",
+      "styleLabel": "Minimal",
+      "colour": "Black",
+      "slideCount": 14,
+      "popularity": 64,
+      "addedOn": "2026-05-08",
+      "premium": false,
+      "badge": null,
+      "keywords": [
+        "board",
+        "update",
+        "directors"
+      ],
+      "family": "atlas",
+      "contentSet": "corp",
+      "defaultTheme": 2,
+      "sample": {
+        "eyebrow": "Board Update",
+        "title": "Quarterly Board Update",
+        "subtitle": "Confidential · Board members only",
+        "team": [
+          "Ananya Rao"
+        ],
+        "guide": "Board of Directors",
+        "department": "Office of the CEO",
+        "date": "October 2026",
+        "question": "Three decisions we need from the board today.",
+        "problem": "The quarter closed ahead of plan, with two risks that need board attention.",
+        "problemPoints": [
+          "Revenue closed 6% ahead of plan",
+          "Supply costs remain volatile",
+          "Engineering hiring is behind plan"
+        ],
+        "architecture": [
+          "Results",
+          "Risks",
+          "Capital",
+          "Talent",
+          "Decisions"
+        ],
+        "coverIndex": "Q3",
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "northline",
+      "name": "Northline",
+      "category": "corporate",
+      "useCase": "Annual Report",
+      "requirement": "annual",
+      "requirementLabel": "Annual Report",
+      "department": null,
+      "departmentLabel": null,
+      "style": "Swiss",
+      "styleLabel": "Swiss grid",
+      "colour": "Blue",
+      "slideCount": 22,
+      "popularity": 71,
+      "addedOn": "2026-10-09",
+      "premium": false,
+      "badge": "New",
+      "keywords": [
+        "annual",
+        "report",
+        "shareholders"
+      ],
+      "family": "swiss",
+      "contentSet": "corp",
+      "defaultTheme": 1,
+      "sample": {
+        "eyebrow": "Annual Report",
+        "title": "Annual Report 2025–26",
+        "subtitle": "Growth, impact and the year ahead",
+        "team": [
+          "Ananya Rao"
+        ],
+        "guide": "Shareholders & partners",
+        "department": "Corporate Communications",
+        "date": "Fiscal Year 2025–26",
+        "question": "A year of building foundations.",
+        "problem": "We grew in every region while investing in long-term capability.",
+        "problemPoints": [
+          "Customers grew in all four regions",
+          "Two new product lines launched",
+          "Operating margin improved year on year"
+        ],
+        "architecture": [
+          "Customers",
+          "Products",
+          "People",
+          "Planet",
+          "Outlook"
+        ],
+        "coverIndex": "25/26",
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "launchpad",
+      "name": "Launchpad",
+      "category": "business",
+      "useCase": "Startup Pitch Deck",
+      "requirement": "pitch",
+      "requirementLabel": "Pitch Deck",
+      "department": null,
+      "departmentLabel": null,
+      "style": "Bold",
+      "styleLabel": "Bold colour",
+      "colour": "Gold",
+      "slideCount": 15,
+      "popularity": 93,
+      "addedOn": "2026-09-12",
+      "premium": true,
+      "badge": "Popular",
+      "keywords": [
+        "startup",
+        "pitch",
+        "investor",
+        "seed"
+      ],
+      "family": "strata",
+      "contentSet": "pitch",
+      "defaultTheme": 1,
+      "sample": {
+        "eyebrow": "Seed Round · 2026",
+        "title": "Kirana OS: Inventory and Credit for Neighbourhood Stores",
+        "subtitle": "Investor presentation",
+        "team": [
+          "Rahul Iyer",
+          "Sana Qureshi",
+          "Dev Malhotra"
+        ],
+        "guide": "Arvind Krishnan",
+        "department": "Kirana OS",
+        "date": "September 2026",
+        "question": "Every neighbourhood store, running on one app.",
+        "problem": "Neighbourhood stores track stock and credit on paper, losing sales and money.",
+        "problemPoints": [
+          "Stock-outs on fast movers lose daily sales",
+          "Customer credit lives in notebooks",
+          "Distributors cannot see store demand"
+        ],
+        "architecture": [
+          "Billing",
+          "Inventory",
+          "Credit ledger",
+          "Reordering",
+          "Insights"
+        ],
+        "coverIndex": null,
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "closer",
+      "name": "Closer",
+      "category": "business",
+      "useCase": "Sales Proposal",
+      "requirement": "sales",
+      "requirementLabel": "Sales Proposal",
+      "department": null,
+      "departmentLabel": null,
+      "style": "Bold",
+      "styleLabel": "Bold colour",
+      "colour": "Black",
+      "slideCount": 12,
+      "popularity": 67,
+      "addedOn": "2026-04-26",
+      "premium": false,
+      "badge": null,
+      "keywords": [
+        "sales",
+        "proposal",
+        "client",
+        "cloud"
+      ],
+      "family": "vertex",
+      "contentSet": "corp",
+      "defaultTheme": 2,
+      "sample": {
+        "eyebrow": "Proposal",
+        "title": "Managed Cloud Migration for Apex Logistics",
+        "subtitle": "Scope, timeline and commercials",
+        "team": [
+          "Vikram Shah",
+          "Leela Menon"
+        ],
+        "guide": "Apex Logistics",
+        "department": "Enterprise Solutions",
+        "date": "October 2026",
+        "question": "Move to the cloud in 16 weeks with zero downtime.",
+        "problem": "Apex runs critical workloads on ageing on-premise servers.",
+        "problemPoints": [
+          "A hardware refresh is due next year",
+          "Peak-season traffic strains capacity",
+          "Disaster recovery is manual"
+        ],
+        "architecture": [
+          "Assess",
+          "Plan",
+          "Migrate",
+          "Optimise",
+          "Support"
+        ],
+        "coverIndex": null,
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "margin",
+      "name": "Margin",
+      "category": "business",
+      "useCase": "Business Plan",
+      "requirement": "plan",
+      "requirementLabel": "Business Plan",
+      "department": null,
+      "departmentLabel": null,
+      "style": "Corporate",
+      "styleLabel": "Corporate",
+      "colour": "Teal",
+      "slideCount": 18,
+      "popularity": 69,
+      "addedOn": "2026-06-11",
+      "premium": false,
+      "badge": null,
+      "keywords": [
+        "business",
+        "plan",
+        "financials"
+      ],
+      "family": "ledger",
+      "contentSet": "corp",
+      "defaultTheme": 1,
+      "sample": {
+        "eyebrow": "Business Plan FY2027",
+        "title": "Cloud Kitchen Expansion Plan",
+        "subtitle": "Market, operations and financial outlook",
+        "team": [
+          "Leela Menon",
+          "Arjun Das"
+        ],
+        "guide": "Investors",
+        "department": "Strategy & Finance",
+        "date": "June 2026",
+        "question": "Four kitchens, one brand, one supply chain.",
+        "problem": "Delivery demand is outgrowing our single kitchen's capacity.",
+        "problemPoints": [
+          "Evening orders exceed kitchen capacity",
+          "Delivery radius limits reach",
+          "Ingredient costs rise without scale"
+        ],
+        "architecture": [
+          "Market",
+          "Menu",
+          "Kitchens",
+          "Delivery",
+          "Financials"
+        ],
+        "coverIndex": null,
+        "coverKpi": "₹4.2 Cr",
+        "coverKpiLabel": "Year-one revenue target"
+      }
+    },
+    {
+      "id": "harbor",
+      "name": "Harbor",
+      "category": "business",
+      "useCase": "Marketing Plan",
+      "requirement": "marketing",
+      "requirementLabel": "Marketing Plan",
+      "department": null,
+      "departmentLabel": null,
+      "style": "Organic",
+      "styleLabel": "Organic",
+      "colour": "Blue",
+      "slideCount": 16,
+      "popularity": 73,
+      "addedOn": "2026-07-20",
+      "premium": false,
+      "badge": null,
+      "keywords": [
+        "marketing",
+        "plan",
+        "campaign",
+        "festive"
+      ],
+      "family": "canopy",
+      "contentSet": "corp",
+      "defaultTheme": 1,
+      "sample": {
+        "eyebrow": "Marketing Plan",
+        "title": "Festive Season Marketing Plan 2026",
+        "subtitle": "Audience, channels, budget and timeline",
+        "team": [
+          "Sana Qureshi",
+          "Dev Malhotra"
+        ],
+        "guide": "Brand & Growth team",
+        "department": "Marketing",
+        "date": "August 2026",
+        "question": "Win the season before it starts.",
+        "problem": "Festive demand peaks in six weeks, and competitors start early.",
+        "problemPoints": [
+          "Acquisition costs double in peak weeks",
+          "Last year's campaign launched late",
+          "Regional languages were underused"
+        ],
+        "architecture": [
+          "Audience",
+          "Message",
+          "Channels",
+          "Budget",
+          "Measurement"
+        ],
+        "coverIndex": null,
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "pulse",
+      "name": "Pulse",
+      "category": "healthcare",
+      "useCase": "Clinical Case Presentation",
+      "requirement": "case",
+      "requirementLabel": "Case Presentation",
+      "department": null,
+      "departmentLabel": null,
+      "style": "Minimal",
+      "styleLabel": "Minimal",
+      "colour": "Teal",
+      "slideCount": 16,
+      "popularity": 87,
+      "addedOn": "2026-08-05",
+      "premium": false,
+      "badge": "Popular",
+      "keywords": [
+        "case",
+        "presentation",
+        "clinical",
+        "medicine"
+      ],
+      "family": "pulse",
+      "contentSet": "health",
+      "defaultTheme": 0,
+      "sample": {
+        "eyebrow": "Case Presentation",
+        "title": "Diabetic Ketoacidosis in a Young Adult",
+        "subtitle": "Presentation, management and learning points",
+        "team": [
+          "Dr. Meera Iyer"
+        ],
+        "guide": "General Medicine",
+        "department": "Department of General Medicine",
+        "date": "Clinical Meeting · Oct 2026",
+        "question": "What could have flagged this case earlier?",
+        "problem": "A 22-year-old presented with vomiting, abdominal pain and rapid breathing.",
+        "problemPoints": [
+          "Symptoms began after missed insulin doses",
+          "The first impression was gastroenteritis",
+          "Glucose and ketone levels confirmed the diagnosis"
+        ],
+        "architecture": [
+          "Presentation",
+          "Assessment",
+          "Fluids & insulin",
+          "Monitoring",
+          "Discharge"
+        ],
+        "coverIndex": null,
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "vital",
+      "name": "Vital",
+      "category": "healthcare",
+      "useCase": "Quality & Safety Report",
+      "requirement": "quality",
+      "requirementLabel": "Quality Report",
+      "department": null,
+      "departmentLabel": null,
+      "style": "Corporate",
+      "styleLabel": "Corporate",
+      "colour": "Blue",
+      "slideCount": 18,
+      "popularity": 65,
+      "addedOn": "2026-05-21",
+      "premium": false,
+      "badge": null,
+      "keywords": [
+        "hospital",
+        "quality",
+        "patient",
+        "safety"
+      ],
+      "family": "pulse",
+      "contentSet": "health",
+      "defaultTheme": 1,
+      "sample": {
+        "eyebrow": "Quality & Patient Safety",
+        "title": "Quality and Safety Report — Q2 2026",
+        "subtitle": "Indicators, incidents and improvement plans",
+        "team": [
+          "Dr. Arvind Rao",
+          "Ms. Leena Thomas"
+        ],
+        "guide": "Quality Council",
+        "department": "Quality Department",
+        "date": "July 2026",
+        "question": "Safer care, measured every month.",
+        "problem": "Medication incidents fell this quarter, but falls rose in two wards.",
+        "problemPoints": [
+          "Medication errors fell for a second quarter",
+          "Patient falls rose in two wards",
+          "Hand hygiene audits are now monthly"
+        ],
+        "architecture": [
+          "Measure",
+          "Review",
+          "Act",
+          "Train",
+          "Audit"
+        ],
+        "coverIndex": null,
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "rounds",
+      "name": "Rounds",
+      "category": "healthcare",
+      "useCase": "Grand Rounds",
+      "requirement": "rounds",
+      "requirementLabel": "Grand Rounds",
+      "department": null,
+      "departmentLabel": null,
+      "style": "Editorial",
+      "styleLabel": "Editorial serif",
+      "colour": "Navy",
+      "slideCount": 16,
+      "popularity": 63,
+      "addedOn": "2026-10-02",
+      "premium": true,
+      "badge": "New",
+      "keywords": [
+        "grand",
+        "rounds",
+        "antimicrobial"
+      ],
+      "family": "halcyon",
+      "contentSet": "health",
+      "defaultTheme": 2,
+      "sample": {
+        "eyebrow": "Grand Rounds",
+        "title": "Antimicrobial Stewardship in Everyday Practice",
+        "subtitle": "Evidence, local data and practical steps",
+        "team": [
+          "Dr. Kiran Joseph"
+        ],
+        "guide": "Department of Medicine",
+        "department": "Internal Medicine",
+        "date": "October 2026",
+        "question": "Every prescription is a decision about resistance.",
+        "problem": "Broad-spectrum antibiotics are often started without a review date.",
+        "problemPoints": [
+          "Empirical therapy is rarely de-escalated",
+          "Culture reports arrive after decisions are made",
+          "Prescribing guidance varies by unit"
+        ],
+        "architecture": [
+          "Diagnose",
+          "Prescribe",
+          "Review",
+          "De-escalate",
+          "Audit"
+        ],
+        "coverIndex": "Nº 09",
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "thesis",
+      "name": "Thesis",
+      "category": "research",
+      "useCase": "Thesis Defence",
+      "requirement": "thesis",
+      "requirementLabel": "Thesis Defence",
+      "department": null,
+      "departmentLabel": null,
+      "style": "Swiss",
+      "styleLabel": "Swiss grid",
+      "colour": "Black",
+      "slideCount": 24,
+      "popularity": 85,
+      "addedOn": "2026-07-08",
+      "premium": true,
+      "badge": "Popular",
+      "keywords": [
+        "thesis",
+        "defence",
+        "phd",
+        "viva"
+      ],
+      "family": "swiss",
+      "contentSet": "research",
+      "defaultTheme": 2,
+      "sample": {
+        "eyebrow": "Doctoral Thesis Defence",
+        "title": "Self-Healing Concrete Using Bacterial Mineralisation",
+        "subtitle": "Ph.D. Candidate · Civil Engineering",
+        "team": [
+          "S. Ramya"
+        ],
+        "guide": "Prof. V. Natarajan",
+        "department": "Civil Engineering",
+        "date": "December 2026",
+        "question": "Can concrete repair its own cracks?",
+        "problem": "Micro-cracks let water in, corroding steel and shortening structural life.",
+        "problemPoints": [
+          "Repairs are costly and often come too late",
+          "Cracks are hard to detect inside structures",
+          "Existing healing agents degrade quickly"
+        ],
+        "architecture": [
+          "Strain selection",
+          "Encapsulation",
+          "Mix design",
+          "Crack healing",
+          "Durability tests"
+        ],
+        "coverIndex": "01",
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "abstract",
+      "name": "Abstract",
+      "category": "research",
+      "useCase": "Conference Paper",
+      "requirement": "conference",
+      "requirementLabel": "Conference Paper",
+      "department": null,
+      "departmentLabel": null,
+      "style": "Minimal",
+      "styleLabel": "Minimal",
+      "colour": "Teal",
+      "slideCount": 14,
+      "popularity": 61,
+      "addedOn": "2026-10-16",
+      "premium": false,
+      "badge": "New",
+      "keywords": [
+        "conference",
+        "paper",
+        "speech"
+      ],
+      "family": "mono",
+      "contentSet": "research",
+      "defaultTheme": 2,
+      "sample": {
+        "eyebrow": "Conference Paper · Session 3B",
+        "title": "Lightweight Transformers for On-Device Speech Recognition",
+        "subtitle": "Speech & Language Workshop 2026",
+        "team": [
+          "A. Krishnan",
+          "M. Fernandes"
+        ],
+        "guide": "Dr. S. Iyer",
+        "department": "Speech & Language Lab",
+        "date": "November 2026",
+        "question": "Accurate speech recognition with no network at all.",
+        "problem": "Cloud speech recognition fails offline and raises privacy concerns.",
+        "problemPoints": [
+          "Large models exceed phone memory budgets",
+          "Latency rises on low-end devices",
+          "Regional accents reduce accuracy"
+        ],
+        "architecture": [
+          "Audio frames",
+          "Feature encoder",
+          "Pruned transformer",
+          "Decoder",
+          "Transcript"
+        ],
+        "coverIndex": null,
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "fieldnotes",
+      "name": "Field Notes",
+      "category": "research",
+      "useCase": "Research Proposal",
+      "requirement": "proposal",
+      "requirementLabel": "Research Proposal",
+      "department": null,
+      "departmentLabel": null,
+      "style": "Organic",
+      "styleLabel": "Organic",
+      "colour": "Orange",
+      "slideCount": 18,
+      "popularity": 58,
+      "addedOn": "2026-03-28",
+      "premium": false,
+      "badge": null,
+      "keywords": [
+        "research",
+        "proposal",
+        "groundwater"
+      ],
+      "family": "canopy",
+      "contentSet": "research",
+      "defaultTheme": 2,
+      "sample": {
+        "eyebrow": "Research Proposal",
+        "title": "Groundwater Recharge in Coastal Aquifers",
+        "subtitle": "Proposed methodology and three-year work plan",
+        "team": [
+          "R. Janani"
+        ],
+        "guide": "Dr. K. Mani",
+        "department": "Environmental Science",
+        "date": "March 2026",
+        "question": "How fast are coastal wells turning saline?",
+        "problem": "Over-extraction is drawing seawater into freshwater aquifers along the coast.",
+        "problemPoints": [
+          "Well salinity rises every dry season",
+          "Recharge rates are poorly measured",
+          "Policy lacks local evidence"
+        ],
+        "architecture": [
+          "Field survey",
+          "Sampling",
+          "Modelling",
+          "Recharge trials",
+          "Policy brief"
+        ],
+        "coverIndex": null,
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "gala",
+      "name": "Gala",
+      "category": "events",
+      "useCase": "Symposium & Annual Day",
+      "requirement": "symposium",
+      "requirementLabel": "Symposium",
+      "department": null,
+      "departmentLabel": null,
+      "style": "Elegant",
+      "styleLabel": "Elegant",
+      "colour": "Gold",
+      "slideCount": 12,
+      "popularity": 83,
+      "addedOn": "2026-08-27",
+      "premium": true,
+      "badge": "Popular",
+      "keywords": [
+        "symposium",
+        "annual",
+        "day",
+        "event"
+      ],
+      "family": "gala",
+      "contentSet": "event",
+      "defaultTheme": 0,
+      "sample": {
+        "eyebrow": "Department of CSE presents",
+        "title": "Annual Technical Symposium",
+        "subtitle": "Paper presentations, project expo and workshops",
+        "team": [
+          "Aravind K",
+          "Deepika S",
+          "Mohammed R",
+          "Sowmya L"
+        ],
+        "guide": "Dr. V. Anand",
+        "department": "Main Auditorium",
+        "date": "March 2027",
+        "question": "Two days of ideas, papers and prototypes.",
+        "problem": "A national-level symposium for students to present research and working projects.",
+        "problemPoints": [
+          "Paper presentations in four tracks",
+          "Project expo with live demos",
+          "Hands-on workshops by industry speakers"
+        ],
+        "architecture": [
+          "Paper track",
+          "Project expo",
+          "Workshops",
+          "Coding contest",
+          "Valedictory"
+        ],
+        "coverIndex": "13—14",
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "convocation",
+      "name": "Convocation",
+      "category": "events",
+      "useCase": "Graduation Ceremony",
+      "requirement": "graduation",
+      "requirementLabel": "Graduation",
+      "department": null,
+      "departmentLabel": null,
+      "style": "Elegant",
+      "styleLabel": "Elegant",
+      "colour": "Navy",
+      "slideCount": 10,
+      "popularity": 60,
+      "addedOn": "2026-06-30",
+      "premium": false,
+      "badge": null,
+      "keywords": [
+        "graduation",
+        "convocation",
+        "ceremony"
+      ],
+      "family": "gala",
+      "contentSet": "event",
+      "defaultTheme": 1,
+      "sample": {
+        "eyebrow": "Celebrating the Class of 2027",
+        "title": "Graduation Day 2027",
+        "subtitle": "Convocation ceremony and awards",
+        "team": [
+          "Dr. P. Raman",
+          "Dr. S. Kalaivani",
+          "Mr. T. Arun"
+        ],
+        "guide": "Dr. P. Raman",
+        "department": "Office of Academic Affairs",
+        "date": "June 2027",
+        "question": "Your next chapter starts today.",
+        "problem": "Honouring graduates, rank holders and the families who supported them.",
+        "problemPoints": [
+          "Academic procession and welcome address",
+          "Conferment of degrees",
+          "University rank holder awards"
+        ],
+        "architecture": [
+          "Procession",
+          "Address",
+          "Degrees",
+          "Awards",
+          "Vote of thanks"
+        ],
+        "coverIndex": "14",
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "fest",
+      "name": "Fest",
+      "category": "events",
+      "useCase": "Cultural Fest",
+      "requirement": "fest",
+      "requirementLabel": "Cultural Fest",
+      "department": null,
+      "departmentLabel": null,
+      "style": "Elegant",
+      "styleLabel": "Elegant",
+      "colour": "Plum",
+      "slideCount": 12,
+      "popularity": 66,
+      "addedOn": "2026-10-12",
+      "premium": false,
+      "badge": "New",
+      "keywords": [
+        "cultural",
+        "fest",
+        "event"
+      ],
+      "family": "gala",
+      "contentSet": "event",
+      "defaultTheme": 2,
+      "sample": {
+        "eyebrow": "Three days · Twenty events",
+        "title": "Cultural Fest 2027",
+        "subtitle": "Music, theatre, dance and art",
+        "team": [
+          "Rithika S",
+          "Manoj K",
+          "Ananya P",
+          "Joel V"
+        ],
+        "guide": "Ms. R. Priya",
+        "department": "Student Affairs",
+        "date": "February 2027",
+        "question": "Three days of music, theatre and art.",
+        "problem": "The college's annual celebration of student talent across twenty events.",
+        "problemPoints": [
+          "Battle of the bands and solo music",
+          "Street theatre and short films",
+          "Fashion show and art installations"
+        ],
+        "architecture": [
+          "Music",
+          "Dance",
+          "Theatre",
+          "Art",
+          "Finale"
+        ],
+        "coverIndex": "08—10",
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    }
+  ]
+}

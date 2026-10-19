@@ -1,5 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import {
   ArrowLeft,
   ArrowRight,
@@ -23,6 +28,7 @@ import { SlideView } from "../components/SlideView";
 import { Empty, Spinner } from "../components/Common";
 export default function Customise() {
   const { id } = useParams(),
+    [params] = useSearchParams(),
     navigate = useNavigate(),
     { templates, user, toast, loading } = useApp(),
     [step, setStep] = useState(0),
@@ -31,10 +37,19 @@ export default function Customise() {
     [saveProfile, setSaveProfile] = useState(true),
     [busy, setBusy] = useState(false);
   const t = templates.find((x) => x.id === id);
-  const deck = useMemo(
-    () => (t ? personalise(makeDeck(t), values, profile) : null),
-    [t, values, profile],
-  );
+  const deck = useMemo(() => {
+    if (!t) return null;
+    const value = personalise(makeDeck(t), values, profile);
+    const theme = Number(params.get("theme"));
+    if (
+      params.has("theme") &&
+      Number.isInteger(theme) &&
+      theme >= 0 &&
+      theme <= 2
+    )
+      value.theme = theme;
+    return value;
+  }, [t, values, profile, params]);
   useEffect(() => {
     if (user)
       api<Profile | null>("/profile")
