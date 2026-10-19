@@ -613,15 +613,15 @@ export async function api(req: Request, env: Env): Promise<Response> {
       );
     if (path.startsWith("/saved/")) {
       const id = path.split("/")[2];
-      await getTemplate(id, env);
-      if (req.method === "PUT")
+      if (req.method === "PUT") {
+        await getTemplate(id, env);
         await storage(env).write({
           table: "saved_templates",
           action: "put",
           values: { user_id: user.id, template_id: id },
           ignore: true,
         });
-      else if (req.method === "DELETE")
+      } else if (req.method === "DELETE")
         await storage(env).write({
           table: "saved_templates",
           action: "delete",
@@ -783,6 +783,12 @@ export async function api(req: Request, env: Env): Promise<Response> {
             action: "update",
             values: { name: c.name, parent: c.parent },
             where: { id: target },
+          } satisfies Mutation,
+          {
+            table: "categories",
+            action: "update",
+            values: { parent: c.name },
+            where: { parent: existing.name },
           } satisfies Mutation,
           ...rows.map(
             (r) =>

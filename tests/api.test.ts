@@ -402,3 +402,168 @@ test("concurrent counters are atomic and failed batches roll back completely", a
     null,
   );
 });
+
+test("category renames preserve child categories and template filters", async () => {
+  await request(
+    "/admin/categories",
+    "POST",
+    { name: "Lifecycle", parent: null },
+    admin,
+  );
+  await request(
+    "/admin/categories",
+    "POST",
+    { name: "Lifecycle Child", parent: "Lifecycle" },
+    admin,
+  );
+  const t = { ...templates[0], id: "lifecycle-design", category: "Lifecycle" };
+  assert.equal(
+    (await request("/admin/templates/" + t.id, "PUT", t, admin)).status,
+    200,
+  );
+  const category = (await request("/categories")).body.find(
+    (c: { name: string }) => c.name === "Lifecycle",
+  );
+  assert.equal(
+    (
+      await request(
+        "/admin/categories/" + category.id,
+        "PUT",
+        { name: "Lifecycle Renamed", parent: null },
+        admin,
+      )
+    ).status,
+    200,
+  );
+  const updated = (await request("/categories")).body;
+  assert.equal(
+    updated.find((c: { name: string }) => c.name === "Lifecycle Child").parent,
+    "Lifecycle Renamed",
+  );
+  assert.equal(
+    (await request("/templates?category=Lifecycle%20Renamed")).body[0].id,
+    t.id,
+  );
+});
+
+test("unpublishing preserves existing decks and download snapshots; bookmarks can be removed", async () => {
+  const t = (await request("/templates/lifecycle-design")).body;
+  const own = makeDeck(t);
+  assert.equal(
+    (await request("/projects/" + own.id, "PUT", own, bob)).status,
+    200,
+  );
+  assert.equal((await request("/saved/" + t.id, "PUT", {}, bob)).status, 200);
+  assert.equal(
+    (
+      await request(
+        "/downloads",
+        "POST",
+        { templateId: t.id, title: own.title, format: "pptx", snapshot: own },
+        bob,
+      )
+    ).status,
+    201,
+  );
+  assert.equal(
+    (
+      await request(
+        "/admin/templates/" + t.id,
+        "PUT",
+        { ...t, published: false },
+        admin,
+      )
+    ).status,
+    200,
+  );
+  assert.equal((await request("/templates/" + t.id)).status, 404);
+  assert.equal(
+    (
+      await request(
+        "/projects/" + own.id,
+        "PUT",
+        { ...own, title: "Still editable" },
+        bob,
+      )
+    ).status,
+    200,
+  );
+  const downloads = (await request("/downloads", "GET", undefined, bob)).body;
+  const saved = (
+    await request("/downloads/" + downloads[0].id, "GET", undefined, bob)
+  ).body;
+  assert.deepEqual(saved.slides, own.slides);
+  assert.equal(
+    (
+      await request(
+        "/downloads",
+        "POST",
+        {
+          templateId: t.id,
+          title: saved.title,
+          format: "pptx",
+          snapshot: saved,
+        },
+        bob,
+      )
+    ).status,
+    201,
+  );
+  assert.equal(
+    (await request("/saved/" + t.id, "DELETE", undefined, bob)).status,
+    200,
+  );
+  assert.equal(
+    (await request("/projects/" + own.id, "DELETE", undefined, bob)).status,
+    200,
+  );
+  assert.equal(
+    (await request("/projects/" + own.id, "GET", undefined, bob)).status,
+    404,
+  );
+});
+
+test("role changes apply to existing sessions and administrators cannot demote themselves", async () => {
+  const b = (await request("/me", "GET", undefined, bob)).body.user;
+  const a = (await request("/me", "GET", undefined, admin)).body.user;
+  assert.equal(
+    (await request("/admin/users/" + a.id, "PUT", { role: "user" }, admin))
+      .status,
+    400,
+  );
+  assert.equal(
+    (await request("/admin/users/" + b.id, "PUT", { role: "admin" }, admin))
+      .status,
+    200,
+  );
+  assert.equal((await request("/admin", "GET", undefined, bob)).status, 200);
+  assert.equal(
+    (await request("/admin/users/" + b.id, "PUT", { role: "user" }, admin))
+      .status,
+    200,
+  );
+  assert.equal((await request("/admin", "GET", undefined, bob)).status, 403);
+});
+
+test("repeated login attempts are limited per client without affecting other clients", async () => {
+  const attempt = (ip: string) =>
+    api(
+      new Request("http://campus.test/api/auth/login", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          origin: "http://campus.test",
+          "x-local-client-ip": ip,
+        },
+        body: JSON.stringify({
+          email: "missing@campusdeck.test",
+          password: "Incorrect-password",
+        }),
+      }),
+      env,
+    );
+  for (let i = 0; i < 20; i++)
+    assert.equal((await attempt("login-limit-test")).status, 401);
+  assert.equal((await attempt("login-limit-test")).status, 429);
+  assert.equal((await attempt("other-login-client")).status, 401);
+});

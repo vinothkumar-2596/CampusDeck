@@ -132,6 +132,7 @@ export default function Workspace() {
   const visibleProjects = projects.filter((d) =>
     d.title.toLowerCase().includes(query.toLowerCase()),
   );
+  const savedTemplates = templates.filter((t) => saved.includes(t.id));
   const projectCards = (items: Deck[]) =>
     items.length ? (
       <div className="template-grid workspace-grid">
@@ -348,7 +349,7 @@ export default function Workspace() {
                   </div>
                   <div>
                     <Bookmark size={20} />
-                    <strong>{saved.length}</strong>
+                    <strong>{savedTemplates.length}</strong>
                     <span>Saved designs</span>
                   </div>
                   <div>
@@ -402,13 +403,11 @@ export default function Workspace() {
               </>
             )}
             {tab === "saved" &&
-              (saved.length ? (
+              (savedTemplates.length ? (
                 <div className="template-grid workspace-grid">
-                  {templates
-                    .filter((t) => saved.includes(t.id))
-                    .map((t, i) => (
-                      <TemplateCard key={t.id} template={t} index={i + 1} />
-                    ))}
+                  {savedTemplates.map((t, i) => (
+                    <TemplateCard key={t.id} template={t} index={i + 1} />
+                  ))}
                 </div>
               ) : (
                 <Empty
@@ -510,7 +509,11 @@ export default function Workspace() {
                             ? 200
                             : key === "year"
                               ? 30
-                              : 150
+                              : key === "degree"
+                                ? 80
+                                : key === "department" || key === "guide"
+                                  ? 100
+                                  : 150
                       }
                     />
                   ))}

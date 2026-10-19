@@ -92,7 +92,7 @@ npm run build
 
 The engine/API tests validate all 18 PPTX packages, slide counts, XML package entries, editable text, shapes, native tables, charts and embedded workbooks; custom text, colours, notes and Unicode; image embedding; PDF structure; text fitting; registration/login; save/reload; cross-account access denial; uploads; bookmarks; private download snapshots; admin publication; categories; disabled billing; and support messages.
 
-Playwright starts an isolated in-memory test database on port 5174. It covers browse → preview → original download → personalise → edit → edited PPTX/PDF download → guest reload → register → save → reload → workspace → admin publication, plus mobile browsing/filtering/editor overflow. It extracts the downloaded PPTX and checks the user's edits. Screenshots, sample exports, and the HTML report are written under `artifacts/`, which is not published or committed. If needed, `PLAYWRIGHT_CHROMIUM_EXECUTABLE` can point to an already installed compatible Chromium binary.
+Playwright starts an isolated in-memory test database on port 5174. Six browser journeys cover every launch design's actual editable PPTX download; browse, preview, personalisation, slide operations, PPTX/PDF export, and guest reload; profile/logo reuse, bookmarks, rename/duplicate/delete, download history, sign-out and fresh-browser sign-in; table/chart/image/notes editing and Tamil PPTX text; public deep links and static assets; admin publication; and mobile browsing/filtering/editor overflow. Downloaded files are unpacked to verify native content. Screenshots, sample exports, and the HTML report are written under `artifacts/`, which is not published or committed. If needed, `PLAYWRIGHT_CHROMIUM_EXECUTABLE` can point to an already installed compatible Chromium binary.
 
 PPTX contents are validated programmatically; desktop Microsoft PowerPoint is not installed in the build environment, so opening the generated files in that application remains a release check for the operator.
 
@@ -111,7 +111,7 @@ npx vercel deploy --prod --scope vinothkumars-projects-d5644634
 
 MongoDB stores slides and snapshots as embedded documents. Unique indexes protect identities and bookmarks; compound indexes support private workspace/history lookups; TTL indexes expire sessions and rate-limit counters. Category updates use a transaction. The same API also supports SQLite locally and D1 on Sites through `server/store.ts`. Database failures return an error rather than falling back to temporary storage. Each deployment provider has separate account data.
 
-MongoDB integration tests use a randomly named test database and remove their documents afterward. Production browser checks can use `E2E_BASE_URL`, `E2E_EMAIL`, and `E2E_PASSWORD`; they verify a regular account and do not change the public catalogue.
+MongoDB integration tests use a randomly named test database and remove their documents afterward. The 12 API tests include category rename propagation, unpublished-template history, role changes, concurrent writes, transaction rollback, and login rate limiting. Production browser checks can use `E2E_BASE_URL`, `E2E_EMAIL`, `E2E_FEATURE_EMAIL`, and `E2E_PASSWORD`; use unique temporary emails and remove those test accounts and their records afterward. These checks use regular accounts and do not change the public catalogue.
 
 To grant administrator access, register your real account first, then run this command with the correct server-side MongoDB environment:
 

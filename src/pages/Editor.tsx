@@ -767,7 +767,11 @@ export default function Editor() {
                             ? 250
                             : key === "registerNumbers"
                               ? 200
-                              : 150
+                              : key === "year"
+                                ? 30
+                                : key === "department" || key === "guide"
+                                  ? 100
+                                  : 150
                         }
                       />
                     ))}
