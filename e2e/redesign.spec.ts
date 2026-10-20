@@ -9,7 +9,7 @@ test("new category routes, filters, URL restoration, keyboard menus and header s
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/templates");
-  await expect(page.locator(".cd-results-count")).toContainText("41 templates");
+  await expect(page.locator(".cd-results-count")).toContainText("53 templates");
   await expect(
     page.locator(".cd-market-results .cd-template-card"),
   ).toHaveCount(12);
@@ -25,7 +25,7 @@ test("new category routes, filters, URL restoration, keyboard menus and header s
   await expect(
     page.locator(".cd-market-results .cd-template-grid"),
   ).toHaveClass(/cd-compact-grid/);
-  await page.getByRole("button", { name: "College 22", exact: true }).click();
+  await page.getByRole("button", { name: "College 26", exact: true }).click();
   await expect(
     page.locator(".cd-market-results .cd-template-card"),
   ).toHaveCount(12);
@@ -47,14 +47,14 @@ test("new category routes, filters, URL restoration, keyboard menus and header s
     page.getByRole("combobox", { name: "Sort templates" }),
   ).toHaveValue("az");
   await expect(page.locator(".cd-results-count")).toContainText(
-    "22 templates in College",
+    "26 templates in College",
   );
   const categoryCounts = {
-    college: 22,
-    corporate: 5,
-    business: 5,
-    healthcare: 3,
-    research: 3,
+    college: 26,
+    corporate: 7,
+    business: 9,
+    healthcare: 4,
+    research: 4,
     events: 3,
   };
   for (const [category, count] of Object.entries(categoryCounts)) {

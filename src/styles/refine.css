@@ -1462,9 +1462,6 @@
   font-weight: 600;
   letter-spacing: -0.038em;
 }
-.cd-fan-slide {
-  box-shadow: var(--cd-shadow-lift);
-}
 .cd-market-search {
   border-color: var(--cd-border);
   box-shadow: var(--cd-shadow-xs);
@@ -1512,8 +1509,6 @@
     max-height: calc(100vh - 100px);
     overflow-y: auto;
     overscroll-behavior: contain;
-    scrollbar-width: thin;
-    scrollbar-color: var(--cd-border-strong) transparent;
   }
 }
 .cd-review-card,
@@ -1680,5 +1675,54 @@
   }
   .cd-hint-short {
     display: inline;
+  }
+}
+
+/* ---------- Scrollbars ----------
+   One slim, rounded thumb everywhere: the page and every scrolling panel.
+   Chromium and Safari draw it with ::-webkit-scrollbar, which drops the
+   arrow buttons. Chrome ignores these rules on any element that sets
+   scrollbar-width or scrollbar-color, so don't set those in components;
+   `scrollbar-width: none` is still fine for hiding a scrollbar. Firefox gets
+   the standard properties instead. */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  min-width: 40px;
+  min-height: 40px;
+  border: 3px solid transparent;
+  border-radius: var(--cd-radius-pill);
+  background: var(--cd-scrollbar) padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  border-width: 2px;
+  background-color: var(--cd-scrollbar-hover);
+}
+::-webkit-scrollbar-thumb:active {
+  border-width: 2px;
+  background-color: var(--cd-scrollbar-active);
+}
+::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+.modal-fullscreen ::-webkit-scrollbar-thumb {
+  background-color: var(--cd-scrollbar-on-dark);
+}
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--cd-scrollbar) transparent;
+  }
+  .modal-fullscreen,
+  .modal-fullscreen * {
+    scrollbar-color: var(--cd-scrollbar-on-dark) transparent;
   }
 }

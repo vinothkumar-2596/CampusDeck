@@ -49,16 +49,8 @@
   min-width: 0;
   margin-top: calc(var(--shift) * var(--card-h) - var(--card-h) * 0.35);
 }
+/* HeroWall.tsx eases each column toward the pointer and scroll position. */
 .cd-wall-live .cd-wall-col {
-  transform: translate3d(
-    calc(var(--cd-px, 0) * var(--depth) * -12px),
-    calc(
-      var(--cd-py, 0) * var(--depth) * -8px - var(--cd-scroll, 0) *
-        var(--speed) * 1px
-    ),
-    0
-  );
-  transition: transform 0.9s var(--cd-ease-out);
   will-change: transform;
 }
 .cd-wall-col:nth-child(1),
@@ -109,10 +101,17 @@
   background: var(--cd-surface);
   box-shadow: var(--cd-shadow-slide);
   transition:
-    transform 0.35s var(--cd-ease-out),
-    box-shadow 0.35s var(--cd-ease-out),
-    opacity 0.3s var(--cd-ease-out);
+    transform 0.45s var(--cd-ease-pop),
+    box-shadow 0.45s var(--cd-ease-out),
+    opacity 0.45s var(--cd-ease-out);
   transform-origin: 50% 60%;
+}
+/* While the pointer drives a card (HeroWall.tsx), its transform is set every
+   frame, so only shadow and opacity transition; it stays on top until it has
+   settled back into the wall. */
+.cd-wall-card.is-live {
+  z-index: 2;
+  transition-property: box-shadow, opacity;
 }
 .cd-wall-card > div {
   overflow: hidden;
@@ -138,18 +137,20 @@
   opacity: 0;
   transform: translateY(4px);
   transition:
-    opacity 0.2s,
-    transform 0.2s;
+    opacity 0.25s var(--cd-ease-out),
+    transform 0.35s var(--cd-ease-pop);
   pointer-events: none;
 }
-/* Hover: the cover lifts and tilts toward the cursor (--cd-tx/--cd-ty are
-   -0.5..0.5, set while the pointer moves over it); the rest step back. */
+/* Hover: the cover lifts and leans toward the cursor (driven per frame in
+   HeroWall.tsx); keyboard focus gets the same lift without the lean. The
+   rest of the wall steps back. */
 .cd-wall-card:hover,
 .cd-wall-card:focus-visible {
   z-index: 2;
-  transform: perspective(900px) rotateX(calc(var(--cd-ty, 0) * -6deg))
-    rotateY(calc(var(--cd-tx, 0) * 8deg)) translateY(-4px) scale(1.03);
   box-shadow: var(--cd-shadow-lift);
+}
+.cd-wall-card:focus-visible:not(.is-live) {
+  transform: translateY(-4px) scale(1.03);
 }
 .cd-wall:has(.cd-wall-card:hover) .cd-wall-card:not(:hover) {
   opacity: 0.8;

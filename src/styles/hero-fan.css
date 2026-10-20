@@ -1,0 +1,151 @@
+/* Collection hero: a hand of real covers (HeroFan.tsx). Resting positions
+   match the original fan; --r is each card's resting angle, --spread-* where
+   it moves when the hand fans out, --from-* where it is dealt from. */
+.cd-fan-item {
+  position: absolute;
+  width: 56%;
+  will-change: transform;
+  /* Keeps a card on top while it settles back after hover. */
+  transition: z-index 0s linear 0.4s;
+}
+.cd-fan-item[data-fan="0"] {
+  --r: -6deg;
+  --spread-x: -18px;
+  --spread-y: -6px;
+  --spread-r: -3.5deg;
+  --from-x: 34%;
+  --from-y: 8%;
+  left: 0;
+  top: 12%;
+}
+.cd-fan-item[data-fan="1"] {
+  --r: 5deg;
+  --spread-x: 18px;
+  --spread-y: -12px;
+  --spread-r: 3.5deg;
+  --from-x: -34%;
+  --from-y: 16%;
+  right: 0;
+  top: 2%;
+}
+.cd-fan-item[data-fan="2"] {
+  --r: 0deg;
+  --spread-x: 0px;
+  --spread-y: 10px;
+  --spread-r: 0deg;
+  --from-x: 0%;
+  --from-y: -8%;
+  left: 19%;
+  bottom: 0;
+  z-index: 2;
+  width: 62%;
+}
+
+.cd-fan-card {
+  --x: 0px;
+  --y: 0px;
+  --turn: 0deg;
+  --s: 1;
+  display: block;
+  position: relative;
+  border-radius: 10px;
+  transform: translate3d(var(--x), var(--y), 0)
+    rotate(calc(var(--r) + var(--turn))) scale(var(--s));
+  transition:
+    transform 0.65s var(--cd-ease-pop),
+    opacity 0.45s var(--cd-ease-out),
+    filter 0.45s var(--cd-ease-out);
+}
+.cd-fan-card:focus-visible {
+  outline: 2px solid var(--cd-accent);
+  outline-offset: 5px;
+}
+.cd-fan-face {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--cd-surface);
+  box-shadow: var(--cd-shadow-lift);
+  transition: box-shadow 0.45s var(--cd-ease-out);
+}
+.cd-fan-face .slide-view {
+  display: block;
+}
+.cd-fan-name {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: var(--cd-radius-pill, 999px);
+  background: var(--cd-ink);
+  color: #fff;
+  font: 600 11.5px/1.5 var(--cd-font-sans);
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 0.25s var(--cd-ease-out),
+    transform 0.35s var(--cd-ease-pop);
+  pointer-events: none;
+}
+.cd-fan-card:hover .cd-fan-name,
+.cd-fan-card:focus-visible .cd-fan-name {
+  opacity: 1;
+  transform: none;
+}
+.cd-fan-item:has(.cd-fan-card:hover),
+.cd-fan-item:has(.cd-fan-card:focus-visible) {
+  z-index: 3;
+  transition-delay: 0s;
+}
+.cd-fan-card:hover .cd-fan-face,
+.cd-fan-card:focus-visible .cd-fan-face {
+  box-shadow:
+    0 0 0 1px rgba(15, 23, 42, 0.06),
+    0 34px 60px -26px rgba(15, 23, 42, 0.5);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* The hand fans apart while the pointer is over it. */
+  .cd-fan:hover .cd-fan-card {
+    --x: var(--spread-x);
+    --y: var(--spread-y);
+    --turn: var(--spread-r);
+  }
+  /* The chosen card comes forward and mostly straightens; the rest recede. */
+  .cd-fan .cd-fan-card:hover,
+  .cd-fan .cd-fan-card:focus-visible {
+    --y: calc(var(--spread-y) - 14px);
+    --turn: calc(var(--r) * -0.65);
+    --s: 1.05;
+  }
+  .cd-fan:has(.cd-fan-card:hover) .cd-fan-card:not(:hover) {
+    --s: 0.97;
+    opacity: 0.88;
+    filter: saturate(0.9);
+  }
+  /* Cards are dealt in from a neat stack, back cards first. */
+  @keyframes cd-fan-deal {
+    from {
+      opacity: 0;
+      translate: var(--from-x) var(--from-y);
+      rotate: calc(var(--r) * -1);
+      scale: 0.9;
+    }
+  }
+  .cd-fan-card {
+    animation: cd-fan-deal 0.9s var(--cd-ease-pop) backwards;
+    animation-delay: calc(120ms + var(--i, 0) * 110ms);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cd-fan-item,
+  .cd-fan-card,
+  .cd-fan-face,
+  .cd-fan-name {
+    transition: none;
+  }
+}

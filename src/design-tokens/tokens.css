@@ -136,6 +136,10 @@
   --cd-on-dark-hover: rgba(255, 255, 255, 0.12); /* On-dark outline hover */
   --cd-overlay: rgba(20, 38, 63, 0.55); /* Dialog backdrop, navy tint */
   --cd-error-bg: #fef3f2; /* Validation message fill */
+  --cd-scrollbar: var(--cd-border-strong); /* Scrollbar thumb at rest */
+  --cd-scrollbar-hover: var(--cd-text-muted); /* Scrollbar thumb on hover */
+  --cd-scrollbar-active: var(--cd-text-2); /* Scrollbar thumb while dragged */
+  --cd-scrollbar-on-dark: rgba(255, 255, 255, 0.28); /* Scrollbar thumb on navy */
 
   /* ---------- Motion ---------- */
   --cd-ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);

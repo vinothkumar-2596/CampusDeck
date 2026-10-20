@@ -154,13 +154,13 @@ test("catalogue filters, search, template details and missing templates", async 
   assert.equal(catalogue.length, allTemplates.length);
   assert.equal(
     catalogue.filter((t: { handoffId?: string }) => t.handoffId).length,
-    41,
+    53,
   );
   assert.equal(
     (await request("/templates?category=College")).body.filter(
       (t: { handoffId?: string }) => t.handoffId,
     ).length,
-    22,
+    26,
   );
   assert.ok(
     (await request("/templates?q=neural")).body.some(

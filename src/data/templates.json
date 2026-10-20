@@ -1,5 +1,5 @@
 {
-  "_note": "41 working presentation templates: the original 33 handoff designs plus 8 scenario-specific additions. Actual slide counts follow each content set's editable outline.",
+  "_note": "53 working presentation templates: the original 33 handoff designs, 8 scenario-specific additions and 12 designs across six reference-led families (Cobalt, Ultramarine, Prism, Bento, Meadow, Studio). Actual slide counts follow each content set’s editable outline.",
   "templates": [
     {
       "id": "meridian",
@@ -2337,6 +2337,723 @@
         "coverIndex": "01",
         "coverKpi": null,
         "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "cobalt",
+      "name": "Cobalt",
+      "category": "business",
+      "useCase": "Brand Launch Plan",
+      "requirement": "marketing",
+      "requirementLabel": "Marketing Plan",
+      "department": null,
+      "departmentLabel": null,
+      "style": "Bold",
+      "styleLabel": "Bold colour",
+      "colour": "Blue",
+      "slideCount": 14,
+      "popularity": 84,
+      "addedOn": "2026-10-20",
+      "premium": false,
+      "badge": "New",
+      "keywords": [
+        "brand",
+        "launch",
+        "marketing",
+        "startup",
+        "campaign",
+        "identity"
+      ],
+      "family": "cobalt",
+      "contentSet": "pitch",
+      "defaultTheme": 0,
+      "sample": {
+        "eyebrow": "Brand launch · 2026",
+        "title": "Nila Coffee\nBrand Launch",
+        "subtitle": "Go-to-market plan for a student-run campus coffee brand",
+        "team": [
+          "Kaaviya S",
+          "Harish V",
+          "Meera J",
+          "Aditya R"
+        ],
+        "guide": "Prof. Lakshmi Narayanan",
+        "department": "Campus Ventures",
+        "date": "November 2026",
+        "question": "Can a campus coffee brand win loyal regulars before it opens a second outlet?",
+        "problem": "Students want good coffee near campus, but every option is either pricey or forgettable.",
+        "problemPoints": [
+          "Cafés near campus charge Rs 180 or more per cup",
+          "Canteen coffee is cheap but builds no loyalty",
+          "No one serves the late-evening study crowd"
+        ],
+        "architecture": [
+          "Brand identity",
+          "Social launch",
+          "Campus ambassadors",
+          "Loyalty app",
+          "Second outlet"
+        ],
+        "coverIndex": null,
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "brandbook",
+      "name": "Brandbook",
+      "category": "college",
+      "useCase": "Technical Seminar",
+      "requirement": "seminar",
+      "requirementLabel": "Seminar",
+      "department": "cse",
+      "departmentLabel": "Computer Science",
+      "style": "Minimal",
+      "styleLabel": "Minimal",
+      "colour": "Blue",
+      "slideCount": 17,
+      "popularity": 72,
+      "addedOn": "2026-10-20",
+      "premium": false,
+      "badge": "New",
+      "keywords": [
+        "design system",
+        "ui",
+        "ux",
+        "components",
+        "seminar",
+        "figma"
+      ],
+      "family": "cobalt",
+      "contentSet": "acad",
+      "defaultTheme": 1,
+      "sample": {
+        "eyebrow": "Technical seminar · 2026–27",
+        "title": "Design Systems\nfor Scalable UI",
+        "subtitle": "Department of Computer Science and Engineering",
+        "team": [
+          "Kaaviya M",
+          "Sanjay P",
+          "Nivetha R",
+          "Gokul S"
+        ],
+        "guide": "Dr. R. Meenakshi",
+        "department": "Computer Science & Engineering",
+        "date": "January 2027",
+        "question": "How can one shared component library keep ten product teams visually consistent?",
+        "problem": "As apps grow, teams rebuild the same buttons and colours, so interfaces drift apart.",
+        "problemPoints": [
+          "Duplicate components with slightly different styles",
+          "Design files and code fall out of sync after every release",
+          "Accessibility fixes must be repeated on every screen"
+        ],
+        "architecture": [
+          "Design tokens",
+          "Core components",
+          "Patterns",
+          "Documentation",
+          "Governance"
+        ],
+        "coverIndex": null,
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "ultramarine",
+      "name": "Ultramarine",
+      "category": "corporate",
+      "useCase": "Strategy",
+      "requirement": "strategy",
+      "requirementLabel": "Strategy",
+      "department": null,
+      "departmentLabel": null,
+      "style": "Corporate",
+      "styleLabel": "Corporate",
+      "colour": "Blue",
+      "slideCount": 14,
+      "popularity": 82,
+      "addedOn": "2026-10-20",
+      "premium": false,
+      "badge": "New",
+      "keywords": [
+        "corporate",
+        "overview",
+        "company",
+        "profile",
+        "strategy",
+        "growth"
+      ],
+      "family": "ultramarine",
+      "contentSet": "corp",
+      "defaultTheme": 0,
+      "sample": {
+        "eyebrow": "Company Profile · FY 2026–27",
+        "title": "Corporate Overview 2026",
+        "subtitle": "Who we are, how we performed and where we invest next.",
+        "team": [
+          "Kaaviya Raman",
+          "Arjun Mehta",
+          "Sneha Iyer",
+          "Vikram Nair"
+        ],
+        "guide": "Board of Directors",
+        "department": "Vantara Industries",
+        "date": "October 2026",
+        "question": "Make services half of revenue by FY28 without adding fixed cost.",
+        "problem": "FY26 closed at 480 crore in revenue, with growth now led by services rather than hardware.",
+        "problemPoints": [
+          "Services revenue grew 31% while hardware stayed flat",
+          "Three regional offices opened on time and on budget",
+          "Customer retention held at 92% for a third year"
+        ],
+        "architecture": [
+          "Expand services",
+          "Digital platform",
+          "Regional hubs",
+          "Talent academy",
+          "Capital discipline"
+        ],
+        "coverIndex": "FY26",
+        "coverKpi": "480 Cr",
+        "coverKpiLabel": "Revenue in FY26, INR"
+      }
+    },
+    {
+      "id": "overview",
+      "name": "Overview",
+      "category": "business",
+      "useCase": "Pitch Deck",
+      "requirement": "pitch",
+      "requirementLabel": "Pitch Deck",
+      "department": null,
+      "departmentLabel": null,
+      "style": "Bold",
+      "styleLabel": "Bold colour",
+      "colour": "Blue",
+      "slideCount": 14,
+      "popularity": 76,
+      "addedOn": "2026-10-20",
+      "premium": false,
+      "badge": "New",
+      "keywords": [
+        "pitch",
+        "startup",
+        "investor",
+        "funding",
+        "seed",
+        "growth"
+      ],
+      "family": "ultramarine",
+      "contentSet": "pitch",
+      "defaultTheme": 1,
+      "sample": {
+        "eyebrow": "Seed Round · Investor Pitch",
+        "title": "FreshRoute: Cold Storage for Every Farm Town",
+        "subtitle": "Solar-powered cold rooms that cut post-harvest loss for small farmers.",
+        "team": [
+          "Kaaviya Sundar",
+          "Rohan Das",
+          "Meera Pillai",
+          "Aditya Rao"
+        ],
+        "guide": "Dr. Lakshmi Narayanan",
+        "department": "IIT Madras Incubation Cell",
+        "date": "Demo Day · November 2026",
+        "question": "What if every farm town had cold storage within 10 km?",
+        "problem": "A fifth of India's fruit and vegetables spoil after harvest, far from any cold storage.",
+        "problemPoints": [
+          "Most cold rooms are in cities, not in farm towns",
+          "Diesel-run storage is too costly for small farmers",
+          "Unsold produce is often dumped within two days"
+        ],
+        "architecture": [
+          "Solar cold room",
+          "IoT sensors",
+          "Booking app",
+          "Buyer network",
+          "Pay per crate"
+        ],
+        "coverIndex": "01",
+        "coverKpi": "7,800",
+        "coverKpiLabel": "Weekly active farmers"
+      }
+    },
+    {
+      "id": "prism",
+      "name": "Prism",
+      "category": "research",
+      "useCase": "Conference Talk",
+      "requirement": "conference",
+      "requirementLabel": "Conference Paper",
+      "department": null,
+      "departmentLabel": null,
+      "style": "Minimal",
+      "styleLabel": "Minimal",
+      "colour": "Plum",
+      "slideCount": 16,
+      "popularity": 82,
+      "addedOn": "2026-10-20",
+      "premium": false,
+      "badge": "New",
+      "keywords": [
+        "conference",
+        "research",
+        "talk",
+        "paper",
+        "battery",
+        "materials"
+      ],
+      "family": "prism",
+      "contentSet": "research",
+      "defaultTheme": 0,
+      "sample": {
+        "eyebrow": "Conference Paper · Session 2A",
+        "title": "Sodium-Ion Cathodes for Low-Cost Grid Storage",
+        "subtitle": "International Conference on Energy Materials 2026",
+        "team": [
+          "Kaaviya S",
+          "Rohan Mehta",
+          "Ananya Iyer",
+          "Siddharth Rao"
+        ],
+        "guide": "Dr. Meenakshi Raghavan",
+        "department": "Materials Science, IIT Madras",
+        "date": "November 2026",
+        "question": "Can sodium match lithium where cost matters more than weight?",
+        "problem": "Grid batteries still rely on lithium, whose price and supply swing sharply year to year.",
+        "problemPoints": [
+          "Lithium carbonate prices tripled within two years",
+          "Stationary storage does not need lithium's energy density",
+          "Sodium cathodes fade quickly over long cycling"
+        ],
+        "architecture": [
+          "Precursor synthesis",
+          "Layered oxide",
+          "Coin-cell assembly",
+          "Cycling tests",
+          "Post-mortem analysis"
+        ],
+        "coverIndex": "2A",
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "lumen",
+      "name": "Lumen",
+      "category": "college",
+      "useCase": "Literature Review",
+      "requirement": "research",
+      "requirementLabel": "Research",
+      "department": "cse",
+      "departmentLabel": "Computer Science",
+      "style": "Minimal",
+      "styleLabel": "Minimal",
+      "colour": "Blue",
+      "slideCount": 14,
+      "popularity": 74,
+      "addedOn": "2026-10-20",
+      "premium": false,
+      "badge": "New",
+      "keywords": [
+        "literature review",
+        "research",
+        "student",
+        "llm",
+        "code",
+        "survey"
+      ],
+      "family": "prism",
+      "contentSet": "literature-synthesis",
+      "defaultTheme": 1,
+      "sample": {
+        "eyebrow": "Literature Review · B.E. CSE",
+        "title": "Large Language Models for Code Review: A Survey of the Evidence",
+        "subtitle": "A structured review of tools, benchmarks and open gaps",
+        "team": [
+          "Kaaviya M",
+          "Harish V",
+          "Nithya P",
+          "Aravind K"
+        ],
+        "guide": "Dr. R. Lakshmi Priya",
+        "department": "Computer Science & Engineering",
+        "date": "February 2027",
+        "question": "Do LLM reviewers catch the defects that human reviewers miss?",
+        "problem": "Studies of AI code review use different benchmarks, so their headline results rarely compare.",
+        "problemPoints": [
+          "Benchmarks favour short, synthetic code changes",
+          "Few studies measure false alarms in real teams",
+          "Model versions change faster than papers publish"
+        ],
+        "architecture": [
+          "Search databases",
+          "Screen records",
+          "Extract evidence",
+          "Appraise quality",
+          "Synthesize gaps"
+        ],
+        "coverIndex": "01",
+        "coverKpi": null,
+        "coverKpiLabel": null
+      }
+    },
+    {
+      "id": "bento",
+      "name": "Bento",
+      "category": "corporate",
+      "useCase": "Annual Report",
+      "requirement": "annual",
+      "requirementLabel": "Annual Report",
+      "department": null,
+      "departmentLabel": null,
+      "style": "Corporate",
+      "styleLabel": "Corporate",
+      "colour": "Green",
+      "slideCount": 14,
+      "popularity": 84,
+      "addedOn": "2026-10-20",
+      "premium": false,
+      "badge": "New",
+      "keywords": [
+        "annual report",
+        "bento",
+        "investor",
+        "corporate",
+        "mint",
+        "modern"
+      ],
+      "family": "bento",
+      "contentSet": "corp",
+      "defaultTheme": 0,
+      "sample": {
+        "eyebrow": "Annual Report 2025–26",
+        "title": "Annual Report and Investor Presentation",
+        "subtitle": "Building a cleaner, better-connected mobility network for South India",
+        "team": [
+          "Kaaviya Raman",
+          "Rohan Iyer",
+          "Meera Pillai",
+          "Arvind Nair"
+        ],
+        "guide": "Board of Directors",
+        "department": "Kaveri Mobility Ltd",
+        "date": "October 2026",
+        "question": "Profitable growth, powered by a greener fleet.",
+        "problem": "Ridership grew 31% while the cost per kilometre fell for the first time in five years.",
+        "problemPoints": [
+          "Electric buses now make up 42% of the fleet",
+          "Operating margin improved by 3.4 points",
+          "New city partnerships signed in Kochi and Mysuru"
+        ],
+        "architecture": [
+          "Electrify",
+          "Connect",
+          "Digitise",
+          "Partner",
+          "Sustain"
+        ],
+        "coverIndex": null,
+        "coverKpi": "₹1,240 Cr",
+        "coverKpiLabel": "Revenue, FY 2025–26"
+      }
+    },
+    {
+      "id": "yearbook",
+      "name": "Yearbook",
+      "category": "college",
+      "useCase": "Hackathon Demo Day",
+      "requirement": "hackathon",
+      "requirementLabel": "Hackathon",
+      "department": "cse",
+      "departmentLabel": "Computer Science",
+      "style": "Bold",
+      "styleLabel": "Bold colour",
+      "colour": "Black",
+      "slideCount": 14,
+      "popularity": 78,
+      "addedOn": "2026-10-20",
+      "premium": false,
+      "badge": "New",
+      "keywords": [
+        "hackathon",
+        "demo day",
+        "pitch",
+        "bento",
+        "startup",
+        "lime"
+      ],
+      "family": "bento",
+      "contentSet": "pitch",
+      "defaultTheme": 1,
+      "sample": {
+        "eyebrow": "Demo Day · Team Kernel",
+        "title": "ParkSense: Smart Parking for Busy Campuses",
+        "subtitle": "48-hour build · Smart Cities track",
+        "team": [
+          "Kaaviya S",
+          "Harish V",
+          "Nandhini R",
+          "Adithya K"
+        ],
+        "guide": "Dr. Revathi M",
+        "department": "Computer Science & Engineering",
+        "date": "Smart India Hackathon 2026",
+        "question": "What if finding a parking spot took ten seconds, not ten minutes?",
+        "problem": "Students and staff lose up to 20 minutes a day circling full parking lots.",
+        "problemPoints": [
+          "Peak-hour lots are full by 9:10 am",
+          "No live view of free slots anywhere on campus",
+          "Circling cars add congestion near the gates"
+        ],
+        "architecture": [
+          "Camera feed",
+          "Slot detection",
+          "Live map",
+          "Smart alerts",
+          "Usage insights"
+        ],
+        "coverIndex": null,
+        "coverKpi": "48 hrs",
+        "coverKpiLabel": "From idea to working demo"
+      }
+    },
+    {
+      "id": "meadow",
+      "name": "Meadow",
+      "category": "healthcare",
+      "useCase": "Hospital Quality Improvement Report",
+      "requirement": "quality",
+      "requirementLabel": "Quality Report",
+      "department": null,
+      "departmentLabel": null,
+      "style": "Organic",
+      "styleLabel": "Organic",
+      "colour": "Green",
+      "slideCount": 14,
+      "popularity": 82,
+      "addedOn": "2026-10-20",
+      "premium": false,
+      "badge": "New",
+      "keywords": [
+        "hospital",
+        "quality improvement",
+        "patient experience",
+        "waiting time",
+        "outpatient",
+        "audit"
+      ],
+      "family": "meadow",
+      "contentSet": "health",
+      "defaultTheme": 0,
+      "sample": {
+        "eyebrow": "Quality improvement report · 2026",
+        "title": "Shorter Waits, Calmer Outpatient Care",
+        "subtitle": "How a six-month pilot redesigned triage and patient flow in the outpatient block",
+        "team": [
+          "Dr. Ananya Krishnan",
+          "Kaaviya S",
+          "Rahul Menon",
+          "Nithya P"
+        ],
+        "guide": "Dr. R. Venkatesan",
+        "department": "Department of Hospital Administration",
+        "date": "October 2026",
+        "question": "Can nurse-led triage cut outpatient waiting time by a third?",
+        "problem": "Outpatients waited 74 minutes on average, and most of that delay happened before triage.",
+        "problemPoints": [
+          "Token queues mixed new, review and urgent patients",
+          "Vitals were recorded twice, at the desk and in the clinic",
+          "Peak arrivals clustered between 9 and 11 am"
+        ],
+        "architecture": [
+          "Patient arrival",
+          "Digital token",
+          "Nurse triage",
+          "Consultation",
+          "Follow-up call"
+        ],
+        "coverIndex": "01",
+        "coverKpi": "−38%",
+        "coverKpiLabel": "Average outpatient waiting time after the six-month pilot"
+      }
+    },
+    {
+      "id": "wellspring",
+      "name": "Wellspring",
+      "category": "business",
+      "useCase": "Community Health Impact Report",
+      "requirement": "impact",
+      "requirementLabel": "Impact Report",
+      "department": null,
+      "departmentLabel": null,
+      "style": "Organic",
+      "styleLabel": "Organic",
+      "colour": "Green",
+      "slideCount": 14,
+      "popularity": 74,
+      "addedOn": "2026-10-20",
+      "premium": false,
+      "badge": "New",
+      "keywords": [
+        "nonprofit",
+        "community health",
+        "impact report",
+        "outreach",
+        "wellbeing",
+        "ngo"
+      ],
+      "family": "meadow",
+      "contentSet": "nonprofit-impact",
+      "defaultTheme": 1,
+      "sample": {
+        "eyebrow": "Annual impact review · 2026",
+        "title": "Healthy Villages, Stronger Families",
+        "subtitle": "A year of community health camps, home visits and follow-up care",
+        "team": [
+          "Meenakshi Raman",
+          "Kaaviya Suresh",
+          "Joseph Arul",
+          "Farhan Ali"
+        ],
+        "guide": "Arogya Trust advisory board",
+        "department": "Arogya Community Health Trust",
+        "date": "Annual review 2026",
+        "question": "Are home visits helping families manage chronic conditions between camps?",
+        "problem": "Health camps reached many people, but few families had support once the camp left the village.",
+        "problemPoints": [
+          "Blood pressure and sugar checks stopped after each camp",
+          "Nearest clinics are over an hour away by bus",
+          "Volunteers kept records in separate notebooks"
+        ],
+        "architecture": [
+          "Village camps",
+          "Screening",
+          "Home visits",
+          "Referral support",
+          "Follow-up records"
+        ],
+        "coverIndex": "01",
+        "coverKpi": "+1,200",
+        "coverKpiLabel": "Families supported with regular home visits this year"
+      }
+    },
+    {
+      "id": "studio",
+      "name": "Studio",
+      "category": "business",
+      "useCase": "Sales Proposal",
+      "requirement": "sales",
+      "requirementLabel": "Sales Proposal",
+      "department": null,
+      "departmentLabel": null,
+      "style": "Bold",
+      "styleLabel": "Bold colour",
+      "colour": "Plum",
+      "slideCount": 14,
+      "popularity": 84,
+      "addedOn": "2026-10-20",
+      "premium": false,
+      "badge": "New",
+      "keywords": [
+        "growth strategy",
+        "digital marketing",
+        "sales proposal",
+        "marketing plan",
+        "bento",
+        "agency"
+      ],
+      "family": "studio",
+      "contentSet": "strategy-workshop",
+      "defaultTheme": 0,
+      "sample": {
+        "eyebrow": "Growth proposal · sample",
+        "title": "How We Drive Growth in the Next 90 Days",
+        "subtitle": "A digital marketing and growth strategy proposal for Kaveri Organics",
+        "team": [
+          "Kaaviya R",
+          "Nikhil Varma",
+          "Sneha Iyer",
+          "Rohan Pillai"
+        ],
+        "guide": "Marketing leadership, Kaveri Organics",
+        "department": "Digital Marketing",
+        "date": "Q1 2027",
+        "question": "Which channel should carry our first growth experiment?",
+        "problem": "Paid campaigns bring visitors to the store, but too few of them return to buy a second time.",
+        "problemPoints": [
+          "Acquisition costs have risen faster than average order value",
+          "Most first-time buyers do not return within 90 days",
+          "Campaign data sits in separate tools with no shared view"
+        ],
+        "architecture": [
+          "Audit the funnel",
+          "Set targets",
+          "Choose channels",
+          "Run experiments",
+          "Scale what works"
+        ],
+        "coverIndex": "01",
+        "coverKpi": "38K",
+        "coverKpiLabel": "Illustrative monthly store visitors today"
+      }
+    },
+    {
+      "id": "momentum",
+      "name": "Momentum",
+      "category": "college",
+      "useCase": "Placement Portfolio",
+      "requirement": "portfolio",
+      "requirementLabel": "Placement Portfolio",
+      "department": "cse",
+      "departmentLabel": "Computer Science",
+      "style": "Bold",
+      "styleLabel": "Bold colour",
+      "colour": "Plum",
+      "slideCount": 14,
+      "popularity": 78,
+      "addedOn": "2026-10-20",
+      "premium": false,
+      "badge": "New",
+      "keywords": [
+        "placement portfolio",
+        "portfolio",
+        "placements",
+        "projects",
+        "interview",
+        "student"
+      ],
+      "family": "studio",
+      "contentSet": "placement-portfolio",
+      "defaultTheme": 1,
+      "sample": {
+        "eyebrow": "Placement portfolio · sample",
+        "title": "Shipping Useful Software, Backed by Evidence",
+        "subtitle": "Projects, decisions and results from four years of building",
+        "team": [
+          "Kaaviya S"
+        ],
+        "guide": "Dr. R. Lakshmi",
+        "department": "Computer Science & Engineering",
+        "date": "Placement season 2027",
+        "question": "Can I take a feature from a real user need to a tested, reliable release?",
+        "problem": "Hostel students track mess menus, laundry slots and notices across five separate WhatsApp groups.",
+        "problemPoints": [
+          "Important notices get buried under daily chatter",
+          "Laundry slots are double-booked several times a week",
+          "Wardens have no simple way to confirm who has read an update"
+        ],
+        "architecture": [
+          "User interviews",
+          "Design decision",
+          "Build",
+          "Test",
+          "Reflect"
+        ],
+        "coverIndex": "01",
+        "coverKpi": "1.2K",
+        "coverKpiLabel": "Illustrative monthly users of my campus app"
       }
     }
   ]

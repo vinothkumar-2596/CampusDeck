@@ -36,7 +36,7 @@ test("every published design downloads a real editable PowerPoint with its adver
       (t: { id: string; handoffId?: string; starter?: boolean }) =>
         t.handoffId === t.id && !t.starter,
     ),
-  ).toHaveLength(41);
+  ).toHaveLength(53);
   expect(
     templates.filter((t: { starter?: boolean }) => t.starter),
   ).toHaveLength(1);

@@ -20,6 +20,7 @@ import { makeDeck, type Template } from "../lib/model";
 import { Empty, Spinner } from "../components/Common";
 import { TemplateCard } from "../components/TemplateCard";
 import { MarketSearch } from "../components/MarketSearch";
+import { HeroFan } from "../components/HeroFan";
 import { AppRail, useWideLayout } from "../components/AppRail";
 import { SlideView } from "../components/SlideView";
 import {
@@ -598,13 +599,10 @@ export default function Explore() {
                 ))}
               </div>
             </div>
-            <div className="cd-market-slide-fan" aria-hidden="true">
-              {heroTemplates.map((t, index) => (
-                <div key={t.id} className={"cd-fan-slide cd-fan-" + index}>
-                  <ShowcaseSlide template={t} />
-                </div>
-              ))}
-            </div>
+            <HeroFan
+              templates={heroTemplates}
+              render={(t) => <ShowcaseSlide template={t} />}
+            />
           </div>
         </section>
         {fixedCategory && (

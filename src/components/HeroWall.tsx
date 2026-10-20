@@ -1,15 +1,14 @@
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  type CSSProperties,
-  type PointerEvent as ReactPointerEvent,
-} from "react";
+import { useEffect, useMemo, useRef, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
 import { useApp } from "../lib/context";
 import { makeDeck, type Template } from "../lib/model";
 import { listedTemplates, templateFamily } from "../lib/marketplace";
+import {
+  createFollower,
+  prefersReducedMotion,
+  tiltHandlers,
+} from "../lib/motion";
 import { SlideView } from "./SlideView";
 import "../styles/hero.css";
 
@@ -36,28 +35,18 @@ function pickCovers(templates: Template[], count: number) {
   return out;
 }
 
-const reducedMotion = () =>
-  typeof matchMedia === "function" &&
-  matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-/* A hovered cover tilts toward the cursor, at most a few degrees. */
-function tiltCard(event: ReactPointerEvent<HTMLAnchorElement>) {
-  if (event.pointerType !== "mouse" || reducedMotion()) return;
-  const card = event.currentTarget;
-  const box = card.getBoundingClientRect();
-  card.style.setProperty(
-    "--cd-tx",
-    ((event.clientX - box.left) / box.width - 0.5).toFixed(3),
-  );
-  card.style.setProperty(
-    "--cd-ty",
-    ((event.clientY - box.top) / box.height - 0.5).toFixed(3),
-  );
-}
-function settleCard(event: ReactPointerEvent<HTMLAnchorElement>) {
-  event.currentTarget.style.removeProperty("--cd-tx");
-  event.currentTarget.style.removeProperty("--cd-ty");
-}
+/* A hovered cover lifts and leans toward the cursor, at most a few degrees,
+   then eases back when the pointer leaves. */
+const tilt = tiltHandlers(
+  (card, tx, ty, lift) => {
+    card.classList.add("is-live");
+    card.style.transform = `perspective(900px) rotateX(${(-ty * 6).toFixed(2)}deg) rotateY(${(tx * 8).toFixed(2)}deg) translateY(${(-4 * lift).toFixed(2)}px) scale(${(1 + 0.03 * lift).toFixed(4)})`;
+  },
+  (card) => {
+    card.style.removeProperty("transform");
+    card.classList.remove("is-live");
+  },
+);
 
 export function HeroWall() {
   const { templates } = useApp();
@@ -72,32 +61,55 @@ export function HeroWall() {
     [templates, total],
   );
 
-  // Columns follow the pointer by a few pixels and drift at different speeds
-  // while the hero scrolls away. Work stops while the hero is off screen.
+  // Columns drift toward the pointer and rise at different speeds while the
+  // hero scrolls away. Both ease every frame (pointer slowly, scroll nearly at
+  // once) instead of restarting a CSS transition on each event.
   useEffect(() => {
     const hero = wall.current?.closest<HTMLElement>(".cd-wall-hero");
-    if (!hero || reducedMotion()) return;
-    let frame = 0;
-    let visible = true;
-    const set = (name: string, value: number) =>
-      hero.style.setProperty(name, value.toFixed(3));
-    const onScroll = () => {
-      if (frame || !visible) return;
-      frame = requestAnimationFrame(() => {
-        frame = 0;
-        const box = hero.getBoundingClientRect();
-        set("--cd-scroll", Math.min(1, Math.max(0, -box.top / box.height)));
+    if (!hero || !wall.current || prefersReducedMotion()) return;
+    const columns = [
+      ...wall.current.querySelectorAll<HTMLElement>(".cd-wall-col"),
+    ];
+    let depth: { depth: number; speed: number }[] = [];
+    const measure = () => {
+      depth = columns.map((column) => {
+        const style = getComputedStyle(column);
+        return {
+          depth: parseFloat(style.getPropertyValue("--depth")) || 1,
+          speed: parseFloat(style.getPropertyValue("--speed")) || 80,
+        };
       });
+    };
+    measure();
+    const motion = createFollower(3, [0.06, 0.06, 0.24], ([px, py, scroll]) =>
+      columns.forEach((column, i) => {
+        const { depth: d, speed } = depth[i];
+        column.style.transform = `translate3d(${(px * d * -12).toFixed(2)}px, ${(py * d * -8 - scroll * speed).toFixed(2)}px, 0)`;
+      }),
+    );
+    let visible = true;
+    const scrolled = () => {
+      const box = hero.getBoundingClientRect();
+      return Math.min(1, Math.max(0, -box.top / box.height));
+    };
+    const pointer = { x: 0, y: 0 };
+    const onScroll = () => {
+      if (visible) motion.to([pointer.x, pointer.y, scrolled()]);
     };
     const onMove = (event: PointerEvent) => {
       if (event.pointerType !== "mouse") return;
       const box = hero.getBoundingClientRect();
-      set("--cd-px", (event.clientX - box.left) / box.width - 0.5);
-      set("--cd-py", (event.clientY - box.top) / box.height - 0.5);
+      pointer.x = (event.clientX - box.left) / box.width - 0.5;
+      pointer.y = (event.clientY - box.top) / box.height - 0.5;
+      onScroll();
     };
     const onLeave = () => {
-      set("--cd-px", 0);
-      set("--cd-py", 0);
+      pointer.x = pointer.y = 0;
+      onScroll();
+    };
+    const onResize = () => {
+      measure();
+      motion.jump([pointer.x, pointer.y, scrolled()]);
     };
     const observer =
       typeof IntersectionObserver === "function"
@@ -108,17 +120,20 @@ export function HeroWall() {
         : null;
     observer?.observe(hero);
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize);
     hero.addEventListener("pointermove", onMove);
     hero.addEventListener("pointerleave", onLeave);
     hero.classList.add("cd-wall-live");
-    onScroll();
+    motion.jump([0, 0, scrolled()]);
     return () => {
-      cancelAnimationFrame(frame);
+      motion.stop();
       observer?.disconnect();
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
       hero.removeEventListener("pointermove", onMove);
       hero.removeEventListener("pointerleave", onLeave);
       hero.classList.remove("cd-wall-live");
+      columns.forEach((column) => column.style.removeProperty("transform"));
     };
   }, []);
 
@@ -138,8 +153,7 @@ export function HeroWall() {
               className="cd-wall-card"
               to={`/templates/${template.id}`}
               style={{ "--cd-i": column + row * 2 } as CSSProperties}
-              onPointerMove={tiltCard}
-              onPointerLeave={settleCard}
+              {...tilt}
             >
               <div aria-hidden="true">
                 <SlideView

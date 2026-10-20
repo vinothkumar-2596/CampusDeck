@@ -84,8 +84,10 @@ export function CanvasEditor({
     setHover(null);
   }, [slide.id]);
   // Regions are rebuilt after every edit; follow-up edits (a new point, the
-  // previous point after a merge) start once their region exists.
-  useEffect(() => {
+  // previous point after a merge) start once their region exists. A layout
+  // effect switches before the next keystroke arrives, so fast typing after
+  // Enter lands in the new point.
+  useLayoutEffect(() => {
     const next = pending.current;
     if (!next) return;
     pending.current = null;
