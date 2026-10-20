@@ -59,9 +59,10 @@ test("homepage hero shows a wall of real template covers that open their templat
   await expect(page).toHaveURL(/\/templates$/);
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
-  expect(
-    await page.locator(".cd-wall-card:visible").count(),
-  ).toBeGreaterThanOrEqual(6);
+  // Covers render once the catalogue loads, so wait rather than count once.
+  await expect
+    .poll(() => page.locator(".cd-wall-card:visible").count())
+    .toBeGreaterThanOrEqual(6);
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= window.innerWidth,
@@ -84,6 +85,13 @@ test("blank creation starts truly empty, survives guest reload, and exports edit
   await expect(
     page.getByRole("heading", { name: "What will you create?", exact: true }),
   ).toBeVisible();
+  // First visits open the tutorial as a lightbox; skipping it clears the way.
+  const tour = page.getByRole("dialog", {
+    name: "How your document becomes slides",
+  });
+  await expect(tour).toBeVisible();
+  await tour.getByRole("button", { name: "Skip tutorial", exact: true }).click();
+  await expect(tour).toHaveCount(0);
   await expect(
     page.getByRole("link", { name: "Browse all templates", exact: true }),
   ).toHaveAttribute("href", "/templates");
@@ -216,5 +224,76 @@ test("blank creation starts truly empty, survives guest reload, and exports edit
   expect((await downloadEditor(page, "pdf")).subarray(0, 5).toString()).toBe(
     "%PDF-",
   );
+  expect(errors).toEqual([]);
+});
+
+test("new visitors get the tutorial as a lightbox, and once skipped it stays on the page", async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto("/create");
+  const tour = page.getByRole("dialog", {
+    name: "How your document becomes slides",
+  });
+  await expect(tour).toBeVisible();
+  await expect(tour.getByText("Step 1 of 6")).toBeVisible();
+  await expect(tour.locator(".cd-learn-stage .slide-view")).toHaveAttribute(
+    "aria-label",
+    "Why it matters",
+  );
+  await tour.getByRole("button", { name: "Next", exact: true }).click();
+  await expect(tour.getByRole("tab", { name: /^Steps/ })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
+  await tour.getByRole("button", { name: "Next", exact: true }).click();
+  await expect(tour.getByText("Step 3 of 6")).toBeVisible();
+  await expect(tour.locator(".cd-learn-stage .slide-view")).toHaveAttribute(
+    "aria-label",
+    "Results",
+  );
+  await tour.getByRole("button", { name: "Back", exact: true }).click();
+  await expect(tour.getByText("Step 2 of 6")).toBeVisible();
+  // The last step offers the sample report or a start.
+  await tour.getByRole("tab", { name: /^Questions/ }).click();
+  await expect(tour.getByRole("button", { name: "Start creating" })).toBeVisible();
+  await expect(tour.getByRole("button", { name: "Next", exact: true })).toHaveCount(0);
+  await tour.getByRole("tab", { name: /^Numbers/ }).click();
+
+  await tour.getByRole("button", { name: "Skip tutorial", exact: true }).click();
+  await expect(tour).toHaveCount(0);
+  // The tutorial is still on the page, showing the step the visitor reached.
+  const inline = page.locator("section.cd-learn");
+  await expect(inline.getByRole("tab", { name: /^Numbers/ })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
+  await expect(inline.locator(".cd-learn-stage .slide-view")).toHaveAttribute(
+    "aria-label",
+    "Results",
+  );
+  await page
+    .getByRole("button", { name: "Start blank presentation", exact: true })
+    .scrollIntoViewIfNeeded();
+  await expect(
+    page.getByRole("button", { name: "Start blank presentation", exact: true }),
+  ).toBeEnabled();
+
+  // Returning visitors aren't interrupted again.
+  await page.reload();
+  await expect(
+    page.getByRole("heading", { name: "What will you create?", exact: true }),
+  ).toBeVisible();
+  await expect(inline.getByRole("tab", { name: /^Headings/ })).toBeVisible();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+
+  // "Start creating" on the last step closes it the same way.
+  await page.evaluate(() => localStorage.removeItem("cd-create-tour-seen"));
+  await page.reload();
+  await expect(tour).toBeVisible();
+  await tour.getByRole("tab", { name: /^Questions/ }).click();
+  await tour.getByRole("button", { name: "Start creating" }).click();
+  await expect(tour).toHaveCount(0);
   expect(errors).toEqual([]);
 });
