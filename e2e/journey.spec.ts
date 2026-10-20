@@ -251,11 +251,21 @@ test("mobile browsing, filtering, preview and responsive editor have no horizont
     .first()
     .click();
   await page.getByRole("button", { name: /^Filters/ }).click();
-  await page.getByRole("checkbox", { name: /^Minimal/ }).click();
-  await expect(page.getByRole("checkbox", { name: /^Minimal/ })).toBeChecked();
+  // The facet count beside the option is the number the filter must return,
+  // so the check holds as templates are added (the grid pages at 12).
+  const minimal = page.getByRole("checkbox", { name: /^Minimal/ });
+  const facet = Number(
+    (await minimal.locator("xpath=..").locator("small").innerText()).trim(),
+  );
+  expect(facet).toBeGreaterThan(0);
+  await minimal.click();
+  await expect(minimal).toBeChecked();
+  await expect(page.locator(".cd-results-count")).toContainText(
+    `${facet} template`,
+  );
   await expect(
     page.locator(".cd-market-results .cd-template-card"),
-  ).toHaveCount(9);
+  ).toHaveCount(Math.min(facet, 12));
   await page.getByRole("button", { name: /^Filters/ }).click();
   await page.screenshot({
     path: "artifacts/explore-mobile.png",

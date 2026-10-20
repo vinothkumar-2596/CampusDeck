@@ -5,6 +5,7 @@ import {
   ArrowUpRight,
   Bookmark,
   Clock,
+  Compass,
   Copy,
   Download,
   FileSliders,
@@ -19,7 +20,6 @@ import {
   Search,
   Settings,
   ShieldCheck,
-  ShoppingBag,
   Trash2,
 } from "lucide-react";
 import { useApp } from "../lib/context";
@@ -33,6 +33,8 @@ import {
 } from "../lib/model";
 import { Empty, Modal, Spinner, TemplateCard } from "../components/Common";
 import { SlideView } from "../components/SlideView";
+import { AppRail } from "../components/AppRail";
+import "../styles/workspace.css";
 import { Field, FormRow } from "../components/Fields";
 type DownloadRecord = {
   id: string;
@@ -47,6 +49,13 @@ const date = (value: string) =>
     month: "short",
     year: "numeric",
   });
+const knownTabs = [
+  "presentations",
+  "saved",
+  "downloads",
+  "profile",
+  "settings",
+];
 export default function Workspace() {
   const {
       user,
@@ -60,7 +69,9 @@ export default function Workspace() {
     } = useApp(),
     navigate = useNavigate(),
     [params, setParams] = useSearchParams(),
-    tab = params.get("tab") || "overview";
+    tab = knownTabs.includes(params.get("tab") || "")
+      ? params.get("tab")!
+      : "overview"; // unknown or retired tabs (e.g. ?tab=purchases) land on the overview
   const [projects, setProjects] = useState<Deck[]>([]),
     [downloads, setDownloads] = useState<DownloadRecord[]>([]),
     [profile, setProfile] = useState<Profile>({ ...blankProfile }),
@@ -94,6 +105,13 @@ export default function Workspace() {
   useEffect(() => {
     void load();
   }, [user?.id]);
+  // On narrow screens the section links become a scrolling row; keep the
+  // current one in view.
+  useEffect(() => {
+    document
+      .querySelector(".workspace-layout .app-nav .active")
+      ?.scrollIntoView({ block: "nearest", inline: "nearest" });
+  }, [tab, fetching]);
   const act = async (key: string, fn: () => Promise<void>) => {
     setBusy(key);
     try {
@@ -126,9 +144,30 @@ export default function Workspace() {
     ["saved", "Saved templates", Bookmark],
     ["downloads", "Downloads", Download],
     ["profile", "Academic profile", GraduationCap],
-    ["purchases", "Purchases", ShoppingBag],
     ["settings", "Account", Settings],
   ] as const;
+  const sections = [
+    ["Workspace", ["overview", "presentations", "downloads"]],
+    ["Templates", ["saved"]],
+    ["You", ["profile", "settings"]],
+  ] as const;
+  const railSection =
+    tab === "saved"
+      ? "saved"
+      : tab === "profile"
+        ? "profile"
+        : tab === "settings"
+          ? "settings"
+          : "home";
+  const counts: Record<string, number> = {
+    presentations: projects.length,
+    downloads: downloads.length,
+    saved: saved.length,
+  };
+  const open = (id: string) => {
+    setParams(id === "overview" ? {} : { tab: id });
+    setQuery("");
+  };
   const visibleProjects = projects.filter((d) =>
     d.title.toLowerCase().includes(query.toLowerCase()),
   );
@@ -255,46 +294,70 @@ export default function Workspace() {
       />
     );
   return (
-    <div className="workspace-layout container">
-      <aside className="workspace-sidebar">
-        <div className="workspace-user">
-          <span className="avatar">{user.name.charAt(0).toUpperCase()}</span>
-          <div>
-            <strong>{user.name}</strong>
-            <small>Your creative space</small>
+    <div className="app-shell workspace-layout">
+      <aside className="app-sidebar" aria-label="Workspace sidebar">
+        <AppRail active={railSection} />
+        <div className="app-panel">
+          <div className="app-panel-user">
+            <span className="avatar">{user.name.charAt(0).toUpperCase()}</span>
+            <div>
+              <strong>{user.name.split(" ")[0]}’s workspace</strong>
+              <small>
+                {user.role === "admin"
+                  ? "Administrator"
+                  : "Your creative space"}
+              </small>
+            </div>
           </div>
-        </div>
-        <nav aria-label="Workspace">
-          {tabs.map(([id, label, Icon]) => (
-            <button
-              key={id}
-              className={tab === id ? "active" : ""}
-              onClick={() => {
-                setParams(id === "overview" ? {} : { tab: id });
-                setQuery("");
-              }}
-            >
-              <Icon size={18} />
-              {label}
-              {id === "presentations" && <small>{projects.length}</small>}
-            </button>
-          ))}
-          {user.role === "admin" && (
-            <Link to="/admin">
-              <ShieldCheck size={18} />
-              Administration
+          <nav className="app-nav" aria-label="Workspace">
+            <Link to="/create" className="app-create">
+              <Plus size={17} />
+              Create new
             </Link>
-          )}
-        </nav>
-        <div className="workspace-sidebar-note">
-          <span className="powerpoint-icon">P</span>
-          <p>
-            A little head start.
-            <br />A lot of possibility.
-          </p>
-          <Link to="/explore">
-            Find your next design <ArrowUpRight size={14} />
-          </Link>
+            {sections.map(([heading, ids]) => (
+              <div className="app-nav-group" key={heading}>
+                <span className="app-nav-heading">{heading}</span>
+                {tabs
+                  .filter(([id]) => (ids as readonly string[]).includes(id))
+                  .map(([id, label, Icon]) => (
+                    <button
+                      key={id}
+                      className={tab === id ? "active" : ""}
+                      aria-current={tab === id ? "page" : undefined}
+                      onClick={() => open(id)}
+                    >
+                      <Icon size={17} />
+                      {label}
+                      {counts[id] !== undefined && (
+                        <small aria-hidden="true">{counts[id]}</small>
+                      )}
+                    </button>
+                  ))}
+                {heading === "Templates" && (
+                  <Link to="/templates">
+                    <Compass size={17} />
+                    Explore templates
+                  </Link>
+                )}
+                {heading === "You" && user.role === "admin" && (
+                  <Link to="/admin">
+                    <ShieldCheck size={17} />
+                    Administration
+                  </Link>
+                )}
+              </div>
+            ))}
+          </nav>
+          <div className="app-panel-note">
+            <span className="powerpoint-icon">P</span>
+            <p>
+              A little head start.
+              <br />A lot of possibility.
+            </p>
+            <Link to="/templates">
+              Find your next design <ArrowUpRight size={14} />
+            </Link>
+          </div>
         </div>
       </aside>
       <section className="workspace-main">
@@ -563,17 +626,6 @@ export default function Workspace() {
                 </button>
               </form>
             )}
-            {tab === "purchases" && (
-              <Empty
-                title="No purchases yet."
-                description="The launch collection is free. Premium purchases are not enabled, and no payment information is collected."
-                action={
-                  <Link className="btn btn-primary" to="/explore">
-                    Explore the free collection
-                  </Link>
-                }
-              />
-            )}{" "}
             {tab === "settings" && (
               <div className="settings-card">
                 <h2>Your account</h2>

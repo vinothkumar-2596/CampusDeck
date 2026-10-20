@@ -1,0 +1,62 @@
+/* Workspace on the shared app shell (app-shell.css). Below 1000px the rail
+   drops away and the panel's links become a scrolling tab row. */
+
+/* Older .workspace-layout rules in design-system.css add page padding. */
+.app-shell.workspace-layout {
+  padding: 0;
+}
+
+.workspace-layout .workspace-main {
+  width: 100%;
+  max-width: calc(1080px + 2 * var(--cd-space-12));
+  padding: var(--cd-space-10) var(--cd-space-12) var(--cd-space-18);
+}
+
+@media (max-width: 1000px) {
+  .app-shell.workspace-layout {
+    display: block;
+    min-height: 0;
+  }
+
+  .workspace-layout > .app-sidebar {
+    position: static;
+    display: block;
+    height: auto;
+  }
+
+  .workspace-layout .app-rail,
+  .workspace-layout .app-panel-user,
+  .workspace-layout .app-panel-note,
+  .workspace-layout .app-nav-heading,
+  .workspace-layout .app-nav > .app-create {
+    display: none;
+  }
+
+  .workspace-layout .app-panel {
+    overflow: visible;
+    padding: var(--cd-space-3) var(--cd-gutter);
+    border-right: 0;
+    border-bottom: 1px solid var(--cd-border);
+  }
+
+  .workspace-layout .app-nav {
+    flex-direction: row;
+    gap: 2px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .workspace-layout .app-nav-group {
+    display: contents;
+  }
+
+  .workspace-layout .app-nav-group > :is(button, a) {
+    flex: none;
+    white-space: nowrap;
+  }
+
+  .workspace-layout .workspace-main {
+    max-width: none;
+    padding: var(--cd-space-6) var(--cd-gutter) var(--cd-space-14);
+  }
+}

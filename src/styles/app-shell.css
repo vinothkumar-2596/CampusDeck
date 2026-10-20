@@ -1,0 +1,287 @@
+/* App shell: an app-style two-tier sidebar (icon rail + section panel) pinned
+   under the site header, flush to the left edge, with the page beside it.
+   Shared by the workspace and the template catalogue. Token-only. */
+
+.app-shell {
+  --app-top: 65px; /* site header: 64px + 1px hairline */
+  --app-rail: 76px;
+  --app-panel: 256px;
+  display: grid;
+  grid-template-columns: calc(var(--app-rail) + var(--app-panel)) minmax(0, 1fr);
+  min-height: calc(100vh - var(--app-top));
+  background: var(--cd-surface);
+}
+
+.app-shell > .app-sidebar {
+  position: sticky;
+  top: var(--app-top);
+  align-self: start;
+  display: grid;
+  grid-template-columns: var(--app-rail) var(--app-panel);
+  height: calc(100vh - var(--app-top));
+}
+
+/* ---- Rail ---------------------------------------------------------------- */
+
+.app-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--cd-space-1);
+  padding: var(--cd-space-4) 0;
+  background: var(--cd-subtle);
+  border-right: 1px solid var(--cd-border);
+}
+
+.app-rail-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  width: 62px;
+  padding: 8px 0 9px;
+  border-radius: var(--cd-radius-lg);
+  color: var(--cd-text-nav);
+  font: 500 11px/1.2 var(--cd-font-sans);
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+
+.app-rail-item > span {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 24px;
+  color: var(--cd-text-strong);
+  transition: color 0.15s ease;
+}
+
+.app-rail-item:hover {
+  background: var(--cd-hover);
+  color: var(--cd-ink);
+}
+
+.app-rail-item:hover > span {
+  color: var(--cd-ink);
+}
+
+/* The whole tile (icon + label) carries the selection, as in app sidebars. */
+.app-rail-item.active {
+  background: var(--cd-accent-tint);
+  box-shadow: inset 0 0 0 1px var(--cd-selection);
+  color: var(--cd-ink);
+  font-weight: 600;
+}
+
+.app-rail-item.active > span {
+  color: var(--cd-accent);
+}
+
+.app-rail-item:focus-visible,
+.app-rail-avatar:focus-visible {
+  outline: none;
+}
+
+.app-rail-item:focus-visible,
+.app-rail-avatar:focus-visible .avatar {
+  box-shadow: var(--cd-focus-ring);
+}
+
+.app-rail-avatar,
+.app-rail-signin {
+  margin-top: auto;
+}
+
+.app-rail-avatar {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  padding-top: var(--cd-space-3);
+  border-top: 1px solid var(--cd-border);
+}
+
+.app-rail-avatar .avatar {
+  width: 34px;
+  height: 34px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* ---- Panel --------------------------------------------------------------- */
+
+.app-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--cd-space-4) var(--cd-space-3);
+  background: var(--cd-bg);
+  border-right: 1px solid var(--cd-border);
+}
+
+.app-panel-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px var(--cd-space-2) var(--cd-space-4);
+}
+
+.app-panel-user .avatar {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.app-panel-user div {
+  min-width: 0;
+}
+
+.app-panel-user strong {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--cd-ink);
+  font-size: var(--cd-text-small);
+  font-weight: 600;
+}
+
+.app-panel-user small {
+  display: block;
+  margin-top: 2px;
+  color: var(--cd-text-2);
+  font-size: var(--cd-text-label);
+}
+
+.app-nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.app-nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--cd-space-3) 0;
+  border-top: 1px solid var(--cd-border);
+}
+
+.app-nav-heading {
+  padding: 2px 10px 6px;
+  color: var(--cd-ink);
+  font-size: var(--cd-text-body);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.app-nav > a,
+.app-nav-group > button,
+.app-nav-group > a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 38px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--cd-radius-md);
+  background: transparent;
+  color: var(--cd-text-strong);
+  font: 500 var(--cd-text-ui) / 1.2 var(--cd-font-sans);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.app-nav svg {
+  flex: none;
+  color: var(--cd-text-2);
+}
+
+.app-nav > a:hover,
+.app-nav-group > :is(button, a):hover {
+  background: var(--cd-hover);
+  color: var(--cd-ink);
+}
+
+.app-nav-group > .active {
+  background: var(--cd-accent-tint);
+  color: var(--cd-ink);
+  font-weight: 600;
+}
+
+.app-nav-group > .active svg {
+  color: var(--cd-accent);
+}
+
+.app-nav > a:focus-visible,
+.app-nav-group > :is(button, a):focus-visible {
+  outline: none;
+  box-shadow: var(--cd-focus-ring);
+}
+
+.app-nav-group small {
+  margin-left: auto;
+  min-width: 22px;
+  padding: 1px 7px;
+  border-radius: var(--cd-radius-pill);
+  background: var(--cd-hover);
+  color: var(--cd-text-2);
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.app-nav-group > .active small {
+  background: var(--cd-surface);
+  color: var(--cd-accent);
+}
+
+/* "Create new" leads the list, like a primary entry rather than a button. */
+.app-nav > .app-create {
+  margin-bottom: var(--cd-space-3);
+  color: var(--cd-ink);
+  font-weight: 600;
+}
+
+.app-nav > .app-create svg {
+  color: var(--cd-accent);
+}
+
+.app-panel-note {
+  margin-top: var(--cd-space-2);
+  padding: var(--cd-space-4);
+  border: 1px dashed var(--cd-border-strong);
+  border-radius: var(--cd-radius-lg);
+  color: var(--cd-text-2);
+  font-size: var(--cd-text-small);
+  line-height: 1.5;
+}
+
+.app-panel-note .powerpoint-icon {
+  width: 24px;
+  height: 28px;
+  font-size: 14px;
+}
+
+.app-panel-note p {
+  margin: var(--cd-space-3) 0 0;
+  color: var(--cd-text-2);
+  font-size: var(--cd-text-small);
+}
+
+.app-panel-note a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: var(--cd-space-2);
+  color: var(--cd-accent);
+  font-size: var(--cd-text-small);
+  font-weight: 500;
+}
+
+.app-panel-note a:hover {
+  color: var(--cd-link-hover);
+}

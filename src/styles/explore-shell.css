@@ -1,0 +1,145 @@
+/* Template catalogue on the shared app shell (app-shell.css). On wide screens
+   the filters live in the side panel, Gamma-style; below 1200px the page
+   falls back to the inline filter column and the "Filters" drawer. */
+
+/* Collapsible filter legends (all widths). */
+.cd-market-filters legend {
+  width: 100%;
+}
+
+.cd-filter-legend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.cd-filter-legend svg {
+  flex: none;
+  color: var(--cd-text-2);
+  transform: rotate(180deg);
+  transition: transform 0.15s ease;
+}
+
+.cd-filter-closed .cd-filter-legend svg {
+  transform: none;
+}
+
+.cd-market-filters .cd-filter-closed legend {
+  margin-bottom: 0;
+}
+
+.cd-filter-legend:focus-visible {
+  outline: none;
+  border-radius: var(--cd-radius-xs);
+  box-shadow: var(--cd-focus-ring);
+}
+
+/* ---- In the side panel --------------------------------------------------- */
+
+.cd-market-shell .cd-market-layout {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.app-nav-group > .app-nav-sub {
+  min-height: 34px;
+  padding-left: 37px; /* aligns with the parent item's label */
+  font-size: var(--cd-text-small);
+}
+
+/* The panel scrolls as one; drop the catalogue column's own sticky scroller. */
+.app-panel .cd-market-filters {
+  position: static;
+  max-height: none;
+  overflow: visible;
+  padding: var(--cd-space-3) 0 0;
+  border-top: 1px solid var(--cd-border);
+  border-right: 0;
+}
+
+.app-panel .cd-filter-heading {
+  margin: 0 0 var(--cd-space-1);
+  padding: 2px 10px 6px;
+}
+
+.app-panel .cd-filter-heading h3 {
+  color: var(--cd-ink);
+  font-size: var(--cd-text-body);
+  letter-spacing: -0.01em;
+}
+
+.app-panel .cd-filter-heading h3 svg {
+  display: none;
+}
+
+.app-panel .cd-filter-heading button {
+  font-size: var(--cd-text-small);
+  font-weight: 500;
+}
+
+.app-panel .cd-market-filters fieldset {
+  margin: 0;
+  padding: 0 0 var(--cd-space-2);
+  border-bottom: 0;
+}
+
+.app-panel .cd-market-filters legend {
+  margin-bottom: 2px;
+}
+
+.app-panel .cd-filter-legend {
+  min-height: 36px;
+  padding: 0 10px;
+  border-radius: var(--cd-radius-md);
+  color: var(--cd-ink);
+  font-size: var(--cd-text-ui);
+  font-weight: 600;
+}
+
+.app-panel .cd-filter-legend:hover {
+  background: var(--cd-hover);
+}
+
+.app-panel .cd-filter-option {
+  min-height: 34px;
+  padding: 0 10px;
+  border-radius: var(--cd-radius-md);
+  color: var(--cd-text-strong);
+  font-size: var(--cd-text-small);
+}
+
+.app-panel .cd-filter-option:hover {
+  background: var(--cd-hover);
+  color: var(--cd-ink);
+}
+
+.app-panel .cd-filter-option:has(input:checked) {
+  color: var(--cd-ink);
+  font-weight: 600;
+}
+
+.app-panel .cd-colour-options {
+  gap: 10px;
+  padding: 4px 10px 6px;
+}
+
+.app-panel .cd-colour-swatch {
+  width: 26px;
+  height: 26px;
+}
+
+.app-panel .cd-filter-note {
+  margin-top: var(--cd-space-2);
+  padding: var(--cd-space-4);
+  border: 1px dashed var(--cd-border-strong);
+  border-radius: var(--cd-radius-lg);
+  background: transparent;
+}
