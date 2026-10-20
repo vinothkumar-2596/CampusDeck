@@ -83,6 +83,20 @@
   font-weight: 100 900;
   font-display: swap;
 }
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-latin-wght-normal.woff2")
+    format("woff2");
+  font-weight: 200 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: "DM Sans";
+  src: url("@fontsource-variable/dm-sans/files/dm-sans-latin-wght-normal.woff2")
+    format("woff2");
+  font-weight: 100 1000;
+  font-display: swap;
+}
 
 :root,
 html[data-theme="dark"] {

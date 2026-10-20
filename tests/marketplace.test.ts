@@ -12,15 +12,15 @@ import {
 import taxonomy from "../src/data/taxonomy.json" with { type: "json" };
 import templateData from "../src/data/templates.json" with { type: "json" };
 
-test("the catalogue exposes 41 real templates with accurate category counts", () => {
+test("the catalogue exposes 53 real templates with accurate category counts", () => {
   const visible = listedTemplates(allTemplates);
-  assert.equal(visible.length, 41);
+  assert.equal(visible.length, 53);
   for (const [category, count] of Object.entries({
-    college: 22,
-    corporate: 5,
-    business: 5,
-    healthcare: 3,
-    research: 3,
+    college: 26,
+    corporate: 7,
+    business: 9,
+    healthcare: 4,
+    research: 4,
     events: 3,
   })) {
     assert.equal(
@@ -44,12 +44,12 @@ test("scenario additions have valid filter metadata and can be found by their re
   for (const [category, requirement, expected] of [
     ["college", "capstone", "prospectus"],
     ["college", "lab", "benchwork"],
-    ["college", "portfolio", "portfolio"],
+    ["college", "portfolio", "portfolio,momentum"],
     ["college", "visit", "site-notes"],
-    ["business", "impact", "ripple"],
+    ["business", "impact", "ripple,wellspring"],
   ]) {
     const filter = readMarketFilters(new URLSearchParams({cat: category, use: requirement}));
-    assert.deepEqual(templates.filter((t) => categoryFor(t) === category && matchesFilters(t, filter)).map((t) => t.id), [expected]);
+    assert.deepEqual(templates.filter((t) => categoryFor(t) === category && matchesFilters(t, filter)).map((t) => t.id), expected.split(","));
   }
   assert.ok(templates.some((t) => t.id === "synthesis" && matchesSearch(t, "literature review")));
   assert.ok(templates.some((t) => t.id === "compass" && matchesSearch(t, "strategy workshop")));

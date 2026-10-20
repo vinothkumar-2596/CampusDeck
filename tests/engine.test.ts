@@ -209,10 +209,10 @@ test("PDF rejects unsupported top labels and highlighted questions, while PPTX p
   }
 });
 
-test("41 working designs cover 12 families with honest counts and compatible legacy snapshots", () => {
-  assert.equal(handoffTemplates.length, 41);
-  assert.equal(new Set(handoffTemplates.map((t) => t.familyKey)).size, 12);
-  assert.equal(designFamilies.length, 12);
+test("53 working designs cover 18 families with honest counts and compatible legacy snapshots", () => {
+  assert.equal(handoffTemplates.length, 53);
+  assert.equal(new Set(handoffTemplates.map((t) => t.familyKey)).size, 18);
+  assert.equal(designFamilies.length, 18);
   assert.equal(
     new Set(allTemplates.map((t) => t.id)).size,
     allTemplates.length,
@@ -240,7 +240,7 @@ test("41 working designs cover 12 families with honest counts and compatible leg
   assert.ok(handoffTemplates.find((t) => t.id === "vital")!.handoffId);
 });
 
-test("all 36 family themes resolve dark/light frames, typefaces and independent editable colours", () => {
+test("all 54 family themes resolve dark/light frames, typefaces and independent editable colours", () => {
   for (const family of designFamilies) {
     const t = handoffTemplates.find((t) => t.familyKey === family.id)!;
     for (const theme of [0, 1, 2] as const) {

@@ -1,7 +1,22 @@
 import pptxgen from "pptxgenjs";
 import { buildScene } from "./scene";
 import type { Deck, Template } from "./model";
-const rgb = (color: string) => color.replace("#", "");
+import {
+  chartLayout,
+  hexColor,
+  tableGrid,
+  tableGridLines,
+  tableHeaderInk,
+  tableLayout,
+  TABLE_PAD_X,
+} from "../components/SlideView";
+type Side = { type: "solid" | "none"; color?: string; pt?: number };
+const rgb = (color: string) => (hexColor(color) || color).replace("#", "");
+/** Scene opacity (0–1) as a PowerPoint transparency percentage. */
+const clear = (opacity?: number) =>
+  opacity === undefined || opacity >= 1
+    ? {}
+    : { transparency: Math.round((1 - Math.max(0, opacity)) * 100) };
 export async function createPptx(
   deck: Deck,
   template: Template,
@@ -44,34 +59,64 @@ export async function createPptx(
           sizing: { type: "contain", w: box.w, h: box.h },
         });
       else if (e.kind === "table") {
-        if (e.rows.length)
+        if (e.rows.length) {
+          const t = tableLayout(e, scene.font),
+            grid = tableGrid(e),
+            ink = rgb(tableHeaderInk(e)),
+            cols = Math.max(...e.rows.map((r) => r.length)),
+            rows = e.rows.length,
+            none = { type: "none" as const },
+            // Interior dividers only, as in the SVG: row boundaries across the
+            // full width, column boundaries in the body, no outer frame.
+            side = (on: boolean): Side =>
+              grid && on
+                ? {
+                    type: "solid" as const,
+                    color: rgb(grid.color),
+                    pt: grid.width * 0.75,
+                  }
+                : none;
           s.addTable(
             e.rows.map((row, ri) =>
-              row.map((text) => ({
-                text,
-                options: {
-                  fill: { color: rgb(ri === 0 ? e.accent : e.light) },
-                  color: ri === 0 ? "FFFFFF" : rgb(e.ink),
-                  bold: ri === 0,
-                },
-              })),
+              Array.from({ length: cols }, (_, ci) => {
+                const cell = t.cells[ri * cols + ci];
+                return {
+                  text: row[ci] || "",
+                  options: {
+                    fill: { color: rgb(ri === 0 ? e.accent : e.light) },
+                    color: ri === 0 ? ink : rgb(e.ink),
+                    bold: ri === 0,
+                    fontSize: cell.size * 0.8,
+                    border: [
+                      side(ri > 0),
+                      side(ri > 0 && ci < cols - 1),
+                      side(ri < rows - 1),
+                      side(ri > 0 && ci > 0),
+                    ] as [Side, Side, Side, Side],
+                  },
+                };
+              }),
             ),
             {
               ...box,
-              border: { type: "solid", color: "FFFFFF", pt: 1 },
-              fontFace: scene.font,
-              fontSize: 15,
-              margin: 0.12,
+              fontFace: e.font || scene.font,
+              valign: "middle",
+              margin: [
+                t.padY / 90,
+                TABLE_PAD_X / 90,
+                t.padY / 90,
+                TABLE_PAD_X / 90,
+              ],
               rowH: box.h / e.rows.length,
-              colW: Array.from(
-                { length: Math.max(...e.rows.map((r) => r.length)) },
-                () => box.w / Math.max(...e.rows.map((r) => r.length)),
-              ),
+              colW: Array.from({ length: cols }, () => box.w / cols),
               autoPage: false,
               verbose: false,
             },
           );
+        }
       } else if (e.kind === "chart") {
+        const { axis } = chartLayout(e),
+          face = e.font || scene.font;
         if (e.data.length)
           s.addChart(
             pptx.ChartType.bar,
@@ -84,15 +129,25 @@ export async function createPptx(
             ],
             {
               ...box,
-              catAxisLabelFontFace: scene.font,
-              catAxisLabelFontSize: 12,
-              valAxisLabelFontSize: 10,
+              catAxisLabelFontFace: face,
+              catAxisLabelFontSize: 12.8,
+              valAxisLabelFontFace: face,
+              valAxisLabelFontSize: 9.6,
+              dataLabelFontFace: face,
+              dataLabelFontSize: 13.6,
               showLegend: false,
               showTitle: false,
               showValue: true,
               chartColors: e.colors?.map(rgb) || [rgb(e.accent)],
-              dataLabelFormatCode: e.unit ? `0\"${e.unit}\"` : "0",
+              // "General" keeps decimals as typed (4.5 stays 4.5), like the SVG.
+              dataLabelFormatCode: e.unit
+                ? `General\"${e.unit.replace(/"/g, "")}\"`
+                : "General",
+              valAxisLabelFormatCode: "General",
               valAxisMinVal: 0,
+              valAxisMaxVal: axis.max,
+              valAxisMajorUnit: axis.step,
+              valGridLine: { color: rgb(e.light), size: 0.75 },
               catAxisLabelColor: rgb(e.ink),
               valAxisLabelColor: rgb(e.ink),
               dataLabelColor: rgb(e.ink),
@@ -112,7 +167,11 @@ export async function createPptx(
           y: Math.min(e.y, e.y + e.h) / 90,
           w: Math.abs(e.w) / 90,
           h: Math.abs(e.h) / 90,
-          line: { color: rgb(e.fill), width: (e.sw || 1) * 0.8 },
+          line: {
+            color: rgb(e.fill),
+            width: (e.sw || 1) * 0.8,
+            ...clear(e.opacity),
+          },
           flipV: e.h < 0,
         });
       else
@@ -131,9 +190,13 @@ export async function createPptx(
             fill:
               e.fill === "none"
                 ? { color: "FFFFFF", transparency: 100 }
-                : { color: rgb(e.fill) },
+                : { color: rgb(e.fill), ...clear(e.opacity) },
             line: e.stroke
-              ? { color: rgb(e.stroke), width: (e.sw || 1) * 0.8 }
+              ? {
+                  color: rgb(e.stroke),
+                  width: (e.sw || 1) * 0.8,
+                  ...clear(e.opacity),
+                }
               : {
                   color: e.fill === "none" ? "FFFFFF" : rgb(e.fill),
                   transparency: 100,
@@ -194,12 +257,29 @@ export async function createPdf(deck: Deck, template: Template): Promise<Blob> {
     format: [960, 540],
   });
   const k = 0.8;
+  const pdfFace = (font: string) =>
+    /Georgia|Instrument Serif|Newsreader/.test(font) ? "times" : "helvetica";
+  const pdfColor = (color: string) => hexColor(color) || color;
   for (const [i, s] of deck.slides.entries()) {
     if (i) pdf.addPage([960, 540], "landscape");
     const scene = buildScene(s, template, deck, i, deck.slides.length);
     pdf.setFillColor(scene.background);
     pdf.rect(0, 0, 960, 540, "F");
     for (const e of scene.elements) {
+      const translucent =
+        (e.kind === "rect" || e.kind === "ellipse" || e.kind === "line") &&
+        e.opacity !== undefined &&
+        e.opacity < 1;
+      if (translucent) {
+        pdf.saveGraphicsState();
+        pdf.setGState(
+          pdf.GState({ opacity: e.opacity, "stroke-opacity": e.opacity }),
+        );
+      }
+      drawPdfElement(e);
+      if (translucent) pdf.restoreGraphicsState();
+    }
+    function drawPdfElement(e: (typeof scene.elements)[number]) {
       if (e.kind === "text") {
         pdf.setFont(
           /Georgia|Instrument Serif|Newsreader/.test(e.font || scene.font)
@@ -213,7 +293,7 @@ export async function createPdf(deck: Deck, template: Template): Promise<Blob> {
           pdf.text(pdfText(e.text), (e.x + e.size) * k, (e.y + e.h) * k, {
             angle: 90,
           });
-          continue;
+          return;
         }
         (e.lines || [e.text]).forEach((line, j) =>
           pdf.text(
@@ -294,58 +374,59 @@ export async function createPdf(deck: Deck, template: Template): Promise<Blob> {
           });
         } else draw();
       } else if (e.kind === "table") {
-        const rows = e.rows.length ? e.rows : [[""]],
-          cols = Math.max(...rows.map((r) => r.length)),
-          cw = e.w / cols,
-          rh = e.h / rows.length;
-        rows.forEach((row, ri) =>
-          row.forEach((cell, ci) => {
-            pdf.setFillColor(ri ? e.light : e.accent);
-            pdf.rect(
-              (e.x + ci * cw) * k,
-              (e.y + ri * rh) * k,
-              cw * k,
-              rh * k,
-              "F",
-            );
-            pdf.setTextColor(ri ? e.ink : "#ffffff");
-            pdf.setFontSize(15);
+        const t = tableLayout(e, scene.font),
+          grid = tableGrid(e),
+          ink = tableHeaderInk(e),
+          face = pdfFace(e.font || scene.font);
+        pdf.setFillColor(pdfColor(e.accent));
+        pdf.rect(e.x * k, e.y * k, e.w * k, t.rh * k, "F");
+        if (t.rows > 1) {
+          pdf.setFillColor(pdfColor(e.light));
+          pdf.rect(e.x * k, (e.y + t.rh) * k, e.w * k, (e.h - t.rh) * k, "F");
+        }
+        if (grid) {
+          pdf.setDrawColor(pdfColor(grid.color));
+          pdf.setLineWidth(grid.width * k);
+          for (const l of tableGridLines(e))
+            pdf.line(l.x1 * k, l.y1 * k, l.x2 * k, l.y2 * k);
+        }
+        for (const c of t.cells) {
+          pdf.setFont(face, c.row ? "normal" : "bold");
+          pdf.setTextColor(pdfColor(c.row ? e.ink : ink));
+          pdf.setFontSize(c.size * k);
+          c.lines.forEach((line, j) =>
             pdf.text(
-              pdf.splitTextToSize(pdfText(cell), (cw - 30) * k),
-              (e.x + ci * cw + 15) * k,
-              (e.y + ri * rh + 38) * k,
-            );
-          }),
-        );
+              pdfText(line),
+              c.tx * k,
+              (c.baseline + j * c.size * 1.2) * k,
+            ),
+          );
+        }
       } else if (e.kind === "chart") {
-        const max = Math.max(...e.data.map((d) => d.value), 1),
-          cw = e.w / Math.max(e.data.length, 1);
-        e.data.forEach((d, j) => {
-          const h = (d.value / max) * (e.h - 65);
-          pdf.setFillColor(e.colors?.[j] || e.accent);
-          pdf.rect(
-            (e.x + j * cw + cw * 0.2) * k,
-            (e.y + e.h - 40 - h) * k,
-            cw * 0.6 * k,
-            h * k,
-            "F",
-          );
-          pdf.setTextColor(e.ink);
-          pdf.setFontSize(13);
-          pdf.text(
-            pdfText(d.label),
-            (e.x + (j + 0.5) * cw) * k,
-            (e.y + e.h - 12) * k,
-            {
-              align: "center",
-            },
-          );
-          pdf.text(
-            pdfText(String(d.value) + (e.unit || "")),
-            (e.x + (j + 0.5) * cw) * k,
-            (e.y + e.h - 48 - h) * k,
-            { align: "center" },
-          );
+        const a = chartLayout(e);
+        pdf.setFont(pdfFace(e.font || scene.font), "normal");
+        pdf.setDrawColor(pdfColor(e.light));
+        pdf.setLineWidth(k);
+        pdf.setTextColor(pdfColor(e.ink));
+        pdf.setFontSize(12 * k);
+        for (const t of a.ticks) {
+          pdf.line(e.x * k, t.y * k, (e.x + e.w) * k, t.y * k);
+          pdf.text(t.label, (e.x - 12) * k, (t.y + 4) * k, { align: "right" });
+        }
+        a.bars.forEach((b, j) => {
+          if (b.h > 0) {
+            pdf.setFillColor(pdfColor(e.colors?.[j] || e.accent));
+            pdf.rect(b.x * k, (a.base - b.h) * k, b.w * k, b.h * k, "F");
+          }
+          pdf.setTextColor(pdfColor(e.ink));
+          pdf.setFontSize(16 * k);
+          pdf.text(pdfText(b.label), b.cx * k, (e.y + e.h - 12) * k, {
+            align: "center",
+          });
+          pdf.setFontSize(17 * k);
+          pdf.text(pdfText(b.value), b.cx * k, (a.base - 8 - b.h) * k, {
+            align: "center",
+          });
         });
       }
     }

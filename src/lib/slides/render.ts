@@ -1,11 +1,10 @@
-import type { Deck, Slide, Template } from "../model";
-import { fitText, type Element, type Scene } from "../scene";
-import {
-  initials,
-  resolveSlideDesign,
-  type DesignSettings,
-  type Palette,
-} from "./resolve";
+import type { Slide, Template } from "../model";
+import type { Scene } from "../scene";
+import type { DesignSettings } from "./resolve";
+import { fitText, wrapText } from "../scene";
+import { createKit, type Kit } from "./kit";
+import { drawInner } from "./inner";
+import { familyModules } from "./families";
 
 /** A shared, editable vector scene: browser previews and file exports use exactly
  * the same geometry. One cqw in the supplied 16:9 artwork is 12 scene units. */
@@ -16,682 +15,15 @@ export function buildHandoffScene(
   index: number,
   total: number,
 ): Scene {
-  const d = resolveSlideDesign(template, deck),
-    { cover: c, inner: p, raw, set, family } = d;
-  const elements: Element[] = [];
-  const mono = "Geist Mono";
-  const R = (
-    x: number,
-    y: number,
-    w: number,
-    h: number,
-    fill: string,
-    stroke?: string,
-    radius = 0,
-    rotate = 0,
-    sw = 1,
-  ) =>
-    elements.push({
-      kind: "rect",
-      x,
-      y,
-      w,
-      h,
-      fill,
-      stroke,
-      radius,
-      rotate,
-      sw,
-    });
-  const C = (
-    x: number,
-    y: number,
-    size: number,
-    fill: string,
-    stroke?: string,
-    sw = 1,
-  ) =>
-    elements.push({
-      kind: "ellipse",
-      x,
-      y,
-      w: size,
-      h: size,
-      fill,
-      stroke,
-      sw,
-    });
-  const L = (
-    x: number,
-    y: number,
-    w: number,
-    h: number,
-    fill: string,
-    sw = 1,
-  ) => elements.push({ kind: "line", x, y, w, h, fill, sw });
-  const T = (
-    value: string,
-    x: number,
-    y: number,
-    w: number,
-    h: number,
-    size: number,
-    color: string,
-    font = d.bodyFont,
-    bold = false,
-    align: "left" | "center" | "right" = "left",
-    rotate = 0,
-  ) => {
-    const fitted = fitText(value, size, w, h);
-    elements.push({
-      kind: "text",
-      text: value,
-      x,
-      y,
-      w,
-      h,
-      size: fitted.size,
-      lines: fitted.lines,
-      color,
-      font,
-      bold,
-      align,
-      rotate,
-    });
-  };
-  const H = (
-    value: string,
-    x: number,
-    y: number,
-    w: number,
-    h: number,
-    size: number,
-    color: string,
-    align: "left" | "center" | "right" = "left",
-  ) =>
-    T(
-      d.uppercase ? value.toUpperCase() : value,
-      x,
-      y,
-      w,
-      h,
-      size,
-      color,
-      d.displayFont,
-      d.weight >= 600,
-      align,
-    );
-  const M = (
-    value: string,
-    x: number,
-    y: number,
-    w: number,
-    color = c.sub,
-    size = 12,
-    align: "left" | "center" | "right" = "left",
-  ) => T(value.toUpperCase(), x, y, w, 26, size, color, mono, false, align);
-  const sample = raw.sample,
-    profile = deck?.profile;
-  // Sample names, dates and figures only fill in for decks that still carry
-  // the template's sample slides. A deck built from the user's own content
-  // (blank starts, imported documents) shows only what the user provided.
-  const sampleBacked =
-    !deck?.slides || deck.slides.some((item) => Boolean(item.sampleKey));
-  const fallback = (value: string | undefined, sampleValue: string) =>
-    value?.trim() || (sampleBacked ? sampleValue : "");
-  const team = fallback(profile?.students, sample.team.join(" · "));
-  const guide = fallback(profile?.guide, sample.guide);
-  const department = fallback(profile?.department, sample.department);
-  const date = fallback(profile?.year, sample.date);
-  const coverSlide = deck?.slides?.find((s) => s.layout === "cover");
-  const eyebrow = fallback(
-    slide.layout === "cover"
-      ? slide.eyebrow
-      : coverSlide?.eyebrow || slide.eyebrow,
-    sample.eyebrow,
-  );
-  const title = slide.title;
-  const meta = (
-    x: number,
-    y: number,
-    width: number,
-    fields: [string, string][],
-    pal: Palette = c,
-  ) => {
-    fields = fields.filter(([, value]) => value);
-    const cw = width / Math.max(fields.length, 1);
-    fields.forEach(([label, value], n) => {
-      M(label, x + n * cw, y, cw - 20, pal.sub, 10.6);
-      T(value, x + n * cw, y + 26, cw - 20, 61, 14.5, pal.ink);
-    });
-  };
-  const footerFields: [string, string][] = [
-    [set.slideFooterLabels.team, team],
-    [set.slideFooterLabels.guide, guide],
-    [set.slideFooterLabels.dept, department],
-    [set.slideFooterLabels.date, date],
-  ];
-  let background = c.bg;
-
-  if (slide.layout === "closing") {
-    C(672, 267, 672, "none", c.acc, 4.8);
-    C(1032, 507, 72, c.acc);
-    M(eyebrow, 72, 60, 1056, c.sub, 12.6);
-    H(title, 72, 260, 1000, 150, 100.8, c.ink);
-    T(slide.subtitle, 72, 428, 900, 60, 21.6, c.sub);
-    M(team, 72, 590, 800, c.sub);
-    M(department, 72, 620, 800, c.sub);
-  } else if (slide.layout === "cover") {
-    switch (family.id) {
-      case "meridian": {
-        const split = 732;
-        R(split, 0, 468, 675, p.panel);
-        for (let x = 780; x < 876; x += 24)
-          for (let y = 65; y < 161; y += 24) C(x, y, 3.2, p.sub);
-        if (!profile?.logo) {
-          C(1044, 65, 101, "none", p.sub);
-          M("LOGO", 1044, 103, 101, p.ink, 10, "center");
-        }
-        C(split - 180, 351, 504, "none", c.bg, 5.4);
-        C(split - 108, 423, 360, "none", p.acc, 5.4);
-        C(split - 42, 489, 228, c.bg);
-        // Cover graphic is clipped to its right-hand panel, like the original artwork.
-        R(0, 0, split, 675, c.bg);
-        C(1080, 262, 29, p.acc);
-        R(67, 73, 31, 4.3, c.acc);
-        M(eyebrow, 113, 62, 552, c.sub, 13.2);
-        H(title, 67, 217, 598, 245, 50.4, c.ink);
-        T(slide.subtitle, 67, 467, 598, 46, 17.4, c.sub);
-        L(67, 549, 598, 0, c.line);
-        meta(67, 567, 610, footerFields.slice(0, 2));
-        break;
-      }
-      case "atlas":
-        R(72, 59, 16, 16, c.acc);
-        M(eyebrow, 102, 54, 650, c.ink, 13.2);
-        M(slide.subtitle, 760, 55, 368, c.sub, 12.2, "right");
-        L(72, 110, 1056, 0, c.line);
-        H(sample.coverIndex || "01", 790, 220, 340, 300, 288, c.acc2, "right");
-        H(title, 72, 237, 696, 260, 54, c.ink);
-        L(72, 550, 1056, 0, c.line);
-        meta(72, 569, 1076, footerFields);
-        break;
-      case "kepler":
-        for (let x = 12; x < 1200; x += 29)
-          for (let y = 12; y < 675; y += 29) C(x, y, 1.6, c.dot || c.line);
-        C(672, 1, 672, "none", c.line);
-        C(768, 97, 480, "none", c.acc);
-        C(864, 193, 288, c.panel, c.line);
-        C(990, 319, 36, c.acc);
-        C(828, 157, 22, c.acc);
-        R(
-          72,
-          60,
-          Math.min(600, eyebrow.length * 8.2 + 58),
-          39,
-          c.panel,
-          c.line,
-          20,
-        );
-        C(87, 75, 8, c.acc);
-        M(eyebrow, 106, 65, 535, c.sub);
-        H(title, 72, 235, 600, 247, 56.4, c.ink);
-        T(slide.subtitle, 72, 490, 570, 60, 18, c.sub);
-        M(team, 72, 607, 780, c.sub);
-        M(date, 860, 607, 268, c.acc, 12, "right");
-        break;
-      case "halcyon":
-        L(144, 0, 0, 675, c.line);
-        H(sample.coverIndex || "01", 37, 55, 70, 55, 31.2, c.acc, "center");
-        // Vertical rail text remains editable in PowerPoint.
-        elements.push({
-          kind: "text",
-          text: eyebrow.toUpperCase(),
-          x: 60,
-          y: 215,
-          w: 25,
-          h: 390,
-          size: 11.4,
-          lines: [eyebrow.toUpperCase()],
-          color: c.sub,
-          font: mono,
-          vertical: true,
-        });
-        C(972, -132, 336, c.acc);
-        C(1026, -78, 336, "none", c.ink);
-        M(date, 204, 56, 620, c.sub);
-        H(title, 204, 216, 790, 265, 72, c.ink);
-        T(slide.subtitle, 204, 479, 780, 56, 22.8, c.sub, "Newsreader");
-        L(204, 550, 924, 0, c.line);
-        meta(204, 571, 810, footerFields.slice(0, 2));
-        break;
-      case "vertex":
-        C(924, -120, 360, c.panel);
-        R(912, 411, 180, 180, c.acc2, undefined, 0, -8);
-        R(942, 381, 180, 180, "none", c.ink, 0, 10, 4.8);
-        R(72, 67, 17, 17, c.ink);
-        M(eyebrow, 101, 60, 800, c.ink, 13.2);
-        M(date, 900, 60, 228, c.sub, 12.6, "right");
-        H(title, 72, 203, 760, 310, 84, c.ink);
-        T(slide.subtitle, 72, 560, 700, 43, 18, c.ink);
-        M(team, 72, 614, 750, c.sub);
-        break;
-      case "ledger": {
-        R(768, 0, 432, 675, c.panel);
-        R(72, 60, 32, 32, c.panel, undefined, 6);
-        [7, 12, 17].forEach((h, n) =>
-          R(79 + n * 6, 85 - h, 4, h, n === 2 ? "#ffffff" : c.acc),
-        );
-        M(eyebrow, 120, 61, 580, c.ink, 12.6);
-        R(72, 204, 72, 6, c.acc);
-        H(title, 72, 231, 630, 245, 55.2, c.ink);
-        T(slide.subtitle, 72, 488, 610, 60, 18, c.sub);
-        T(department, 72, 606, 530, 35, 14, c.ink);
-        M(date, 72, 637, 600, c.sub, 10);
-        M(
-          sampleBacked ? "Highlights" : "",
-          816,
-          61,
-          336,
-          c.psub || c.sub,
-          11.4,
-        );
-        H(
-          sampleBacked ? sample.coverKpi || "+18%" : "",
-          816,
-          276,
-          336,
-          92,
-          62.4,
-          "#ffffff",
-        );
-        T(
-          sampleBacked ? sample.coverKpiLabel || "Growth, year on year" : "",
-          816,
-          377,
-          336,
-          48,
-          13.8,
-          c.psub || c.sub,
-        );
-        [34, 46, 41, 58, 70, 88].forEach((v, n) =>
-          R(
-            816 + n * 58,
-            607 - v * 1.8,
-            44,
-            v * 1.8,
-            n === 5 ? c.acc : c.pbar || c.acc2,
-            undefined,
-            3,
-          ),
-        );
-        L(816, 608, 336, 0, c.pline || c.line);
-        break;
-      }
-      case "pulse": {
-        R(0, 432, 1200, 243, c.panel);
-        const points = [
-          [0, 20],
-          [58, 20],
-          [64, 20],
-          [68, 8],
-          [73, 33],
-          [78, 4],
-          [82, 20],
-          [120, 20],
-          [126, 20],
-          [129, 13],
-          [133, 27],
-          [137, 20],
-          [200, 20],
-        ];
-        points
-          .slice(1)
-          .forEach(([x, y], n) =>
-            L(
-              points[n][0] * 6,
-              378 + points[n][1] * 2.7,
-              (x - points[n][0]) * 6,
-              (y - points[n][1]) * 2.7,
-              c.acc,
-              2,
-            ),
-          );
-        R(72, 60, 43, 43, c.acc, undefined, 12);
-        R(83, 79, 22, 6, "#ffffff");
-        R(91, 71, 6, 22, "#ffffff");
-        M(eyebrow, 132, 71, 990, c.sub, 12.6);
-        H(title, 72, 166, 900, 196, 51.6, c.ink);
-        T(slide.subtitle, 72, 363, 780, 48, 17.4, c.sub);
-        T(team, 72, 575, 780, 34, 16.8, c.ink, d.bodyFont, true);
-        T(department, 72, 615, 800, 28, 13.2, c.sub);
-        M(date, 900, 610, 228, c.sub, 12, "right");
-        break;
-      }
-      case "gala":
-        C(600, -22, 720, "none", c.acc);
-        C(696, 73, 528, "none", c.line);
-        H(sample.coverIndex || "01", 870, 260, 245, 115, 84, c.ink, "center");
-        M(date, 790, 395, 354, c.acc, 13.2, "center");
-        M(eyebrow, 72, 62, 880, c.acc, 12.6);
-        L(72, 107, 84, 0, c.acc);
-        H(title, 72, 215, 610, 275, 79.2, c.ink);
-        T(slide.subtitle, 72, 500, 600, 67, 24, c.sub, "Instrument Serif");
-        M(department, 72, 611, 980, c.sub);
-        break;
-      case "swiss":
-        for (let x = 0; x <= 1200; x += 100) L(x, 0, 0, 675, c.line);
-        C(800, 96, 300, c.acc);
-        M(
-          `${sample.coverIndex || "01"} / ${eyebrow}`,
-          100,
-          55,
-          850,
-          c.ink,
-          12.6,
-        );
-        M(date, 945, 55, 205, c.sub, 12.6, "right");
-        H(title, 100, 228, 815, 280, 74.4, c.ink);
-        L(100, 542, 815, 0, c.ink, 3);
-        meta(100, 562, 835, footerFields.slice(0, 3));
-        break;
-      case "strata":
-        R(720, 70, 408, 252, c.panel, c.line, 19, -14);
-        R(760, 176, 408, 252, c.acc, undefined, 19, -14);
-        R(815, 290, 408, 252, c.acc2, undefined, 19, -14);
-        R(792, 212, 108, 8, c.acc2, undefined, 4, -14);
-        R(795, 234, 60, 8, c.acc2, undefined, 4, -14);
-        [
-          [835, 354, 887, 322],
-          [887, 322, 929, 336],
-          [929, 336, 984, 285],
-          [984, 285, 1030, 303],
-          [1030, 303, 1106, 246],
-        ].forEach(([x, y, x2, y2]) => L(x, y, x2 - x, y2 - y, "#ffffff", 3));
-        [108, 72, 144].forEach((h, n) =>
-          R(854 + n * 62, 515 - h, 48, h, c.panel, undefined, 5, -14),
-        );
-        M(eyebrow, 72, 60, 750, c.acc2, 12.6);
-        H(title, 72, 231, 560, 235, 55.2, c.ink);
-        T(slide.subtitle, 72, 483, 565, 74, 18, c.sub);
-        T(team, 72, 609, 680, 36, 13.8, c.ink);
-        M(date, 710, 609, 418, c.sub, 12, "right");
-        break;
-      case "canopy":
-        C(840, 387, 456, c.acc);
-        C(672, 531, 288, c.acc2);
-        elements.push({
-          kind: "ellipse",
-          x: 936,
-          y: 291,
-          w: 156,
-          h: 95,
-          fill: c.acc2,
-          rotate: -35,
-        });
-        C(1056, 72, 96, "none", c.acc);
-        C(72, 67, 14, c.acc);
-        M(eyebrow, 100, 60, 850, c.acc, 12.6);
-        H(title, 72, 225, 675, 254, 60, c.ink);
-        T(slide.subtitle, 72, 490, 680, 66, 18, c.sub);
-        meta(72, 575, 720, footerFields.slice(0, 2));
-        break;
-      default:
-        C(72, 66, 12, c.acc);
-        M(eyebrow, 99, 60, 820, c.ink, 12.6);
-        M(date, 930, 60, 198, c.sub, 12.6, "right");
-        H(title, 72, 210, 1000, 310, 81.6, c.ink);
-        L(72, 577, 1056, 0, c.line);
-        T(team, 72, 602, 530, 45, 15, c.ink);
-        T(
-          slide.subtitle,
-          635,
-          602,
-          493,
-          45,
-          15,
-          c.sub,
-          d.bodyFont,
-          false,
-          "right",
-        );
-    }
-    if (profile?.registerNumbers || profile?.college) {
-      // Preserve all student metadata without crowding the supplied title artwork.
-      T(
-        [
-          profile.college,
-          profile.registerNumbers && `Register no. ${profile.registerNumbers}`,
-        ]
-          .filter(Boolean)
-          .join(" · "),
-        72,
-        650,
-        1056,
-        20,
-        10,
-        c.sub,
-      );
-    }
-  } else {
-    background = p.bg;
-    const mw = parseFloat(family.accentMark.width) * 12,
-      mh = parseFloat(family.accentMark.height) * 12;
-    R(
-      67,
-      55,
-      mw,
-      mh,
-      p.acc,
-      undefined,
-      family.accentMark.radius === "50%" ? 20 : 0,
-    );
-    M(eyebrow, 67 + mw + 11, 46, 910, p.sub, 11.4);
-    M(String(index + 1).padStart(2, "0"), 1040, 46, 93, p.sub, 11.4, "right");
-    H(title, 67, 92, 1066, 85, 39.6, p.ink);
-    const body = slide.body;
-    if (slide.layout === "agenda") {
-      body.slice(0, 6).forEach((item, n) => {
-        const x = 67 + (n % 3) * 367,
-          y = 210 + Math.floor(n / 3) * 189,
-          [heading, ...detail] = item.split("\n");
-        L(x, y, 331, 0, p.line);
-        H(String(n + 1).padStart(2, "0"), x, y + 15, 331, 48, 31.2, p.acc);
-        T(heading, x, y + 77, 331, 50, 18.6, p.ink, d.bodyFont, true);
-        T(detail.join("\n"), x, y + 132, 331, 43, 13.2, p.sub);
-      });
-    } else if (slide.layout === "problem") {
-      T(slide.subtitle, 67, 220, 550, 120, 23.4, p.ink);
-      body.slice(0, 5).forEach((point, n) => {
-        R(67, 371 + n * 43, 10, 10, p.acc, undefined, 3);
-        T(point, 91, 362 + n * 43, 526, 43, 16.2, p.sub);
-      });
-      R(666, 207, 467, 374, p.panel, undefined, 14);
-      M(set.questionLabel, 700, 239, 398, p.sub, 11.4);
-      H(
-        fallback(slide.question, sample.question),
-        700,
-        315,
-        398,
-        196,
-        31.2,
-        p.ink,
-      );
-      R(700, 542, 38, 5, p.acc);
-      R(746, 542, 14, 5, p.acc2);
-    } else if (slide.layout === "architecture" || slide.layout === "process") {
-      const blocks = body.slice(0, 6),
-        cw = (1066 - (blocks.length - 1) * 31) / Math.max(blocks.length, 1);
-      blocks.forEach((item, n) => {
-        const x = 67 + n * (cw + 31);
-        R(x, 281, cw, 168, p.panel, p.line, 12);
-        M(String(n + 1).padStart(2, "0"), x + 18, 301, cw - 36, p.acc);
-        T(item, x + 18, 369, cw - 36, 64, 17.4, p.ink, d.bodyFont, true);
-        if (n < blocks.length - 1) {
-          L(x + cw + 6, 365, 19, 0, p.acc, 2);
-          L(x + cw + 18, 359, 7, 6, p.acc, 2);
-          L(x + cw + 18, 371, 7, -6, p.acc, 2);
-        }
-      });
-      const groups = slide.subtitle.split(" · ").filter(Boolean);
-      const spans = [426, 426, 214];
-      groups.slice(0, 3).forEach((group, n) => {
-        const x = 67 + spans.slice(0, n).reduce((a, b) => a + b, 0);
-        L(x, 476, spans[n] - 20, 0, [p.acc, p.acc2, p.ink][n], 3.6);
-        M(group, x, 489, spans[n] - 20, p.sub, 11.4);
-      });
-    } else if (slide.layout === "chart") {
-      M(fallback(slide.subtitle, set.chart.title), 67, 205, 620, p.sub, 11.4);
-      const max = Math.max(...slide.chart.map((b) => b.value), 1),
-        highlight =
-          set.chart.highlight === "max"
-            ? slide.chart.findIndex((b) => b.value === max)
-            : slide.chart.length - 1;
-      elements.push({
-        kind: "chart",
-        x: 87,
-        y: 262,
-        w: 620,
-        h: 304,
-        data: slide.chart,
-        accent: p.acc,
-        ink: p.ink,
-        light: p.line,
-        colors: slide.chart.map((_, n) => (n === highlight ? p.acc : p.bar!)),
-        unit: sampleBacked ? set.chart.unit : "",
-      });
-      body.slice(0, 2).forEach((k, n) => {
-        const y = 246 + n * 170,
-          [value, ...label] = k.split("\n");
-        L(773, y, 360, 0, p.line);
-        H(value, 773, y + 20, 360, 78, 52.8, p.ink);
-        T(label.join("\n"), 773, y + 108, 360, 54, 14.4, p.sub);
-      });
-    } else if (slide.layout === "timeline") {
-      const milestones = body.slice(0, 6),
-        cw = 1066 / Math.max(milestones.length, 1),
-        current = Math.min(set.timeline.current, milestones.length - 1);
-      L(67, 330, 1066, 0, p.line);
-      L(67, 330, current * cw + 14, 0, p.acc, 3.6);
-      milestones.forEach((item, n) => {
-        const x = 67 + n * cw,
-          [when, heading, ...detail] = item.split("\n");
-        M(when, x, 272, cw - 20, n <= current ? p.acc : p.sub, 12.6);
-        C(
-          x,
-          318,
-          24,
-          n < current ? p.acc : p.bg,
-          n <= current ? p.acc : p.line,
-          4.2,
-        );
-        T(heading || when, x, 371, cw - 24, 65, 18.6, p.ink, d.bodyFont, true);
-        T(detail.join("\n"), x, 449, cw - 24, 85, 13.2, p.sub);
-      });
-    } else if (slide.layout === "team") {
-      const names = (
-          profile?.students?.trim() ? team.split(/\s*[·,;\n]\s*/) : body
-        )
-          .filter(Boolean)
-          .slice(0, 4),
-        columns = Math.max(3, names.length),
-        cw = 748 / columns;
-      names.forEach((name, n) => {
-        const x = 67 + n * cw;
-        if (family.avatarRadius === "50%") C(x, 277, 132, p.panel);
-        else R(x, 277, 132, 132, p.panel, undefined, 9.6);
-        H(initials(name), x, 315, 132, 63, 36, p.acc, "center");
-        T(name, x, 437, cw - 20, 55, 17.4, p.ink, d.bodyFont, true);
-        T(
-          names.length === 1 ? "Presenter" : set.teamRoles[n] || "Contributor",
-          x,
-          500,
-          cw - 20,
-          54,
-          12.6,
-          p.sub,
-        );
-      });
-      R(856, 215, 277, 366, p.panel, undefined, 14);
-      M(set.guideLabel, 887, 375, 215, p.sub, 11.4);
-      T(guide, 887, 415, 215, 78, 20.4, p.ink, d.bodyFont, true);
-      T(department, 887, 505, 215, 63, 13.2, p.sub);
-    } else if (slide.layout === "table") {
-      T(slide.subtitle, 67, 188, 1066, 42, 16, p.sub);
-      elements.push({
-        kind: "table",
-        x: 67,
-        y: 257,
-        w: 1066,
-        h: 308,
-        rows: slide.table,
-        accent: p.acc,
-        ink: p.ink,
-        light: p.panel,
-      });
-    } else if (slide.layout === "image") {
-      if (slide.image)
-        elements.push({
-          kind: "image",
-          x: 67,
-          y: 233,
-          w: 718,
-          h: 342,
-          src: slide.image,
-        });
-      else {
-        R(67, 233, 718, 342, p.panel, p.line, 12);
-        R(370, 342, 110, 75, "none", p.acc, 4);
-        C(385, 354, 17, p.acc);
-        L(370, 417, 50, -38, p.acc, 2);
-        L(420, 379, 60, 38, p.acc, 2);
-        M("Your image or diagram", 240, 453, 378, p.sub, 13, "center");
-      }
-      T(slide.subtitle, 828, 237, 305, 90, 18, p.ink, d.bodyFont, true);
-      T(body.join("\n\n"), 828, 349, 305, 212, 16, p.sub);
-    } else if (slide.layout === "columns") {
-      body.slice(0, 4).forEach((item, n) => {
-        const x = 67 + (n % 2) * 551,
-          y = 213 + Math.floor(n / 2) * 188;
-        R(x, y, 515, 166, p.panel, undefined, 12);
-        H(String(n + 1).padStart(2, "0"), x + 23, y + 20, 65, 55, 32, p.acc);
-        T(item, x + 102, y + 23, 390, 119, 18, p.ink);
-      });
-    } else if (slide.layout === "section") {
-      H(String(index + 1).padStart(2, "0"), 67, 249, 260, 180, 132, p.acc2);
-      H(title, 355, 275, 778, 180, 58, p.ink);
-    } else {
-      T(slide.subtitle, 67, 187, 1066, 59, 17, p.sub);
-      const row = Math.min(99, 324 / Math.max(body.length, 1));
-      body.forEach((point, n) => {
-        R(69, 273 + n * row, 8, 8, p.acc, undefined, 4);
-        T(point, 102, 260 + n * row, 1020, row - 12, 22, p.ink);
-      });
-    }
-    L(67, 610, 1066, 0, p.line);
-    M(
-      coverSlide?.title || deck?.title || sample.title,
-      67,
-      624,
-      700,
-      p.sub,
-      9.6,
-    );
-    T(department, 805, 624, 328, 30, 9.6, p.sub, mono, false, "right");
-    // Use the real slide count in navigation/footer, rather than example numbers.
-    T(
-      `${index + 1} / ${total}`,
-      1050,
-      652,
-      83,
-      18,
-      9,
-      p.sub,
-      mono,
-      false,
-      "right",
-    );
-  }
+  const k = createKit(slide, template, deck, index, total);
+  const module = familyModules[k.family.id];
+  let background: string;
+  if (slide.layout === "closing")
+    background = module?.closing?.(k) || drawClosing(k);
+  else if (slide.layout === "cover")
+    background = module?.cover?.(k) || drawCover(k);
+  else background = drawInner(k, module?.skin);
+  const { profile, elements, d } = k;
   if (profile?.logo)
     elements.push({
       kind: "image",
@@ -702,4 +34,812 @@ export function buildHandoffScene(
       src: profile.logo,
     });
   return { background, elements, font: d.bodyFont };
+}
+
+/** How much wider a face really sets than fitText's generic estimate (p90 of
+ * measured sample titles). Wrapping to the narrower width keeps real glyphs
+ * inside the box, so headlines never run into the cover artwork. Faces that
+ * set narrower than the estimate keep the box as given. */
+function widthFactor(font: string, bold: boolean) {
+  const f = font.toLowerCase();
+  // Mono labels are always uppercase, which the estimate already sets wide.
+  if (f.includes("mono")) return 1.1;
+  // Instrument Serif sets far narrower than the estimate: wrap wider.
+  if (f.includes("instrument")) return 0.86;
+  if (f.includes("sora")) return 1.19;
+  if (f.includes("space grotesk")) return 1.1;
+  if (f.includes("newsreader")) return bold ? 1.14 : 1.05;
+  if (f.includes("archivo")) return bold ? 1.12 : 1.06;
+  if (f.includes("manrope")) return bold ? 1.1 : 1.05;
+  if (f.includes("geist")) return bold ? 1.12 : 1.06;
+  return bold ? 1.13 : 1.08;
+}
+
+/** Mix two #rrggbb colours (t = share of b). */
+function mix(a: string, b: string, t: number) {
+  const ch = (h: string, i: number) => parseInt(h.slice(1 + i * 2, 3 + i * 2), 16);
+  return (
+    "#" +
+    [0, 1, 2]
+      .map((i) => Math.round(ch(a, i) * (1 - t) + ch(b, i) * t).toString(16).padStart(2, "0"))
+      .join("")
+  );
+}
+
+/** Layout helpers shared by covers and closings. Every helper keeps the
+ * kit's field-to-text contract: text is drawn whole (case may change). */
+function tools(k: Kit) {
+  const { T, H, M, L, C, c, d, mono, profile, set } = k;
+  const shrink = (
+    x: number,
+    w: number,
+    factor: number,
+    align: "left" | "center" | "right",
+  ) => {
+    const inner = w / factor;
+    return {
+      x: align === "right" ? x + w - inner : align === "center" ? x + (w - inner) / 2 : x,
+      w: inner,
+    };
+  };
+  /** Display headline whose real glyphs stay inside x..x+w. */
+  const HT = (
+    value: string,
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    size: number,
+    color: string,
+    align: "left" | "center" | "right" = "left",
+  ) => {
+    const b = shrink(x, w, widthFactor(d.displayFont, d.weight >= 600), align);
+    H(value, b.x, y, b.w, h, size, color, align);
+  };
+  /** Body text whose real glyphs stay inside x..x+w. */
+  const BT = (
+    value: string,
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    size: number,
+    color: string,
+    font = d.bodyFont,
+    bold = false,
+    align: "left" | "center" | "right" = "left",
+  ) => {
+    const b = shrink(x, w, widthFactor(font, bold), align);
+    T(value, b.x, y, b.w, h, size, color, font, bold, align);
+  };
+  /** Mono uppercase label whose real glyphs stay inside x..x+w. */
+  const ML = (
+    value: string,
+    x: number,
+    y: number,
+    w: number,
+    color = c.sub,
+    size = 12,
+    align: "left" | "center" | "right" = "left",
+  ) => {
+    const b = shrink(x, w, widthFactor(mono, false), align);
+    M(value, b.x, y, b.w, color, size, align);
+  };
+  /** Name lists ("A · B · C", one per line, or comma lists) break only
+   * between names, never inside one, and a line never starts or ends on a
+   * "·" separator. Lines are balanced so no name is left alone. The element
+   * still carries the value whole, so the field stays editable in place.
+   * Values that are not lists (or whose names cannot fit) wrap as BT does. */
+  const NT = (
+    value: string,
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    size: number,
+    color: string,
+    font = d.bodyFont,
+    bold = false,
+    align: "left" | "center" | "right" = "left",
+  ) => {
+    const parts = value.split(/(\s+[·•|/]\s+|\s*\n\s*|\s*;\s+|,\s+(?!\d))/);
+    if (parts.length < 3) return BT(value, x, y, w, h, size, color, font, bold, align);
+    const b = shrink(x, w, widthFactor(font, bold), align);
+    const fits = (line: string, s: number, width: number) => wrapText(line, s, width).length === 1;
+    /** Greedy pack at a given line width; null when a single name is too wide. */
+    const pack = (s: number, width: number) => {
+      const lines: string[] = [];
+      let line = parts[0];
+      if (!fits(line, s, width)) return null;
+      for (let i = 1; i < parts.length; i += 2) {
+        const sep = parts[i],
+          name = parts[i + 1];
+        const joined = line + sep + name;
+        if (!sep.includes("\n") && fits(joined, s, width)) {
+          line = joined;
+          continue;
+        }
+        const keep = sep.trim();
+        lines.push(line + (keep === "," || keep === ";" ? keep : ""));
+        if (!fits(name, s, width)) return null;
+        line = name;
+      }
+      lines.push(line);
+      return lines;
+    };
+    const emit = (s: number, lines: string[]) =>
+      k.elements.push({ kind: "text", text: value, x: b.x, y, w: b.w, h, size: s, lines, color, font, bold, align });
+    // Prefer a slightly smaller single line over a wrap.
+    for (let s = size; s >= size - 1.5; s -= 0.5) {
+      const lines = pack(s, b.w);
+      if (lines?.length === 1) return emit(s, lines);
+    }
+    for (let s = size; s >= Math.min(size, 11); s -= 0.5) {
+      const lines = pack(s, b.w);
+      if (!lines || lines.length * s * 1.2 > h) continue;
+      // Balance: the narrowest width that still needs no extra line.
+      let best = lines;
+      for (let width = b.w - 4; lines.length > 1 && width > b.w * 0.45; width -= 4) {
+        const tighter = pack(s, width);
+        if (!tighter || tighter.length > lines.length) break;
+        best = tighter;
+      }
+      return emit(s, best);
+    }
+    BT(value, x, y, w, h, size, color, font, bold, align);
+  };
+  /** Label/value columns; optional hairline dividers like a stat row.
+   * `weights` share the width unevenly (e.g. a long name list gets more). */
+  const metaRow = (
+    x: number,
+    y: number,
+    width: number,
+    fields: [string, string][],
+    pal: { sub: string; ink: string; line: string } = c,
+    dividers = false,
+    valueSize = 14.5,
+    weights?: number[],
+  ) => {
+    const kept = fields.map((f, n) => [f, weights?.[n] ?? 1] as const).filter(([[, value]]) => value);
+    const sum = kept.reduce((n, [, wt]) => n + wt, 0) || 1;
+    let cx = x;
+    kept.forEach(([[label, value], wt], n) => {
+      const cw = (width * wt) / sum;
+      const pad = dividers && n ? 22 : 0;
+      if (pad) L(cx, y + 2, 0, 56, pal.line);
+      ML(label, cx + pad, y, cw - 22 - pad, pal.sub, 11.5);
+      NT(value, cx + pad, y + 24, cw - 22 - pad, 40, valueSize, pal.ink);
+      cx += cw;
+    });
+  };
+  const measure = (
+    value: string,
+    w: number,
+    h: number,
+    size: number,
+    font: string,
+    bold: boolean,
+  ) => {
+    if (!value.trim()) return 0;
+    const r = fitText(value, size, w / widthFactor(font, bold), h);
+    return r.lines.length * r.size * 1.2;
+  };
+  /** Headline + subtitle stacked with a fixed gap and placed as one block
+   * (centred, top- or bottom-anchored) between `top` and `bottom`. */
+  const block = (
+    x: number,
+    top: number,
+    bottom: number,
+    w: number,
+    size: number,
+    maxH: number,
+    sub: { size: number; h: number; w?: number; font?: string; color?: string } | null,
+    opts: { anchor?: "center" | "top" | "bottom"; gap?: number; color?: string; align?: "left" | "center" } = {},
+  ) => {
+    const value = k.title,
+      subValue = k.slide.subtitle || "",
+      align = opts.align || "left",
+      bold = d.weight >= 600;
+    const th = measure(d.uppercase ? value.toUpperCase() : value, w, maxH, size, d.displayFont, bold);
+    const sw = sub?.w ?? w,
+      sf = sub?.font ?? d.bodyFont;
+    const sh = sub ? measure(subValue, sw, sub.h, sub.size, sf, false) : 0;
+    const gap = sh ? (opts.gap ?? Math.max(14, size * 0.24)) : 0;
+    const total = th + gap + sh;
+    const y0 =
+      opts.anchor === "top"
+        ? top
+        : opts.anchor === "bottom"
+          ? bottom - total
+          : top + (bottom - top - total) / 2;
+    HT(value, x, y0, w, Math.max(th, size * 1.2) + 1, size, opts.color || c.ink, align);
+    if (sub)
+      BT(
+        subValue,
+        align === "center" ? x + (w - sw) / 2 : x,
+        y0 + th + gap,
+        sw,
+        Math.max(sh, sub.size * 1.2) + 1,
+        sub.size,
+        sub.color || c.sub,
+        sf,
+        false,
+        align,
+      );
+    return { top: y0, bottom: y0 + total };
+  };
+  /** Diagonal "↗" arrow drawn with strokes (renders the same everywhere). */
+  const arrow = (cx: number, cy: number, s: number, color: string, sw = 2.5) => {
+    const x0 = cx - s / 2,
+      y0 = cy - s / 2;
+    L(x0, y0 + s, s, -s, color, sw);
+    L(x0 + s * 0.22, y0, s * 0.78, 0, color, sw);
+    L(x0 + s, y0, 0, s * 0.78, color, sw);
+  };
+  /** Organic leaf: a long rotated ellipse with a centre vein. */
+  const leaf = (
+    cx: number,
+    cy: number,
+    len: number,
+    wide: number,
+    angle: number,
+    fill: string,
+    vein: string,
+  ) => {
+    k.elements.push({ kind: "ellipse", x: cx - len / 2, y: cy - wide / 2, w: len, h: wide, fill, rotate: angle });
+    const a = (angle * Math.PI) / 180,
+      r = len * 0.4;
+    L(cx - Math.cos(a) * r, cy - Math.sin(a) * r, Math.cos(a) * r * 2, Math.sin(a) * r * 2, vein, 2);
+  };
+  /** Round arrow button (references: annual-report / healthcare decks). */
+  const arrowButton = (x: number, y: number, size: number, fill: string, ink: string) => {
+    C(x, y, size, fill);
+    arrow(x + size / 2, y + size / 2, size * 0.34, ink, Math.max(2, size / 22));
+  };
+  const pillWidth = (label: string, size = 11) =>
+    Math.max(48, label.length * size * 0.66 + 32);
+  /** Right edge for top-row items; leaves room for an uploaded logo. */
+  const RX = profile?.logo ? 1040 : 1128;
+  const labels = set.slideFooterLabels;
+  const pageMark = `${k.num(k.index + 1)} / ${k.num(k.total)}`;
+  return { HT, BT, NT, ML, metaRow, block, arrow, arrowButton, leaf, pillWidth, RX, labels, pageMark };
+}
+
+/** Closing slides: each original family echoes its own cover's motif. */
+export function drawClosing(k: Kit): string {
+  const { R, C, L, S, c, p, d, family, slide, eyebrow, title, team, department, date, glow, pill } = k;
+  const { BT, NT, ML, metaRow, block, arrow, leaf, pillWidth, RX, labels, pageMark } = tools(k);
+  const credits: [string, string][] = [
+    [labels.team, team],
+    [labels.dept, department],
+  ];
+  switch (family.id) {
+    case "meridian": {
+      const split = 732;
+      R(split, 0, 468, 675, p.panel);
+      glow(split + 40, 110, 360, p.acc2, 0.4);
+      for (let x = 1040; x < 1136; x += 24)
+        for (let y = 520; y < 616; y += 24) C(x, y, 3.2, p.sub);
+      C(split - 180, -180, 504, "none", c.bg, 5.4);
+      C(split - 108, -108, 360, "none", p.acc, 5.4);
+      C(split - 42, -42, 228, c.bg);
+      R(0, 0, split, 675, c.bg);
+      C(912, 400, 44, p.acc);
+      R(72, 73, 31, 4.3, c.acc);
+      ML(eyebrow, 117, 62, 548, c.sub, 12.6);
+      block(72, 130, 530, 600, 88, 240, { size: 20, h: 52 });
+      L(72, 548, 600, 0, c.line);
+      metaRow(72, 566, 600, credits);
+      return c.bg;
+    }
+    case "atlas": {
+      R(72, 59, 16, 16, c.acc);
+      ML(eyebrow, 102, 54, 560, c.ink, 13.2);
+      ML(pageMark, 900, 55, RX - 900, c.sub, 12.2, "right");
+      L(72, 110, 1056, 0, c.line);
+      block(72, 130, 520, 640, 96, 250, { size: 20, h: 50, w: 620 });
+      L(72, 566, 640, 0, c.line);
+      ML(date, 72, 580, 640, c.sub, 12);
+      R(792, 150, 336, 450, c.acc);
+      arrow(860, 222, 72, c.bg, 5);
+      ML(labels.team, 824, 440, 272, c.acc2, 11.5);
+      NT(team, 824, 466, 272, 62, 17, c.bg, d.bodyFont, true);
+      ML(labels.dept, 824, 536, 272, c.acc2, 11.5);
+      BT(department, 824, 562, 272, 24, 15, c.bg);
+      return c.bg;
+    }
+    case "kepler": {
+      for (let x = 12; x < 1200; x += 29)
+        for (let y = 12; y < 675; y += 29) C(x, y, 1.6, c.dot || c.line);
+      glow(1100, 900, 700, c.acc, 0.22);
+      C(500, 300, 1200, "none", c.line);
+      C(560, 360, 1080, "none", c.acc);
+      C(580, 380, 1040, c.panel, c.line);
+      C(882, 323, 26, c.acc);
+      C(1146, 286, 14, c.acc2);
+      const w = Math.min(560, eyebrow.length * 7.6 + 60);
+      R(72, 60, w, 39, c.panel, c.line, 20);
+      C(87, 75, 8, c.acc);
+      ML(eyebrow, 106, 66, w - 46, c.sub, 12);
+      ML(pageMark, 860, 66, RX - 860, c.acc, 12, "right");
+      block(72, 130, 540, 680, 92, 230, { size: 20, h: 50, w: 600 });
+      L(72, 556, 520, 0, c.line);
+      // Same credits as the cover (team + date): the pitch set labels the
+      // department column "Track", which would mislabel a department.
+      metaRow(72, 574, 542, [
+        [labels.team, team],
+        [labels.date, date],
+      ], c, false, 14.5, [1.45, 1]);
+      return c.bg;
+    }
+    case "halcyon": {
+      L(144, 0, 0, 675, c.line);
+      k.H(k.num(k.index + 1), 37, 55, 70, 55, 31.2, c.acc, "center");
+      k.elements.push({
+        kind: "text",
+        text: eyebrow.toUpperCase(),
+        x: 60,
+        y: 215,
+        w: 25,
+        h: 390,
+        size: 11.4,
+        lines: [eyebrow.toUpperCase()],
+        color: c.sub,
+        font: k.mono,
+        vertical: true,
+      });
+      C(930, 420, 380, c.acc);
+      C(990, 470, 380, "none", c.ink);
+      ML(date, 204, 56, 600, c.sub, 12);
+      block(204, 110, 505, 720, 124, 250, { size: 24, h: 56, w: 640, font: "Newsreader" });
+      L(204, 520, 600, 0, c.line);
+      metaRow(204, 538, 600, credits);
+      return c.bg;
+    }
+    case "vertex": {
+      C(880, 400, 460, c.panel);
+      R(940, 70, 170, 170, c.acc2, undefined, 0, -8);
+      R(968, 44, 170, 170, "none", c.ink, 0, 10, 4.8);
+      R(72, 67, 17, 17, c.ink);
+      ML(eyebrow, 101, 60, 640, c.ink, 13.2);
+      block(72, 120, 525, 820, 150, 300, { size: 20, h: 46, w: 700, color: c.ink });
+      L(72, 540, 700, 0, c.line);
+      metaRow(72, 558, 700, credits, { ...c, ink: c.ink, sub: c.sub }, false, 14.5, [1.3, 1]);
+      return c.bg;
+    }
+    case "ledger": {
+      R(768, 0, 432, 675, c.panel);
+      [372, 452, 532].forEach((y) => L(816, y, 336, 0, c.pline || c.line));
+      [38, 52, 46, 66, 80, 100].forEach((v, n) =>
+        R(816 + n * 58, 612 - v * 2.6, 44, v * 2.6, n === 5 ? c.acc : c.pbar || c.acc2, undefined, 3),
+      );
+      L(816, 613, 336, 0, c.pline || c.line);
+      R(72, 60, 32, 32, c.panel, undefined, 6);
+      [7, 12, 17].forEach((h, n) => R(79 + n * 6, 85 - h, 4, h, n === 2 ? "#ffffff" : c.acc));
+      ML(eyebrow, 120, 64, 580, c.ink, 12.6);
+      const b = block(72, 150, 535, 640, 96, 220, { size: 20, h: 50, w: 620 });
+      R(72, b.top - 30, 72, 6, c.acc);
+      L(72, 556, 640, 0, c.line);
+      metaRow(72, 574, 660, credits, c, false, 14.5, [1.3, 1]);
+      return c.bg;
+    }
+    case "pulse": {
+      R(0, 452, 1200, 223, c.panel);
+      const beat = [
+        [0, 20],
+        [96, 20],
+        [102, 20],
+        [106, 8],
+        [111, 33],
+        [116, 4],
+        [120, 20],
+        [182, 20],
+      ];
+      beat
+        .slice(1)
+        .forEach(([x, y], n) =>
+          L(beat[n][0] * 6, 398 + beat[n][1] * 2.7, (x - beat[n][0]) * 6, (y - beat[n][1]) * 2.7, c.acc, 2.4),
+        );
+      C(1092 - 9, 452 - 9, 18, c.acc);
+      R(72, 60, 43, 43, c.acc, undefined, 12);
+      R(83, 79, 22, 6, "#ffffff");
+      R(91, 71, 6, 22, "#ffffff");
+      ML(eyebrow, 132, 71, 640, c.sub, 12.6);
+      ML(pageMark, 860, 71, RX - 860, c.sub, 12, "right");
+      block(72, 120, 380, 1000, 96, 200, { size: 20, h: 32, w: 760 }, { anchor: "bottom" });
+      metaRow(72, 534, 1000, credits, c, true, 16);
+      return c.bg;
+    }
+    case "gala": {
+      C(360, 50, 480, "none", c.acc);
+      C(330, -8, 540, "none", c.line);
+      C(594, 176, 12, c.acc);
+      ML(eyebrow, 72, 48, 380, c.acc, 12.6);
+      ML(date, 830, 48, RX - 830, c.sub, 12.6, "right");
+      block(370, 180, 420, 460, 104, 136, { size: 22, h: 36, w: 400, font: "Instrument Serif" }, { align: "center" });
+      NT(team, 150, 556, 900, 40, 15, c.ink, d.bodyFont, false, "center");
+      ML(department, 200, 604, 800, c.sub, 12, "center");
+      return c.bg;
+    }
+    case "swiss": {
+      for (let x = 0; x <= 1200; x += 100) L(x, 0, 0, 675, c.line);
+      C(900, 375, 400, c.acc);
+      ML(eyebrow, 100, 55, 640, c.ink, 12.6);
+      ML(pageMark, 800, 55, RX - 800, c.sub, 12.6, "right");
+      block(100, 120, 515, 800, 120, 250, { size: 22, h: 50, w: 700 });
+      L(100, 530, 700, 0, c.ink, 3);
+      metaRow(100, 550, 700, credits);
+      return c.bg;
+    }
+    case "strata": {
+      glow(930, 380, 330, c.acc, 0.2);
+      R(800, 110, 360, 230, c.panel, c.line, 19, 8);
+      R(760, 230, 360, 230, c.acc, undefined, 19, 8);
+      R(740, 350, 360, 230, c.acc2, undefined, 19, 8);
+      R(810, 270, 108, 8, c.acc2, undefined, 4, 8);
+      R(806, 292, 60, 8, c.acc2, undefined, 4, 8);
+      [70, 110, 150].forEach((h, n) => R(800 + n * 64, 540 - h, 46, h, c.panel, undefined, 5, 8));
+      ML(eyebrow, 72, 60, 600, c.acc2, 12.6);
+      ML(pageMark, 860, 60, RX - 860, c.sub, 12, "right");
+      block(72, 120, 530, 600, 92, 250, { size: 20, h: 50, w: 580 });
+      L(72, 548, 580, 0, c.line);
+      metaRow(72, 566, 580, credits);
+      return c.bg;
+    }
+    case "canopy": {
+      C(820, -180, 520, c.acc);
+      C(700, 170, 240, c.acc2);
+      leaf(912, 446, 190, 70, -28, c.acc2, c.bg);
+      leaf(1010, 452, 124, 46, -58, c.acc, c.bg);
+      const w = Math.min(520, pillWidth(eyebrow, 11.5) + 18);
+      R(72, 58, w, 32, c.panel, undefined, 16);
+      C(86, 70, 8, c.acc);
+      ML(eyebrow, 102, 64, w - 40, c.acc, 11.5);
+      block(72, 130, 530, 600, 96, 230, { size: 20, h: 50, w: 580 });
+      L(72, 548, 580, 0, c.line);
+      metaRow(72, 566, 580, credits);
+      return c.bg;
+    }
+    case "mono": {
+      C(72, 66, 12, c.acc);
+      ML(eyebrow, 99, 60, 700, c.ink, 12.6);
+      const pw = pillWidth(pageMark, 11);
+      pill(pageMark, RX - pw, 54, c.ink, c.bg);
+      block(72, 120, 535, 980, 124, 270, { size: 22, h: 44, w: 820 });
+      L(72, 556, 1056, 0, c.line);
+      metaRow(72, 574, 860, credits);
+      arrow(1092, 610, 60, c.ink, 5);
+      return c.bg;
+    }
+    default:
+      C(672, 267, 672, "none", c.acc, 4.8);
+      C(1032, 507, 72, c.acc);
+      ML(eyebrow, 72, 60, 1000, c.sub, 12.6);
+      block(72, 130, 560, 680, 100.8, 200, { size: 21.6, h: 60, w: 640 });
+      ML(team, 72, 590, 640, c.sub);
+      ML(department, 72, 620, 640, c.sub);
+      return c.bg;
+  }
+}
+
+/** Covers for the original twelve families. */
+export function drawCover(k: Kit): string {
+  const {
+    R,
+    C,
+    L,
+    S,
+    H,
+    c,
+    p,
+    family,
+    slide,
+    sample,
+    profile,
+    eyebrow,
+    title,
+    team,
+    guide,
+    department,
+    date,
+    footerFields,
+    sampleBacked,
+    elements,
+    mono,
+    glow,
+    pill,
+  } = k;
+  const { HT, BT, ML, metaRow, block, arrowButton, leaf, pillWidth, RX, labels, pageMark } = tools(k);
+  switch (family.id) {
+    case "meridian": {
+      const split = 732;
+      R(split, 0, 468, 675, p.panel);
+      glow(split + 70, 560, 380, p.acc2, 0.42);
+      for (let x = 780; x < 876; x += 24)
+        for (let y = 65; y < 161; y += 24) C(x, y, 3.2, p.sub);
+      if (!profile?.logo) {
+        C(1044, 65, 101, "none", p.sub);
+        k.M("LOGO", 1044, 103, 101, p.ink, 10, "center");
+      }
+      C(split - 180, 351, 504, "none", c.bg, 5.4);
+      C(split - 108, 423, 360, "none", p.acc, 5.4);
+      C(split - 42, 489, 228, c.bg);
+      // Cover graphic is clipped to its right-hand panel, like the original artwork.
+      R(0, 0, split, 675, c.bg);
+      C(1080, 262, 29, p.acc);
+      if (date) pill(date, 780, 196, p.bg, p.ink, p.line, 12, 32);
+      R(72, 73, 31, 4.3, c.acc);
+      ML(eyebrow, 117, 62, 548, c.sub, 12.6);
+      block(72, 120, 530, 600, 54, 262, { size: 17.4, h: 52 });
+      L(72, 548, 600, 0, c.line);
+      metaRow(72, 566, 600, footerFields.slice(0, 2));
+      break;
+    }
+    case "atlas":
+      R(72, 59, 16, 16, c.acc);
+      ML(eyebrow, 102, 54, 560, c.ink, 13.2);
+      ML(slide.subtitle, 680, 55, RX - 680, c.sub, 12.2, "right");
+      L(72, 110, 1056, 0, c.line);
+      block(72, 130, 528, 660, 58, 300, null);
+      R(792, 150, 336, 360, c.acc);
+      ML(pageMark, 824, 180, 200, c.acc2, 12);
+      arrowButton(1052, 170, 52, c.bg, c.acc);
+      HT(sample.coverIndex || "01", 822, 286, 280, 200, 190, c.bg);
+      L(72, 548, 1056, 0, c.line);
+      metaRow(72, 566, 1056, footerFields, c, true);
+      break;
+    case "kepler": {
+      for (let x = 12; x < 1200; x += 29)
+        for (let y = 12; y < 675; y += 29) C(x, y, 1.6, c.dot || c.line);
+      glow(1008, 337, 300, c.acc, 0.24);
+      C(672, 1, 672, "none", c.line);
+      C(768, 97, 480, "none", c.acc);
+      C(864, 193, 288, c.panel, c.line);
+      C(990, 319, 36, c.acc);
+      C(828, 157, 22, c.acc);
+      const w = Math.min(560, eyebrow.length * 7.6 + 60);
+      R(72, 60, w, 39, c.panel, c.line, 20);
+      C(87, 75, 8, c.acc);
+      ML(eyebrow, 106, 66, w - 46, c.sub, 12);
+      block(72, 120, 540, 580, 58, 270, { size: 18, h: 50, w: 560 });
+      L(72, 556, 660, 0, c.line);
+      // The rings leave the row clear to x≈750; names get the extra width.
+      metaRow(72, 574, 682, [
+        [labels.team, team],
+        [labels.date, date],
+      ], c, false, 14.5, [1.8, 1]);
+      break;
+    }
+    case "halcyon":
+      L(144, 0, 0, 675, c.line);
+      H(sample.coverIndex || "01", 37, 55, 70, 55, 31.2, c.acc, "center");
+      // Vertical rail text remains editable in PowerPoint.
+      elements.push({
+        kind: "text",
+        text: eyebrow.toUpperCase(),
+        x: 60,
+        y: 215,
+        w: 25,
+        h: 390,
+        size: 11.4,
+        lines: [eyebrow.toUpperCase()],
+        color: c.sub,
+        font: mono,
+        vertical: true,
+      });
+      C(972, -132, 336, c.acc);
+      C(1026, -78, 336, "none", c.ink);
+      ML(date, 204, 56, 600, c.sub, 12);
+      L(204, 96, 56, 0, c.acc, 2);
+      block(204, 116, 535, 760, 86, 276, { size: 23, h: 56, font: "Newsreader" });
+      L(204, 550, 924, 0, c.line);
+      metaRow(204, 568, 924, footerFields.slice(0, 3), c, true);
+      break;
+    case "vertex":
+      C(924, -120, 360, c.panel);
+      R(912, 411, 180, 180, c.acc2, undefined, 0, -8);
+      R(942, 381, 180, 180, "none", c.ink, 0, 10, 4.8);
+      R(72, 67, 17, 17, c.ink);
+      ML(eyebrow, 101, 60, 700, c.ink, 13.2);
+      block(72, 110, 525, 780, 90, 300, { size: 19, h: 46, w: 720, color: c.ink });
+      L(72, 540, 780, 0, c.line);
+      metaRow(72, 558, 780, [
+        [labels.team, team],
+        [labels.guide, guide],
+        [labels.date, date],
+      ], c, false, 14.5, [1.4, 1, 0.9]);
+      break;
+    case "ledger": {
+      R(768, 0, 432, 675, c.panel);
+      R(72, 60, 32, 32, c.panel, undefined, 6);
+      [7, 12, 17].forEach((h, n) =>
+        R(79 + n * 6, 85 - h, 4, h, n === 2 ? "#ffffff" : c.acc),
+      );
+      ML(eyebrow, 120, 64, 580, c.ink, 12.6);
+      const b = block(72, 150, 540, 640, 56, 246, { size: 18, h: 56, w: 620 });
+      R(72, b.top - 30, 72, 6, c.acc);
+      L(72, 556, 640, 0, c.line);
+      metaRow(72, 574, 660, [
+        [labels.team, team],
+        [labels.dept, department],
+        [labels.date, date],
+      ], c, false, 14.5, [1.45, 1.05, 0.7]);
+      ML(sampleBacked ? "Highlights" : "", 816, 61, Math.min(336, RX - 816), c.psub || c.acc2, 11.4);
+      HT(sampleBacked ? sample.coverKpi || "+18%" : "", 816, 190, 336, 92, 66, "#ffffff");
+      BT(
+        sampleBacked ? sample.coverKpiLabel || "Growth, year on year" : "",
+        816,
+        284,
+        300,
+        48,
+        14,
+        c.psub || c.acc2,
+      );
+      [427, 487, 547].forEach((y) => L(816, y, 336, 0, c.pline || c.line));
+      [34, 46, 41, 58, 70, 88].forEach((v, n) =>
+        R(
+          816 + n * 58,
+          607 - v * 2.2,
+          44,
+          v * 2.2,
+          n === 5 ? c.acc : c.pbar || c.acc2,
+          undefined,
+          3,
+        ),
+      );
+      L(816, 608, 336, 0, c.pline || c.line);
+      break;
+    }
+    case "pulse": {
+      R(0, 432, 1200, 243, c.panel);
+      const points = [
+        [0, 20],
+        [58, 20],
+        [64, 20],
+        [68, 8],
+        [73, 33],
+        [78, 4],
+        [82, 20],
+        [120, 20],
+        [126, 20],
+        [129, 13],
+        [133, 27],
+        [137, 20],
+        [200, 20],
+      ];
+      points
+        .slice(1)
+        .forEach(([x, y], n) =>
+          L(
+            points[n][0] * 6,
+            378 + points[n][1] * 2.7,
+            (x - points[n][0]) * 6,
+            (y - points[n][1]) * 2.7,
+            c.acc,
+            2.4,
+          ),
+        );
+      R(72, 60, 43, 43, c.acc, undefined, 12);
+      R(83, 79, 22, 6, "#ffffff");
+      R(91, 71, 6, 22, "#ffffff");
+      ML(eyebrow, 132, 71, 600, c.sub, 12.6);
+      if (date) {
+        const w = pillWidth(date, 12);
+        // Small accent text on the tint needs a deeper accent for contrast.
+        pill(date, RX - w, 64, c.panel, mix(c.acc, c.ink, 0.3), undefined, 12, 32);
+      }
+      block(72, 120, 372, 860, 56, 200, { size: 18, h: 32, w: 760 }, { anchor: "bottom" });
+      metaRow(72, 522, 1056, footerFields.slice(0, 3), c, true, 15);
+      break;
+    }
+    case "gala":
+      C(600, -22, 720, "none", c.acc);
+      C(696, 73, 528, "none", c.line);
+      HT(sample.coverIndex || "01", 860, 262, 200, 110, 84, c.ink, "center");
+      ML(date, 830, 392, 260, c.acc, 13.2, "center");
+      ML(eyebrow, 72, 62, 500, c.acc, 12.6);
+      L(72, 104, 84, 0, c.acc);
+      block(72, 120, 556, 520, 86, 290, { size: 24, h: 64, w: 500, font: "Instrument Serif" });
+      // Organisers get most of the row (clear of the rings up to x≈600).
+      metaRow(72, 572, 540, [
+        [labels.dept, department],
+        [labels.team, team],
+      ], c, false, 14.5, [0.75, 1.25]);
+      break;
+    case "swiss":
+      for (let x = 0; x <= 1200; x += 100) L(x, 0, 0, 675, c.line);
+      C(800, 96, 300, c.acc);
+      ML(`${sample.coverIndex || "01"} / ${eyebrow}`, 100, 55, 640, c.ink, 12.6);
+      ML(date, 800, 55, RX - 800, c.sub, 12.6, "right");
+      block(100, 110, 525, 660, 76, 330, { size: 20, h: 50, w: 640 });
+      L(100, 542, 1000, 0, c.ink, 3);
+      metaRow(100, 562, 1000, footerFields.slice(0, 3));
+      break;
+    case "strata":
+      glow(960, 320, 340, c.acc, 0.2);
+      R(720, 70, 408, 252, c.panel, c.line, 19, -14);
+      R(760, 176, 408, 252, c.acc, undefined, 19, -14);
+      R(815, 290, 408, 252, c.acc2, undefined, 19, -14);
+      R(792, 212, 108, 8, c.acc2, undefined, 4, -14);
+      R(795, 234, 60, 8, c.acc2, undefined, 4, -14);
+      {
+        // Trend line drawn in the front card's own (rotated) frame, above its
+        // bars and well inside its top edge.
+        const a = (-14 * Math.PI) / 180,
+          ox = 815 + 204,
+          oy = 290 + 126;
+        const at = ([x, y]: number[]) => [
+          ox + (x - ox) * Math.cos(a) - (y - oy) * Math.sin(a),
+          oy + (x - ox) * Math.sin(a) + (y - oy) * Math.cos(a),
+        ];
+        const pts = [
+          [846, 372],
+          [900, 348],
+          [948, 360],
+          [1000, 326],
+          [1050, 340],
+          [1124, 312],
+        ].map(at);
+        pts.slice(1).forEach(([x2, y2], n) => {
+          const [x, y] = pts[n];
+          L(x, y, x2 - x, y2 - y, "#ffffff", 3);
+        });
+      }
+      [108, 72, 144].forEach((h, n) =>
+        R(854 + n * 62, 515 - h, 48, h, c.panel, undefined, 5, -14),
+      );
+      ML(eyebrow, 72, 60, 600, c.acc2, 12.6);
+      block(72, 110, 540, 580, 56, 280, { size: 18, h: 56, w: 560 });
+      L(72, 556, 580, 0, c.line);
+      metaRow(72, 574, 580, [
+        [labels.team, team],
+        [labels.date, date],
+      ]);
+      break;
+    case "canopy": {
+      C(840, 387, 456, c.acc);
+      C(672, 531, 288, c.acc2);
+      leaf(1004, 338, 190, 72, -35, c.acc2, c.bg);
+      leaf(1100, 236, 128, 48, -64, c.acc, c.bg);
+      C(1056, 72, 96, "none", c.acc);
+      const w = Math.min(560, pillWidth(eyebrow, 11.5) + 18);
+      R(72, 58, w, 32, c.panel, undefined, 16);
+      C(86, 70, 8, c.acc);
+      ML(eyebrow, 102, 64, w - 40, c.acc, 11.5);
+      block(72, 110, 540, 660, 62, 276, { size: 18, h: 56, w: 640 });
+      L(72, 556, 600, 0, c.line);
+      metaRow(72, 572, 600, footerFields.slice(0, 2));
+      break;
+    }
+    default: {
+      C(72, 66, 12, c.acc);
+      ML(eyebrow, 99, 60, 700, c.ink, 12.6);
+      if (date) {
+        const w = pillWidth(date, 11);
+        pill(date, RX - w, 54, c.ink, c.bg);
+      }
+      block(72, 110, 540, 1000, 86, 290, { size: 20, h: 44, w: 860 });
+      L(72, 556, 1056, 0, c.line);
+      metaRow(72, 574, 900, footerFields.slice(0, 3));
+      tools(k).arrow(1092, 604, 48, c.ink, 4);
+    }
+  }
+  if (profile?.registerNumbers || profile?.college) {
+    // Preserve all student metadata without crowding the supplied title artwork.
+    k.T(
+      [
+        profile.college,
+        profile.registerNumbers && `Register no. ${profile.registerNumbers}`,
+      ]
+        .filter(Boolean)
+        .join(" · "),
+      72,
+      650,
+      1056,
+      20,
+      10,
+      c.sub,
+    );
+  }
+  return c.bg;
 }

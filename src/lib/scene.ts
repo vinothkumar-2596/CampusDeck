@@ -12,6 +12,8 @@ export type Shape = {
   sw?: number;
   radius?: number;
   rotate?: number;
+  /** 0–1; applies to fill and stroke. */
+  opacity?: number;
 };
 export type TextElement = {
   kind: "text";
@@ -39,6 +41,14 @@ export type TableElement = {
   accent: string;
   ink: string;
   light: string;
+  /** Header-row text colour (default white). Pick one readable on `accent`. */
+  headerInk?: string;
+  /** Cell divider colour (default white); "none" draws no dividers. */
+  grid?: string;
+  /** Cell divider width (default 2). */
+  gridWidth?: number;
+  /** Text font (default the scene font). */
+  font?: string;
 };
 export type ChartElement = {
   kind: "chart";
@@ -52,6 +62,8 @@ export type ChartElement = {
   light: string;
   colors?: string[];
   unit?: string;
+  /** Font for tick, value and category labels (default the scene font). */
+  font?: string;
 };
 export type ImageElement = {
   kind: "image";
